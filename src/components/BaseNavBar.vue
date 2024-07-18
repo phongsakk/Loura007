@@ -127,6 +127,8 @@ export default {
         }
 
         const fetchUserProfile = async () => {
+            if (!token.value) return
+
             const getUserData = await getUserProfile(token.value)
             userData.value = getUserData.data
             console.log("User data :", getUserData.data.code)

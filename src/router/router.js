@@ -126,6 +126,8 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some((record) => record.meta.requiresAdmin)) {
     if (isLoggedIn && userTypeId === "21") {
         next();
+    } else if (isLoggedIn && userTypeId !== "21") {
+        next({ path: "/" });
     } else {
         next({ path: "/login" });
     }
@@ -135,33 +137,11 @@ router.beforeEach((to, from, next) => {
     } else if (isLoggedIn &&  userTypeId === 21) {
         next({ path: "/import-wine-list" });
     } else {
-        next();
+        next({ path:"/login" });
     }
   } else {
     next();
   }
-
-//   if (to.matched.some((record) => record.meta.requiresAdmin)) {
-//     console.log("It's in admin login path", isLoggedIn, userTypeId);
-//     if (isLoggedIn && userTypeId === "21") {
-//       next();
-//     } else if (!isLoggedIn) {
-//       next({ path: "/login" });
-//     } else {
-//       next({ path: "/" });
-//     }
-//   } else if (to.matched.some((record) => record.meta.requiresUser)) {
-//     console.log("It's in user login path");
-//     if (isLoggedIn && userTypeId !== "21") {
-//       next();
-//     } else if (!isLoggedIn) {
-//         next({ path: "/" });
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
 });
 
 export default router;

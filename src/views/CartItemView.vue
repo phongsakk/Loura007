@@ -189,6 +189,7 @@ export default {
         const isTotalLitersExceeded = computed(() => totalLiters.value > 10);
 
         const onConfirmClick = async() => {
+            const newParseFloat = (val) => parseFloat(`${val}`.replace(/,/g, ""));
             spinner.value = true
             const wineData = {
                 IsStatus : 0,
@@ -199,12 +200,12 @@ export default {
                     Year: wine.Year,
                     BottleSize: wine.BottleSize,
                     WineLiquorTotal: wine.quantity,
-                    ExciseTax: parseFloat(wine.exciseTaxByTotal),
-                    LocalTax: parseFloat(wine.externalLocal),
-                    Fund: parseFloat(wine.externalFund),
-                    CustomsDuty: parseFloat(wine.exciseTaxByDuty),
-                    InitialValue: parseFloat(wine.RecommendMinPrice),
-                    TotalTax: parseFloat(wine.externalTotal.replace(/,/g, '')),
+                    ExciseTax: newParseFloat(wine.exciseTaxByTotal),
+                    LocalTax: newParseFloat(wine.externalLocal),
+                    Fund: newParseFloat(wine.externalFund),
+                    CustomsDuty: newParseFloat(wine.exciseTaxByDuty),
+                    InitialValue: newParseFloat(wine.RecommendMinPrice),
+                    TotalTax: newParseFloat(wine.externalTotal),
                     NewPrice: wine.NewPrice,
                     InvoiceFileType: wine.fileType,
                     InvoicePictureUrl: wine.uploadFile
@@ -219,8 +220,7 @@ export default {
             if (isLoggedIn.value && isLoggedIn.value === 'true') {
                 router.push('/import-liquor')
                 localStorage.removeItem('cartItems')
-            }
-            else {
+            } else {
                 window.scrollTo(0,0)
                 registerModal.value = true
             }

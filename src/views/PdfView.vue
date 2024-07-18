@@ -69,7 +69,7 @@ export default {
 
         const cartData = {
           importDate: formatDate(cartItems.value.ImportPurpose.PurposeDate),
-          importerName: userData.value.FirstName+ ' ' + userData.value.LastName,
+          importerName: userData.value.FirstName + ' ' + userData.value.LastName,
           importerId: userData.value.IDCard,
           userType: userData.value.FtUserTypeId,
           exciseId: userData.value.ExciseNo,
@@ -82,7 +82,7 @@ export default {
           addressDistrict: userData.value.District,
           province: userData.value.Province,
           postelCode: userData.value.PostCode,
-          phoneNumber: userData.value.Phone? userData.value.Phone : userData.value.Mobile,
+          phoneNumber: userData.value.Phone ? userData.value.Phone : userData.value.Mobile,
           importPurpose: cartItems.value.ImportPurpose.PurposeId,
         };
 
@@ -119,56 +119,62 @@ export default {
         });
 
         if (cartData.userType === 19) {
-            page.drawText('/', {
-                x: 74,
-                y: height-165,
-                size: 16,
-                font: sarabunFont,
-                color: rgb(0, 0, 0),
-            });
+          page.drawText('/', {
+            x: 74,
+            y: height - 165,
+            size: 16,
+            font: sarabunFont,
+            color: rgb(0, 0, 0),
+          });
         } else if (cartData.userType === 20) {
-            page.drawText('/', {
-                x: 155,
-                y: height - 165,
-                size: fontSize,
-                font: sarabunFont,
-                color: rgb(0, 0, 0),
-            });
+          page.drawText('/', {
+            x: 155,
+            y: height - 165,
+            size: fontSize,
+            font: sarabunFont,
+            color: rgb(0, 0, 0),
+          });
         }
 
         if (cartData.importPurpose === 22) {
-            page.drawText('/', {
-                x: 127,
-                y: height-376,
-                size: 16,
-                font: sarabunFont,
-                color: rgb(0, 0, 0),
-            });
+          page.drawText('/', {
+            x: 127,
+            y: height - 376,
+            size: 16,
+            font: sarabunFont,
+            color: rgb(0, 0, 0),
+          });
         } else if (cartData.importPurpose === 23) {
-            page.drawText('/', {
-                x: 127,
-                y: height - 397,
-                size: 16,
-                font: sarabunFont,
-                color: rgb(0, 0, 0),
-            });
-        } else if (cartData.importPurpose === 24){
-            page.drawText('/', {
-                x: 127,
-                y: height - 420,
-                size: 16,
-                font: sarabunFont,
-                color: rgb(0, 0, 0),
-            });
+          page.drawText('/', {
+            x: 127,
+            y: height - 397,
+            size: 16,
+            font: sarabunFont,
+            color: rgb(0, 0, 0),
+          });
+        } else if (cartData.importPurpose === 24) {
+          page.drawText('/', {
+            x: 127,
+            y: height - 420,
+            size: 16,
+            font: sarabunFont,
+            color: rgb(0, 0, 0),
+          });
         }
 
-        page.drawText(`${addSpacesBetweenNumbers(cartData.importerId)}`, {
-          x: 234,
-          y: height - 208,
-          size: 13,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
+        // Draw importer's Id
+        console.log(addSpacesBetweenNumbers);
+        const importerIdBits = `${cartData.importerId}`.split("");
+        let XAxis = 222;
+        for (const bit of importerIdBits) {
+          page.drawText(bit, {
+            x: XAxis+=13,
+            y: height - 208,
+            size: 13,
+            font: sarabunFont,
+            color: rgb(0, 0, 0),
+          });
+        }
 
         page.drawText(`${cartData.addressName}`, {
           x: 120,

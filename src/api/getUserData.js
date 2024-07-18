@@ -27,14 +27,14 @@ export async function getRegisterData(userData) {
     }
 }
 
-export async function getLonginUser (email, password) {
+export async function getLonginUser(email, password) {
     try {
         const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-FtSignIn`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ Email : email, Password : password }),
+            body: JSON.stringify({ Email: email, Password: password }),
         })
         if (!response.ok) {
             if (response.status === 400) {
@@ -47,14 +47,14 @@ export async function getLonginUser (email, password) {
         const data = await response.json();
         return data;
     } catch {
-        throw new Error ("Login failed")
+        throw new Error("Login failed")
     }
 }
 
-export async function verifyEmail (code, token) {
+export async function verifyEmail(code, token) {
     try {
         const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-FtVerifyEmail?code=${code}`, {
-        method: 'GET',
+            method: 'GET',
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
@@ -70,14 +70,14 @@ export async function verifyEmail (code, token) {
         const data = await response.json();
         return data
     } catch {
-        throw new Error ("Login failed")
+        throw new Error("Login failed")
     }
 }
 
-export async function resendEmail (email, token) {
+export async function resendEmail(email, token) {
     try {
         const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-FtEmailResend`, {
-        method: 'POST',
+            method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
@@ -90,14 +90,16 @@ export async function resendEmail (email, token) {
         const data = await response.json();
         return data
     } catch {
-        throw new Error ("Login failed")
+        throw new Error("Login failed")
     }
 }
 
-export async function getUserProfile (token) {
+export async function getUserProfile(token) {
     try {
+        if (!token) { return false }
+
         const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-FtProfile`, {
-        method: 'GET',
+            method: 'GET',
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
@@ -113,6 +115,6 @@ export async function getUserProfile (token) {
         const data = await response.json();
         return data
     } catch {
-        throw new Error ("Login failed")
+        throw new Error("Login failed")
     }
 }
