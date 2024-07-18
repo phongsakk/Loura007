@@ -185,7 +185,7 @@
                                     <li v-for="(result, index) in algoliaResults" :key="index"
                                         @click="selectWine(result.name)">
                                         <img :src="result.image_bottle" alt="Bottle Image" class="bottle-image" />{{
-                    result.name }}
+                                            result.name }}
                                     </li>
                                 </ul>
                             </div>
@@ -296,12 +296,12 @@
                         <div class="d-flex justify-content-between" style="padding-top: 10px;">
                             <div class="category">
                                 <p class="category-name" style="margin-bottom: 0px;"><span class="category-icon"><img
-                                            src="../assets/img/wine-img1.png"
-                                            class="category-image"></span>{{ wine.WineLiquor.CategoryLabel }}</p>
+                                            src="../assets/img/wine-img1.png" class="category-image"></span>{{
+                                                wine.WineLiquor.CategoryLabel }}</p>
                             </div>
                             <div class="year">
                                 <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span class="manu-year">{{
-                    wine.WineLiquorPic.WineLiquorYear }}</span></p>
+                                    wine.WineLiquorPic.WineLiquorYear }}</span></p>
                             </div>
                         </div>
                         <div class="row text-start">
@@ -329,7 +329,7 @@
                             </div>
                             <div class="col-3">
                                 <label class="form-label">ภาษีท้องถิ่น</label>
-                                <p style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท</p>
+                                <p style="margin-bottom: 0px;">{{ formatNumber(wine.LocalTax) }} บาท</p>
                             </div>
                             <div class="col-3">
                                 <label class="form-label">เงินบำรุงกองทุน</label>
@@ -366,28 +366,32 @@
         <div class="summary-card">
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">ปริมาตรสุราในตะกร้า</p>
-                <p class="text-end summary-value">2.25/10 ลิตร</p>
+                <p class="text-end summary-value">{{ totalLiter }}/10 ลิตร</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">รวมจำนวนสุรานำเข้าทั้งหมด</p>
-                <p class="text-end summary-value">3 ขวด</p>
+                <p class="text-end summary-value">{{ totalQty }} ขวด</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">เป็นมูลค่าเบื้องต้น</p>
-                <p class="text-end summary-value">67,013.00 บาท</p>
+                <p class="text-end summary-value">{{ totalInitialValue.toLocaleString('en-US', {
+                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                }) }} บาท</p>
             </div>
             <hr class="divider-line">
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label" style="font-weight: 700;">รวมมูลค่าภาษีที่ต้องชำระ</p>
-                <p class="text-end summary-value">14,263.00 บาท</p>
+                <p class="text-end summary-value">{{ totalTaxAll.toLocaleString('en-US', {
+                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                }) }} บาท</p>
             </div>
             <div style="padding: 0px 70px;">
                 <p v-if="isConfirmed === true" class="tax-confirm text-center">ยืนยันการรับชำระเงินภาษี</p>
                 <div class="d-flex justify-content-center">
                     <button class="btn-previous" @click="onPreviousClick">ตรวจสอบด้วยตนเอง</button>
                     <!-- <div> -->
-                        <button class="btn-save" v-if="isConfirmed === false" @click="onConfirmSaveClick">สแกนฉลาก</button>
-                        <button class="btn-save" v-else @click="onSaveClick">สแกนฉลาก</button>
+                    <button class="btn-save" v-if="isConfirmed === false" @click="onConfirmSaveClick">สแกนฉลาก</button>
+                    <button class="btn-save" v-else @click="onSaveClick">สแกนฉลาก</button>
                     <!-- </div> -->
                 </div>
                 <!-- <button class="btn-previous" @click="onPreviousClick">ย้อนกลับ</button> -->
@@ -464,6 +468,11 @@ export default {
         // const externalFund = ref(0)
         // const externalTotal = ref(0)
         // const fAndI = ref(0)
+
+        const totalLiter = ref(0)
+        const totalQty = ref(0)
+        const totalInitialValue = ref(0)
+        const totalTaxAll = ref(0)
 
         const onCorrectClick = (wineId) => {
             const wine = cartItems.value.Items.find(w => w.Id === wineId);
@@ -708,6 +717,10 @@ export default {
                     isCorrect: isCorrect.value
                 }
             })
+            totalLiter.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * (cur.BottleSize === 'Bottle (750ml)' || cur.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(cur.BottleSize) / 1000 : extractBottleSizeL(cur.BottleSize))), 0)
+            totalQty.value = cartItems.value.Items?.reduce((acc, cur) => acc + cur.WineLiquorTotal, 0);
+            totalInitialValue.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * cur.InitialValue), 0);
+            totalTaxAll.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * cur.TotalTax), 0);
             console.log("Cart Items after map", itemsArray.value)
             spinner.value = false
         }
@@ -786,7 +799,12 @@ export default {
             onAddConfirmClick,
             onSaveClick,
             onConfirmSaveClick,
-            formatNumber
+            formatNumber,
+
+            totalLiter,
+            totalQty,
+            totalInitialValue,
+            totalTaxAll,
         }
     }
 }
