@@ -50,28 +50,36 @@
         <div class="summary-card">
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">ปริมาตรสุราในตะกร้า</p>
-                <p class="text-end summary-value">4.5/10 ลิตร</p>
+                <p class="text-end summary-value">{{ totalLiter }}/10 ลิตร</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">รวมจำนวนสุรานำเข้าทั้งหมด</p>
-                <p class="text-end summary-value">6 ขวด</p>
+                <p class="text-end summary-value">{{ totalQty }} ขวด</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">มูลค่าที่ใช้ในการคำนวนภาษี</p>
-                <p class="text-end summary-value">218,198.00 บาท</p>
+                <p class="text-end summary-value">{{ totalInitialValue.toLocaleString('en-US', {
+                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                }) }} บาท</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">มูลค่าภาษีเดิมที่ชำระแล้ว</p>
-                <p class="text-end summary-value">18,263.00 บาท</p>
+                <p class="text-end summary-value">{{ totalTaxAll.toLocaleString('en-US', {
+                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                }) }} บาท</p>
             </div>
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">มูลค่าภาษีใหม่ที่ต้องชำระ</p>
-                <p class="text-end summary-value">16,263.00 บาท</p>
+                <p class="text-end summary-value">{{ totalTaxAll.toLocaleString('en-US', {
+                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                }) }} บาท</p>
             </div>
             <hr class="divider-line">
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label" style="font-weight: 700; color: #5896DE;">รวมมูลค่าภาษีที่ต้องชำระ</p>
-                <p class="text-end summary-value">2,000.00 บาท</p>
+                <p class="text-end summary-value">{{ totalTaxAll.toLocaleString('en-US', {
+                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                }) }} บาท</p>
             </div>
             <div class="payment-success">
                 <p class="payment-success-text">ทำการชำระภาษีสำเร็จ</p>
@@ -102,6 +110,11 @@ export default {
         const totalInitialPrice = ref('')
         const totalTax = ref('')
 
+        const totalLiter = ref(0)
+        const totalQty = ref(0)
+        const totalInitialValue = ref(0)
+        const totalTaxAll = ref(0)
+
         const onPreviousClick = () => {
             router.push ('/import-wine-list')
         }
@@ -113,6 +126,11 @@ export default {
             importCheckpoint.value = cartItems.value.ImportPurpose.CheckpointLabel
             importPurpose.value = cartItems.value.ImportPurpose.PurposeLabel
             importDate.value = formatDate(cartItems.value.ImportPurpose.PurposeDate)
+
+            totalLiter.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * (cur.BottleSize === 'Bottle (750ml)' || cur.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(cur.BottleSize) / 1000 : extractBottleSizeL(cur.BottleSize))), 0)
+            totalQty.value = cartItems.value.Items?.reduce((acc, cur) => acc + cur.WineLiquorTotal, 0);
+            totalInitialValue.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * cur.InitialValue), 0);
+            totalTaxAll.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * cur.TotalTax), 0);
         }
 
         const formatDate = (data) => {
@@ -143,7 +161,12 @@ export default {
             formatNumber,
             totalInitialPrice,
             totalTax,
-            onPreviousClick
+            onPreviousClick,
+
+            totalLiter,
+            totalQty,
+            totalInitialValue,
+            totalTaxAll,
         }
     }
 }
