@@ -20,7 +20,7 @@
                         </option>
                     </select>
                     <label class="form-label">วันที่ประมาณนำเข้า</label>
-                    <input type="date" class="form-input" v-model="importDate">
+                    <input type="date" class="form-input" :min="minDate" v-model="importDate">
                 </div>
         </div>
         <div v-if="cartItems">
@@ -149,11 +149,12 @@ import { useRouter } from 'vue-router'
 import { getEnumGroup } from '@/api/getMaster'
 
 export default {
-    setup () {
+    props: ['cardId'],
+    setup (props) {
         const router = useRouter()
 
         const token = ref('')
-        const importCartId = ref('')
+        const importCartId = ref(props.cartId || '')
         const userTypeId = ref('')
         const cartItems = ref([])
         const importCheckpoint = ref('')
@@ -275,6 +276,11 @@ export default {
                 return floatValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
+        const minDate = computed ( () => {
+            const today = new Date().toISOString().split('T')[0];
+            return today;
+        })
+
         onMounted (() => {
             token.value = localStorage.getItem('token')
             importCartId.value = localStorage.getItem('importCartId')
@@ -305,7 +311,8 @@ export default {
             onBackToHomeClick,
             onDownloadQRCodeClick,
             onPreviousClick,
-            formatNumber
+            formatNumber,
+            minDate
         }
     }
 }
@@ -441,10 +448,5 @@ export default {
     justify-content: center;
     box-shadow: 0px 2px 6px #00000080;
     border-radius: 14px;
-}
-
-.wine-name-display {
-    font-size: 22px;
-    font-weight: 700;
 }
 </style>

@@ -204,7 +204,7 @@ export default {
             console.log("Import purpose :", cartItems.value.ImportPurpose.CheckpointLabel)
             importCheckpoint.value = cartItems.value.ImportPurpose.CheckpointLabel
             importPurpose.value = cartItems.value.ImportPurpose.PurposeLabel
-            importDate.value = formatDate(cartItems.value.ImportPurpose.PurposeDate)
+            importDate.value = new Date(cartItems.value.ImportPurpose.PurposeDate).toISOString().slice(0, 10)
             spinner.value = false
         }
 
@@ -223,13 +223,13 @@ export default {
             return match ? parseFloat(match[1]) : 0;
         }
 
-        const formatDate = (data) => {
-            const date = new Date(data);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-        }
+        // const formatDate = (data) => {
+        //     const date = new Date(data);
+        //     const day = String(date.getDate()).padStart(2, '0');
+        //     const month = String(date.getMonth() + 1).padStart(2, '0');
+        //     const year = date.getFullYear();
+        //     return `${day}/${month}/${year}`;
+        // }
 
         onMounted (() => {
             cartId.value = localStorage.getItem('cartId')

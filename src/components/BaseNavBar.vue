@@ -37,10 +37,24 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="nav-item">
-                        <a class="" href="#" role="button" style="margin-right: 15px;">
+                    <div class="nav-item menu-icon">
+                        <a class="text-reset dropdown-toggle hidden-arrow" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 15px;" >
                             <img src="../assets/img/userprofile-logo.png" alt="" class="nav-image">
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
+                            <li>
+                                <div class="dropdown-item dropdown-list menu-dropdown-item d-flex justify-content-center">
+                                    <div class="user-image">
+                                        <img src="../assets/img/userprofile-icon-blue.webp" alt="" class="user-image-icon">
+                                    </div>
+                                    <div class="user-data">
+                                        <p class="user-name text-start">{{ userName }}</p>
+                                        <p class="email text-start"><img src="../assets/img/email-icon.png" alt="" class="nav-menu-icon">{{ emailAddress }}</p>
+                                        <p class="email text-start"><img src="../assets/img/phone-icon.png" alt="" class="nav-menu-icon">{{ phoneNumber }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -51,6 +65,7 @@
 <script>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { getUserProfile } from '@/api/getUserData'
 
 export default {
     name: 'nav-bar',
@@ -60,8 +75,14 @@ export default {
         const cartItems = ref([])
         const totalLitersToShow = ref('')
         const userTypeId = ref('')
+        const token = ref('')
+        const userData = ref([])
+        const userName = ref('')
+        const emailAddress = ref('')
+        const phoneNumber = ref('')
 
         const onCartClick = () => {
+            console.log("clicked");
             router.push('./your-cart')
         }
 
@@ -105,10 +126,22 @@ export default {
             return match ? parseFloat(match[1]) : 0;
         }
 
-        onMounted (() => {
+        const fetchUserProfile = async () => {
+            const getUserData = await getUserProfile(token.value)
+            userData.value = getUserData.data
+            console.log("User data :", getUserData.data.code)
+            userName.value = userData.value.FirstName + ' ' + userData.value.LastName
+            emailAddress.value = userData.value.Email
+            phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile
+        }
+
+        onMounted ( async () => {
             userTypeId.value = localStorage.getItem('userTypeId')
             cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
             totalLitersToShow.value = localStorage.getItem('totalLitersToShow')
+            token.value = localStorage.getItem('token')
+
+            await fetchUserProfile()
         })
 
         return {
@@ -116,6 +149,9 @@ export default {
             cartItems,
             totalLiters,
             totalLitersToShow,
+            userName,
+            emailAddress,
+            phoneNumber,
             onLogoClick,
             onCartClick,
             onImportLiquorListClick,
@@ -213,5 +249,34 @@ export default {
     font-weight: 700;
     color: #FFFFFF;
     margin: 0px 20px;
+}
+
+.user-image {
+    /* padding: 0px 20px; */
+    margin-right: 30px;
+}
+
+.user-image-icon {
+    width: 90px;
+    height: 90px;
+    margin-top: 10px;
+}
+
+.nav-menu-icon {
+    width: 20px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: 500;
+    color: #000000;
+}
+
+.email {
+    font-size: 12px;
+    font-weight: 500;
+    color: #898989;
 }
 </style>

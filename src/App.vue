@@ -400,4 +400,9 @@ tbody, td, tfoot, th, thead, tr {
     width: 20px;
     height: auto;
 }
+
+.wine-name-display {
+    font-size: 22px;
+    font-weight: 500;
+}
 </style>

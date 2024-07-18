@@ -23,11 +23,11 @@
                         <td style="text-decoration: underline; cursor: pointer;">{{ wine.ImportPurpose && wine.ImportPurpose.PurposeDate ? formatDate(wine.ImportPurpose.PurposeDate) : ''}}</td>
                         <td class="text-start" style="text-decoration: underline; cursor: pointer;" @click="onImportWineClick(wine.Id, wine.IsStatus)">{{ wine.ImportPurpose && wine.ImportPurpose.PurposeLabel ? wine.ImportPurpose.PurposeLabel : ''}}</td>
                         <td>{{ wine.ImportPurpose && wine.ImportPurpose.CheckpointLabel ? wine.ImportPurpose.CheckpointLabel : '' }}</td>
-                        <td>{{ calculateTotalQuantity(wine.Items) }}</td>
+                        <td>{{ calculateTotalQuantity(wine.Items) }}  ขวด</td>
                         <td>{{ formatNumber(calculateTotalPrice(wine.Items)) }} บาท</td>
                         <td>
-                            <span v-if="wine.IsStatus === 0" class="red-text" >สุรายังไม่ถูกนำเข้า</span>
-                            <span v-else class="blue-text">สุราถูกนำเข้าแล้ว</span>
+                            <span v-if="wine.IsStatus === 0" class="red-text" >ไวน์ยังไม่ถูกนำเข้า</span>
+                            <span v-else class="blue-text">ไวน์ถูกนำเข้าแล้ว</span>
                         </td>
                         <td>
                             <span v-if="wine.IsStatus !== 2" class="red-text">ยังไม่ชำระภาษี</span>
@@ -141,11 +141,11 @@ export default {
                     router.push('/wine-list')
                 }
                 else {
-                    router.push('/import-wine-list/import-wine-list-in-cart')
+                    router.push({ name: 'import-wine-list-in-cart', params: { cartId: importCartId } })
                 }
             }
             else {
-                router.push('/import-wine-list/import-wine-list-in-cart')
+                router.push({ name: 'import-wine-list-in-cart', params: { cartId: importCartId } })
             }
         }
 

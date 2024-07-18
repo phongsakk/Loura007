@@ -12,7 +12,7 @@ const app = createApp(App);
 
 app.use(router);
 app.use(GlobalComponents);
-// // app.use(convertPdfToPng)
-// // app.component('VueSlider',VueSlider)
+// app.use(convertPdfToPng)
+// app.component('VueSlider',VueSlider)
 
 app.mount("#app");

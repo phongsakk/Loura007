@@ -82,8 +82,8 @@ export default {
           addressDistrict: userData.value.District,
           province: userData.value.Province,
           postelCode: userData.value.PostCode,
-          phoneNumber: userData.value.Phone,
-          importPurpose: '',
+          phoneNumber: userData.value.Phone? userData.value.Phone : userData.value.Mobile,
+          importPurpose: cartItems.value.ImportPurpose.PurposeId,
         };
 
         // const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -117,6 +117,50 @@ export default {
           font: sarabunFont,
           color: rgb(0, 0, 0),
         });
+
+        if (cartData.userType === 19) {
+            page.drawText('/', {
+                x: 74,
+                y: height-165,
+                size: 16,
+                font: sarabunFont,
+                color: rgb(0, 0, 0),
+            });
+        } else if (cartData.userType === 20) {
+            page.drawText('/', {
+                x: 155,
+                y: height - 165,
+                size: fontSize,
+                font: sarabunFont,
+                color: rgb(0, 0, 0),
+            });
+        }
+
+        if (cartData.importPurpose === 22) {
+            page.drawText('/', {
+                x: 127,
+                y: height-376,
+                size: 16,
+                font: sarabunFont,
+                color: rgb(0, 0, 0),
+            });
+        } else if (cartData.importPurpose === 23) {
+            page.drawText('/', {
+                x: 127,
+                y: height - 397,
+                size: 16,
+                font: sarabunFont,
+                color: rgb(0, 0, 0),
+            });
+        } else if (cartData.importPurpose === 24){
+            page.drawText('/', {
+                x: 127,
+                y: height - 420,
+                size: 16,
+                font: sarabunFont,
+                color: rgb(0, 0, 0),
+            });
+        }
 
         page.drawText(`${addSpacesBetweenNumbers(cartData.importerId)}`, {
           x: 234,
@@ -233,7 +277,7 @@ export default {
             page.drawText(String(item.WineLiquor.DisplayName), {
               x: tableLeft + 85,
               y,
-              size: fontSize,
+              size: 10,
               font: sarabunFont,
               color: rgb(0, 0, 0)
             });
@@ -269,9 +313,9 @@ export default {
             });
           }
 
-          if (item.InitialValue) {
-            page.drawText(String(item.InitialValue), {
-              x: tableLeft + 355,
+          if (item.WineLiquorTotal) {
+            page.drawText(String(item.WineLiquorTotal), {
+              x: tableLeft + 368,
               y,
               size: fontSize,
               font: sarabunFont,
@@ -279,7 +323,7 @@ export default {
             });
           }
 
-          page.drawText("price", {
+          page.drawText(String(item.InitialValue), {
             x: tableLeft + 400,
             y,
             size: fontSize,
@@ -329,7 +373,7 @@ export default {
     }
 
     const addSpacesBetweenNumbers = (numberString) => {
-      return numberString.split('').join('  ');
+      return numberString?.split('').join('  ') ?? '';
     };
 
     const formatBottleSize = (text) => {

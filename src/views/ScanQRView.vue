@@ -16,16 +16,16 @@
                         </div>
                     </div>
                     <div class="download-button">
-                        <button class="btn-download" @click="onDownloadPdfClick">แบบสำหรับยื่นชำระภาษี ณ ด่านศุลกากรในวันนำเข้า</button>
+                        <button class="btn-download d-flex align-items-center justify-content-center" @click="onDownloadPdfClick" style="padding-left: 20px; padding-right: 20px;"><img src="../assets/img/download-icon.png" alt="" class="download-icon"><span>แบบสำหรับยื่นชำระภาษี ณ ด่านศุลกากรในวันนำเข้า</span></button>
                     </div>
                     <div class="download-button">
-                        <button class="btn-download" @click="downloadQrCode">ดาวน์โหลดคิวอาร์โค้ด</button>
+                        <button class="btn-download" @click="downloadQrCode"><img src="../assets/img/download-icon.png" alt="" class="download-icon">ดาวน์โหลดคิวอาร์โค้ด</button>
                     </div>
                     <p>สามารถยื่น QR แจ้งกับหน้าด้านศุลกากร ณ ช่อง มีของต้องสำแดง หรือ ช่องแดง</p>
                 </div>
                 <div class="button-session">
-                    <button class="btn-home">กลับหน้าแรก</button>
-                    <button class="btn-cancel-qr">ย้อนกลับ</button>
+                    <button class="btn-home" @click="onHomeClick">กลับหน้าแรก</button>
+                    <button class="btn-cancel-qr" @click="onCancelClick">ย้อนกลับ</button>
                 </div>
             </div>
         </div>
@@ -34,6 +34,7 @@
 
 <script>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 // import {QrcodeStream} from 'vue-qrcode-reader'
 import { getConfirmExciseTaxForm } from '@/api/getQRData.js'
@@ -46,11 +47,12 @@ export default {
     },
 
     setup () {
+        const router = useRouter()
         const cartId = localStorage.getItem('cartId')
         const token = localStorage.getItem('token')
         const qrCode = ref('')
         const cartItems = ref([])
-        const apiUrl = `https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-getFtCart/${cartId}`
+        const apiUrl = `https://tbit-exiseftvue.web.app/import-wine-list/import-wine-list-in-cart/${cartId}`
         const qrCodeImage = ref(null)
         const savedPdfUrl = ref('')
         const qrData = ref('')
@@ -118,6 +120,13 @@ export default {
             qrData.value = fetchQrData.data
         }
 
+        const onHomeClick =() => {
+            router.push('/')
+        }
+
+        const onCancelClick = () => {
+            router.push('/pdf-view')
+        }
 
         onMounted (() => {
             // cartId.value = localStorage.getItem('cartId')
@@ -145,6 +154,8 @@ export default {
             templateReference,
             onDownloadPdfClick,
             downloadQrCode,
+            onHomeClick,
+            onCancelClick,
             // captureQrCodeImage,
             qrCodeImage
             // onDecode
@@ -173,6 +184,9 @@ export default {
 }
 
 .btn-download {
+    font-family: "Prompt", sans-serif;
+    /* font-size: 20px; */
+    font-weight: 700;
     margin: 10px 0px;
     padding: 10px ;
     width: 100%;
@@ -187,6 +201,9 @@ export default {
 } */
 
 .btn-home {
+    font-family: "Prompt", sans-serif;
+    size: 20px;
+    font-weight: 700;
     margin: 5px 0px;
     width: 100%;
     height: 44px;
@@ -197,6 +214,9 @@ export default {
 }
 
 .btn-cancel-qr {
+    font-family: "Prompt", sans-serif;
+    size: 20px;
+    font-weight: 700;
     margin: 5px 0px;
     width: 100%;
     height: 44px;
@@ -211,5 +231,15 @@ export default {
     justify-content: center;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.download-icon {
+    width: 17px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.download-button {
+    padding: 0px 20px;
 }
 </style>

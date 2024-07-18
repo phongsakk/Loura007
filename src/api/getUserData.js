@@ -104,6 +104,10 @@ export async function getUserProfile (token) {
             }
         })
         if (!response.ok) {
+            if (response.status === 403) {
+                const data = await response.json();
+                return data
+            }
             throw new Error('Error: Unable to fetch data');
         }
         const data = await response.json();

@@ -18,8 +18,9 @@
                 <div class="row">
                     <div class="col-6">
                         <label class="form-label">เลขบัตรประจำตัวประชาชน</label>
-                        <input type="text" class="form-input input-grey" v-if="dbdId" v-model="dbdId">
-                        <input type="text" class="form-input input-grey" v-else v-model="individualId">
+                        <input type="text" class="form-input input-grey" v-if="dbdId" v-model="dbdId" disabled>
+                        <input type="text" class="form-input input-grey" v-else-if="individualId" v-model="individualId" disabled>
+                        <input type="text" class="form-input input-grey" v-else v-model="passportId" disabled>
                     </div>
                     <div class="col-6">
                         <div v-if="userType === 20">
@@ -121,7 +122,7 @@
                     <div class="col-3">
                         <label class="form-label">ตำบล/แขวง</label>
                         <select id="idSelect" name="id" class="select" v-model="subDistrict">
-                            <option v-for="option in subDistrictList" :key="option.Id" :value="option.SubDistCode"
+                            <option v-for="option in subDistrictList" :key="option.Id" :value="option.SubdistCode"
                                 class="option">
                                 {{ option.NameTh }}
                             </option>
@@ -198,6 +199,10 @@ export default {
         const onConfirmClick = async() => {
             spinner.value = true
             if(dbdId.value) {
+                const provinceLabel = provinceList.value.find((p) => p.PvCode == province.value);
+                const districtLabel = districtList.value.find((d) => d.DistCode == district.value);
+                const subdistrictLabel = subDistrictList.value.find((s) => s.SubdistCode == subDistrict.value);
+
                 const userData = {
                     Email: email.value,
                     FtUserTypeId: userType.value,
@@ -207,9 +212,9 @@ export default {
                     ExciseNo: regNumber.value,
                     Moo: alley.value,
                     Soi: street.value,
-                    Province: province.value,
-                    District: district.value,
-                    SubDistrict: subDistrict.value,
+                    Province: provinceLabel.NameTh,
+                    District: districtLabel.NameTh,
+                    SubDistrict: subdistrictLabel.NameTh,
                     PostCode: postelCode.value,
                     IsStatus: parseInt(status.value),
                     IsActive: true
@@ -224,6 +229,12 @@ export default {
                 spinner.value = false
             }
             else {
+                const provinceLabel = provinceList.value.find((p) => p.PvCode == province.value);
+                const districtLabel = districtList.value.find((d) => d.DistCode == district.value);
+                const subdistrictLabel = subDistrictList.value.find((s) => s.SubdistCode == subDistrict.value);
+                console.log("I am ordinary user", provinceLabel.NameTh, districtLabel.NameTh, subdistrictLabel.NameTh);
+                // return false;
+
                 const userData = {
                     Email: email.value,
                     FtUserTypeId: userType.value,
@@ -238,9 +249,9 @@ export default {
                     Moo: village.value,
                     Soi: alley.value,
                     Street: street.value,
-                    Province: province.value,
-                    District: district.value,
-                    SubDistrict: subDistrict.value,
+                    Province: provinceLabel.NameTh,
+                    District: districtLabel.NameTh,
+                    SubDistrict: subdistrictLabel.NameTh,
                     PostCode: postelCode.value,
                     IsStatus: parseInt(status.value),
                     IsActive: true
@@ -369,6 +380,7 @@ export default {
         return {
             dbdId,
             individualId,
+            passportId,
             userTypes,
             userType,
             importerType,

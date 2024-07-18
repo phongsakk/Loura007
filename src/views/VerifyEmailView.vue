@@ -46,7 +46,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { verifyEmail, resendEmail } from '@/api/getUserData'
+import { verifyEmail, resendEmail, getUserProfile } from '@/api/getUserData'
 
 export default {
     setup () {
@@ -61,6 +61,7 @@ export default {
         const codeErrorText = ref('')
         const emailSendSuccess = ref(false)
         const spinner = ref(false)
+        const userData = ref([])
 
         const restrictVerificationCode = (event) => {
             const number = event.target.value
@@ -81,6 +82,7 @@ export default {
                     exciseIdNumber.value = getVerifyEmail.data.id_no
                     password.value = getVerifyEmail.data.password
                     showVerifyEmailCard.value = false
+                    await fetchUserProfile()
                 }
             }
             else {
@@ -97,6 +99,7 @@ export default {
             const emailResend = await resendEmail(emailAddress, token.value)
             emailSendSuccess.value = true
             console.log("Resending email :", emailResend.data)
+            await fetchUserProfile()
             spinner.value = false
         }
 
@@ -112,9 +115,17 @@ export default {
             router.push('/import-liquor')
         }
 
-        onMounted (() => {
+        const fetchUserProfile = async () => {
+            const getUserData = await getUserProfile(token.value)
+            userData.value = getUserData.data
+            console.log("User data :", getUserData.data.code)
+        }
+
+        onMounted ( async() => {
             email.value = localStorage.getItem('email')
             token.value = localStorage.getItem('token')
+
+            await fetchUserProfile();
         })
 
         return {
@@ -140,7 +151,7 @@ export default {
 <style scoped>
 .verify-email-card {
     /* position: relative; */
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 50px;
     box-shadow: 0px 2px 6px #00000080;
     border-radius: 14px;
@@ -176,7 +187,7 @@ export default {
 }
 
 .verify-successful-card {
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 50px;
     box-shadow: 0px 2px 6px #00000080;
     border-radius: 14px;
