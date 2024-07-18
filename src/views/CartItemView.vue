@@ -3,7 +3,7 @@
         <div class="header-card">
             <h1 class="text-start">รายการไวน์ในตระกร้า</h1>
         </div>
-        <div v-if="cartItems.length > 0" style="margin-top: 10px;">
+        <div v-if="cartItems?.length > 0" style="margin-top: 10px;">
             <div v-for="wine in cartItems" :key="wine.Id" class="product-card">
                 <div class="row">
                     <div class="col-lg-2 d-flex justify-content-center align-items-center">
@@ -196,7 +196,7 @@ export default {
                 IsStatus : 0,
                 CreatedBy: 0,
                 UpdatedBy: 0,
-                datas : cartItems.value.map (wine => ({
+                datas : cartItems.value?.map (wine => ({
                     WineLiquorId: wine.WineLiquorId,
                     Year: wine.Year,
                     BottleSize: wine.BottleSize,
@@ -386,7 +386,7 @@ export default {
                 result = validateEmpty(value, '* กรุณากรอกข้อมูล');
                 result = result || validateType(value, '* กรอกข้อมูลไม่ถูกต้อง');
 
-                if (value.length !== 13) {
+                if (value?.length !== 13) {
                 result = '* กรุณากรอกข้อมูลให้ครบ 13 หลัก';
                 } else {
                 let resultCheck = false;
@@ -433,7 +433,7 @@ export default {
 
             fetchStatus();
 
-            cartItems.value = cartItems.value.map(item => {
+            cartItems.value = cartItems.value?.map(item => {
                 const calculatedValues = calculateValues(item);
 
                 return {

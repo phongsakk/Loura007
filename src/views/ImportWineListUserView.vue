@@ -90,11 +90,11 @@ export default {
         }
 
         const calculateTotalQuantity = (items) => {
-            return items.reduce((sum, item) => sum + item.WineLiquorTotal, 0);
+            return items?.reduce((sum, item) => sum + item.WineLiquorTotal, 0);
         };
 
         const calculateTotalPrice = (items) => {
-            return items.reduce((sum, item) => sum + item.InitialValue * item.WineLiquorTotal, 0);
+            return items?.reduce((sum, item) => sum + item.InitialValue * item.WineLiquorTotal, 0);
         };
 
         const currentPage = ref(1);

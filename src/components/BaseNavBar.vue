@@ -26,7 +26,7 @@
                             <li v-if="userTypeId === '21'">
                                 <a class="dropdown-item dropdown-list menu-dropdown-item" href="#" @click="onStampClosingClick">ตรวจสอบความถูกต้องของการปิดแสตมป์</a>
                             </li>
-                            <li>
+                            <li v-if="isLoggedIn && userTypeId !== '21'">
                                 <a class="dropdown-item dropdown-list menu-dropdown-item" href="#" @click="onImportLiquorListClick">รายการการนำเข้าสุรา</a>
                             </li>
                             <li>
@@ -35,13 +35,19 @@
                             <li>
                                 <a class="dropdown-item dropdown-list menu-dropdown-item" href="#">ข้อกําหนดในการใช้งาน</a>
                             </li>
-                            <li>
+                            <li v-if="isLoggedIn">
                                 <a class="dropdown-item dropdown-list menu-dropdown-item red-text" href="#" @click="onLogoutClick">ออกจากระบบ</a>
+                            </li>
+                            <li v-else>
+                                <a class="dropdown-item dropdown-list menu-dropdown-item" href="#" @click="onLoginClick">เข้าสู่ระบบ</a>
                             </li>
                         </ul>
                     </div>
                     <div class="nav-item menu-icon">
-                        <a class="text-reset dropdown-toggle hidden-arrow" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 15px;" >
+                        <a v-if="isLoggedIn" class="text-reset dropdown-toggle hidden-arrow" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 15px;">
+                            <img src="../assets/img/userprofile-logo.png" alt="" class="nav-image">
+                        </a>
+                        <a v-else class="text-reset dropdown-toggle hidden-arrow" href="#" id="userProfileDropdown" role="button" aria-expanded="false" style="margin-right: 15px;">
                             <img src="../assets/img/userprofile-logo.png" alt="" class="nav-image">
                         </a>
                         <ul v-if="isLoggedIn" class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
@@ -103,6 +109,11 @@ export default {
         }
 
         const onLogoutClick = () => {
+            localStorage.clear()
+            router.push('/login')
+        }
+       
+        const onLoginClick = () => {
             localStorage.clear()
             router.push('/login')
         }
@@ -168,7 +179,8 @@ export default {
             onCartClick,
             onStampClosingClick,
             onImportLiquorListClick,
-            onLogoutClick
+            onLogoutClick,
+            onLoginClick
         }
     }
 }
