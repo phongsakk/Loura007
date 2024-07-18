@@ -424,6 +424,7 @@ export default {
 
 
 <style scoped>
+Copy code
 .pdf-container {
   position: relative;
   background-color: #3D3E3E;
@@ -433,12 +434,18 @@ export default {
 }
 
 .button-session {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
   padding: 30px;
   background-color: #212121;
   border-radius: 13px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: calc(100% - 40px); /* Adjust width based on padding */
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
 .button-session .btn-back {

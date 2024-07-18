@@ -84,9 +84,9 @@
                         <div class="d-flex justify-content-between">
                             <label class="form-label">จำนวนขวด</label>
                             <div class="quantity-count">
-                                <button class="btn-count" @click="decreaseQuantity(wine.Id)">-</button>
+                                <button class="btn-count" @click="decreaseQuantity(wine.Id)" disabled >-</button>
                                 <input type="text" class="quantity-input text-center" v-model="wine.WineLiquorTotal" disabled>
-                                <button class="btn-count" @click="increaseQuantity(wine.Id)">+</button>
+                                <button class="btn-count" @click="increaseQuantity(wine.Id) " disabled>+</button>
                             </div>
                         </div>
                         <!-- <div>

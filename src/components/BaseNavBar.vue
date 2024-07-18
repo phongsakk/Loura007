@@ -23,6 +23,9 @@
                             <img src="../assets/img/menu-logo.png" alt="" class="nav-image">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
+                            <li v-if="userTypeId === '21'">
+                                <a class="dropdown-item dropdown-list menu-dropdown-item" href="#" @click="onStampClosingClick">ตรวจสอบความถูกต้องของการปิดแสตมป์</a>
+                            </li>
                             <li>
                                 <a class="dropdown-item dropdown-list menu-dropdown-item" href="#" @click="onImportLiquorListClick">รายการการนำเข้าสุรา</a>
                             </li>
@@ -41,7 +44,7 @@
                         <a class="text-reset dropdown-toggle hidden-arrow" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 15px;" >
                             <img src="../assets/img/userprofile-logo.png" alt="" class="nav-image">
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
+                        <ul v-if="isLoggedIn" class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
                             <li>
                                 <div class="dropdown-item dropdown-list menu-dropdown-item d-flex justify-content-center">
                                     <div class="user-image">
@@ -80,6 +83,7 @@ export default {
         const userName = ref('')
         const emailAddress = ref('')
         const phoneNumber = ref('')
+        const isLoggedIn = ref('')
 
         const onCartClick = () => {
             console.log("clicked");
@@ -90,8 +94,12 @@ export default {
             router.push('./')
         }
 
+        const onStampClosingClick = () => {
+            router.push('./check-the-correctness')
+        }
+
         const onImportLiquorListClick = () => {
-            router.push('/import-wine-list')
+            router.push('/your-import-wine-list')
         }
 
         const onLogoutClick = () => {
@@ -142,6 +150,7 @@ export default {
             cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
             totalLitersToShow.value = localStorage.getItem('totalLitersToShow')
             token.value = localStorage.getItem('token')
+            isLoggedIn.value = localStorage.getItem('isLoggedIn')
 
             await fetchUserProfile()
         })
@@ -154,8 +163,10 @@ export default {
             userName,
             emailAddress,
             phoneNumber,
+            isLoggedIn,
             onLogoClick,
             onCartClick,
+            onStampClosingClick,
             onImportLiquorListClick,
             onLogoutClick
         }

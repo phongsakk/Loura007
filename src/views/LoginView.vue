@@ -13,7 +13,7 @@
                 <p class="error-text" v-if="passwordErrorText">{{ passwordErrorText }}</p>
             </div>
             <div class="login-buttons">
-                <button class="btn-cancel">สร้างบัญชี</button>
+                <button class="btn-cancel" @click="onRegisterClick">สร้างบัญชี</button>
                 <button class="btn-login" @click="onLoginClick">ลงชื่อเข้าใช้</button>
             </div>
             <div class="forgot-password">
@@ -71,6 +71,10 @@ export default {
             }
         };
 
+        const onRegisterClick = async () => {
+            router.push('/register');
+        }
+
         const onForgotPasswordClick = async() => {
 
         }
@@ -82,6 +86,7 @@ export default {
             emailErrorText,
             passwordErrorText,
             onLoginClick,
+            onRegisterClick,
             onForgotPasswordClick,
         }
     }

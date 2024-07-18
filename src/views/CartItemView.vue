@@ -160,6 +160,7 @@ export default {
         const idNumber = ref('')
         const idLabel = ref('')
         const passportNumber = ref('')
+        const token = ref('')
          
         const taxByPrice = ref(5)
         const taxByValue = ref(1000)
@@ -212,7 +213,7 @@ export default {
                 }))
             }
             console.log("WineData :", wineData)
-            const addWineDataToCart = await addToCart(wineData)
+            const addWineDataToCart = await addToCart(wineData, token.value)
             console.log("Added to cart :", addWineDataToCart.data)
             // uploadWineFile(cartItems.value.Id);
             localStorage.setItem('cartId', addWineDataToCart.data.insertedId)
@@ -427,6 +428,7 @@ export default {
         onMounted (() => {
             isLoggedIn.value = localStorage.getItem('isLoggedIn')
             cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
+            token.value = localStorage.getItem('token')
             console.log("Cart items from localstorage :", cartItems.value)
 
             fetchStatus();

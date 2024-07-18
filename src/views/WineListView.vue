@@ -133,6 +133,16 @@ export default {
             totalTaxAll.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * cur.TotalTax), 0);
         }
 
+        const extractBottleSizeMl = (bottleSize) => {
+            const match = bottleSize.match(/(\d+(\.\d+)?)\s*ml/i);
+            return match ? parseFloat(match[1]) : 0;
+        }
+
+        const extractBottleSizeL = (bottleSize) => {
+            const match = bottleSize.match(/(\d+(\.\d+)?)\s*L/i);
+            return match ? parseFloat(match[1]) : 0;
+        }
+
         const formatDate = (data) => {
             const date = new Date(data);
             const day = String(date.getDate()).padStart(2, '0');

@@ -12,6 +12,8 @@ import EditWineListView from "@/views/EditWineListView.vue";
 import WineListInCart from "@/views/WineListInCartView.vue";
 import ImportWineListInCart from "@/views/ImportWineListInCartView.vue";
 import CheckWineByUpload from "@/views/CheckWineByUploadView.vue";
+import CheckTheCorrectness from "@/views/CheckTheCorrectnessView.vue"
+import ImportWineListUser from "@/views/ImportWineListUserView.vue"
 import PdfView from "@/views/PdfView.vue";
 import LoginView from "@/views/LoginView.vue";
 
@@ -63,6 +65,11 @@ const routes = [
         name: "wine-list-in-cart",
         component: WineListInCart,
       },
+      {
+        path: "your-import-wine-list",
+        name: "your-import-wine-list",
+        component: ImportWineListUser,
+      }
     ],
     meta: { requiresUser: true },
   },
@@ -92,6 +99,11 @@ const routes = [
         name: "check-wine-by-upload",
         component: CheckWineByUpload,
       },
+      {
+        path: "check-the-correctness",
+        name: "check-the-correctness",
+        component: CheckTheCorrectness,
+      }
     ],
     meta: { requiresAdmin: true },
   },
@@ -117,7 +129,7 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const userTypeId = localStorage.getItem("userTypeId");
 
-  if (to.path == "/") {
+  if (to.path == "/" || to.path == "/your-cart" || to.path == "/register") {
     if (isLoggedIn && userTypeId === "21") {
       next({ path: "/import-wine-list" })
     } else {
@@ -125,19 +137,19 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some((record) => record.meta.requiresAdmin)) {
     if (isLoggedIn && userTypeId === "21") {
-        next();
+      next();
     } else if (isLoggedIn && userTypeId !== "21") {
-        next({ path: "/" });
+      next({ path: "/" });
     } else {
-        next({ path: "/login" });
+      next({ path: "/login" });
     }
   } else if (to.matched.some((record) => record.meta.requiresUser)) {
-    if (isLoggedIn &&  userTypeId !== 21) {
-        next();
-    } else if (isLoggedIn &&  userTypeId === 21) {
-        next({ path: "/import-wine-list" });
+    if (isLoggedIn && userTypeId !== 21) {
+      next();
+    } else if (isLoggedIn && userTypeId === 21) {
+      next({ path: "/import-wine-list" });
     } else {
-        next({ path:"/login" });
+      next({ path: "/login" });
     }
   } else {
     next();

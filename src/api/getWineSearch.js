@@ -72,13 +72,17 @@ export async function getBottleSize(bottleSize) {
     }
 }
 
-export async function addToCart (wineData) {
+export async function addToCart (wineData, token) {
     try {
+        let headers = {
+            "Content-Type": "application/json",
+        }
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
         const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-addFtCart`, {
             method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: headers,
             body: JSON.stringify(wineData)
         })
         if (!response.ok) {
