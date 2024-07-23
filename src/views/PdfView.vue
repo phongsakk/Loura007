@@ -17,6 +17,7 @@ import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 
 import { getUserProfile } from '@/api/getUserData'
+import numberToCurrency from '@/js/numberToCurrency';
 
 export default {
   setup() {
@@ -329,7 +330,7 @@ export default {
             });
           }
 
-          page.drawText(String(item.InitialValue), {
+          page.drawText(numberToCurrency(item.InitialValue), {
             x: tableLeft + 400,
             y,
             size: fontSize,
