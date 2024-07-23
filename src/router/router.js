@@ -155,19 +155,19 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some((record) => record.meta.requiresAdmin)) {
     if (isLoggedIn && userTypeId === "21") {
-      next();
+        next();
     } else if (isLoggedIn && userTypeId !== "21") {
-      next({ path: "/" });
+        next({ path: "/" });
     } else {
-      next({ path: "/login" });
+        next({ path: "/login" });
     }
   } else if (to.matched.some((record) => record.meta.requiresUser)) {
-    if (isLoggedIn && userTypeId !== 21) {
-      next();
-    } else if (isLoggedIn && userTypeId === 21) {
-      next({ path: "/import-wine-list" });
+    if (isLoggedIn &&  userTypeId !== 21) {
+        next();
+    } else if (isLoggedIn &&  userTypeId === 21) {
+        next({ path: "/import-wine-list" });
     } else {
-      next({ path: "/login" });
+        next({ path:"/login" });
     }
   } else {
     next();

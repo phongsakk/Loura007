@@ -230,7 +230,7 @@
         <div v-if="notFoundAlert" class="d-flex justify-content-center">
             <div class="not-found-alert">
                 <div class="alert alert-primary" role="alert">
-                    <p style="margin-bottom: 0px;">ไม่พบข้อมูลสุราที่ต้องการค้นหา</p>
+                    <p style="margin-bottom: 0px;">ไม่พบข้อมูลไวน์ที่ต้องการค้นหา</p>
                     <!-- <button @click="onOkayClick()" type="button">Ok</button> -->
                 </div>
             </div>
@@ -241,14 +241,16 @@
                     <div class="modal-content">
                         <p class="form-label fw-bold text-start" style="margin-bottom: 10px;">ค้นหาด้วยรูปภาพ</p>
                         <div class="image-search-list">
-                            <div v-for="result in algoliaImageResults" :key="result.objectID">
-                                <div class="image-search-results" @click="onImageResultClick(result.name, result.alcohol)">
-                                    <div class="result-name d-flex align-items-center">
-                                        <img :src="result.image_label" alt="" class="bottle-image">
-                                        <p class="wine-name text-start" style="margin-bottom: 0px;">{{ result.name }}</p>
-                                    </div>
-                                    <div class="result-country">
-                                        <p class="country-text">{{ result.country }}</p>
+                            <div v-if="algoliaImageResults.length > 0">
+                                <div v-for="result in algoliaImageResults" :key="result.objectID">
+                                    <div class="image-search-results" @click="onImageResultClick(result.name, result.alcohol)">
+                                        <div class="result-name d-flex align-items-center">
+                                            <img :src="result.image_label" alt="" class="bottle-image">
+                                            <p class="wine-name text-start" style="margin-bottom: 0px;">{{ result.name }}</p>
+                                        </div>
+                                        <div class="result-country">
+                                            <p class="country-text">{{ result.country }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -366,7 +368,12 @@ export default {
                 const { hits } = await index.search(wineNameFromImage.value);
                 algoliaImageResults.value = hits;
                 console.log("Algolia search result:", algoliaImageResults.value);
-                imageSearchModal.value = true
+                if (algoliaImageResults.value.length === 0) {
+                    await showNotFoundAlert()
+                }
+                else {
+                    imageSearchModal.value = true
+                }
             }
         };
 
@@ -444,7 +451,7 @@ export default {
             console.log("Wine Search Data:", wineSearchData.data)
             if ( wineSearchData.code === 404) {
                 spinner.value = false
-                notFoundAlert.value = true
+                await showNotFoundAlert()
             }
             else {
                 if (Array.isArray(wineSearchData.data)) {
@@ -479,7 +486,7 @@ export default {
                 notFoundAlert.value = false;
             }, 5000);
         };
- 
+
         const decreaseQuantity = (wineId) => {
             console.log("Wine id to decrease:", wineId)
             const wine = wineSearch.value.find(w => w.Id === wineId);

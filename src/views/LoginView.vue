@@ -1,4 +1,4 @@
-<template>
+<template> 
     <div class="login-page">
         <div class="login-card">
             <img src="../assets/img/excise-logo.png" alt="" class="img-fluid">
@@ -34,7 +34,7 @@ import { useRouter } from 'vue-router'
 import { getLonginUser } from '@/api/getUserData'
 
 export default {
-    setup() {
+    setup () {
         const router = useRouter()
 
         const email = ref('')
@@ -75,7 +75,7 @@ export default {
             router.push('/to-register')
         }
 
-        const onForgotPasswordClick = async () => {
+        const onForgotPasswordClick = async() => {
 
         }
 

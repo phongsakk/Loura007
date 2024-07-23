@@ -400,13 +400,13 @@
         </div>
     </div>
     <div v-if="notFoundAlert" class="d-flex justify-content-center">
-        <div class="not-found-alert">
-            <div class="alert alert-primary" role="alert">
-                <p style="margin-bottom: 0px;">ไม่พบข้อมูลไวน์ที่ต้องการค้นหา</p>
-                <!-- <button @click="onOkayClick()" type="button">Ok</button> -->
+            <div class="not-found-alert">
+                <div class="alert alert-primary" role="alert">
+                    <p style="margin-bottom: 0px;">ไม่พบข้อมูลไวน์ที่ต้องการค้นหา</p>
+                    <!-- <button @click="onOkayClick()" type="button">Ok</button> -->
+                </div>
             </div>
         </div>
-    </div>
     <div v-if="spinner" class="overlay"></div>
 
     <div v-if="spinner" class="text-center-spinner">
@@ -540,7 +540,7 @@ export default {
         const onSearchClick = async () => {
             spinner.value = true
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
-            if (wineSearchData.code === 404) {
+            if ( wineSearchData.code === 404) {
                 spinner.value = false
                 await showNotFoundAlert()
             }
@@ -762,7 +762,7 @@ export default {
             return years;
         }
 
-        const showNotFoundAlert = async () => {
+        const showNotFoundAlert = async() => {
             notFoundAlert.value = true;
             setTimeout(() => {
                 notFoundAlert.value = false;

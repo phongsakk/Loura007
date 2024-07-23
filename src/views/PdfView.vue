@@ -17,7 +17,6 @@ import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 
 import { getUserProfile } from '@/api/getUserData'
-import numberToCurrency from '@/js/numberToCurrency';
 
 export default {
   setup() {
@@ -169,7 +168,7 @@ export default {
         let XAxis = 222;
         for (const bit of importerIdBits) {
           page.drawText(bit, {
-            x: XAxis += 13,
+            x: XAxis+=13,
             y: height - 208,
             size: 13,
             font: sarabunFont,
@@ -330,8 +329,8 @@ export default {
             });
           }
 
-          page.drawText(numberToCurrency(item.InitialValue), {
-            x: tableLeft + 400,
+          page.drawText(formatNumber(item.InitialValue), {
+            x: tableLeft + 395,
             y,
             size: fontSize,
             font: sarabunFont,
@@ -394,6 +393,11 @@ export default {
       userData.value = getUserData.data
     }
 
+    const formatNumber = (value) => {
+      const floatValue = parseFloat(value);
+      return floatValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
     onMounted(async () => {
       cartItems.value = JSON.parse(localStorage.getItem('cartItemsToScan'));
       token.value = localStorage.getItem('token')
@@ -417,6 +421,7 @@ export default {
       base64,
       onBackClick,
       onConfirmClick,
+      formatNumber
     };
   },
 };
@@ -445,8 +450,7 @@ export default {
   bottom: 20px;
   right: 20px;
   /* width: calc(100% - 40px); Adjust width based on padding */
-  box-sizing: border-box;
-  /* Ensure padding is included in width calculation */
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
 .button-session .btn-back {

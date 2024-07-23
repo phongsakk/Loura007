@@ -17,8 +17,7 @@
                     <div class="col-6">
                         <label class="form-label">เลขบัตรประจำตัวประชาชน</label>
                         <input type="text" class="form-input input-grey" v-if="dbdId" v-model="dbdId" disabled>
-                        <input type="text" class="form-input input-grey" v-else-if="individualId" v-model="individualId"
-                            disabled>
+                        <input type="text" class="form-input input-grey" v-else-if="individualId" v-model="individualId" disabled>
                         <input type="text" class="form-input input-grey" v-else v-model="passportId" disabled>
                     </div>
                     <div class="col-6">
@@ -29,7 +28,8 @@
                         <div v-if="userType === 19">
                             <label class="form-label">คำนำหน้าชื่อ <span class="required-text">*</span></label>
                             <select id="idSelect" name="id" class="select" v-model="title" required>
-                                <option v-for="option in titleList" :key="option.Id" :value="option.Id" class="option">
+                                <option v-for="option in titleList" :key="option.Id" :value="option.Id"
+                                    class="option">
                                     {{ option.FullTitleName }}
                                 </option>
                             </select>
@@ -59,18 +59,13 @@
                 <div class="row">
                     <div class="col-6">
                         <label class="form-label">อีเมล <span class="required-text">*</span></label>
-                        <input type="text" class="form-input" v-model="email" @input="() => emailErrorText = ''" required>
+                        <input type="text" class="form-input" v-model="email" @input="()=>emailErrorText=''" required>
                         <p v-if="emailErrorText" class="error-text">{{ emailErrorText }}</p>
                     </div>
                     <div class="col-6">
                         <label class="form-label">เบอร์โทรศัพท์ <span class="required-text">*</span></label>
-                        <input type="text" class="form-input" v-if="userType === 20" name="telephoneNumber"
-                            v-model="telephoneNumber.value" :ref="telephoneNumber.ref"
-                            onkeydown="return event.keyCode !== 69" maxlength="9" @input="restrictPhoneNumber($event)"
-                            required>
-                        <input type="text" class="form-input" v-else name="mobileNumber" v-model="mobileNumber.value"
-                            :ref="mobileNumber.ref" onkeydown="return event.keyCode !== 69" maxlength="10"
-                            @input="restrictMobileNumber($event)" required>
+                        <input type="text" class="form-input" v-if="userType === 20" name="telephoneNumber" v-model="telephoneNumber.value" :ref="telephoneNumber.ref" onkeydown="return event.keyCode !== 69" maxlength="9" @input="restrictPhoneNumber($event)" required>
+                        <input type="text" class="form-input" v-else name="mobileNumber" v-model="mobileNumber.value" :ref="mobileNumber.ref" onkeydown="return event.keyCode !== 69" maxlength="10" @input="restrictMobileNumber($event)" required>
                         <p class="error-text" v-if="telephoneNumber.error">{{ telephoneNumber.error.message }}</p>
                         <p class="error-text" v-if="mobileNumber.error">{{ mobileNumber.error.message }}</p>
                     </div>
@@ -115,7 +110,7 @@
                     </div>
                     <div class="col-3">
                         <label class="form-label">อำเภอ/เขต</label>
-                        <select id="idSelect" name="id" class="select" v-model="district">
+                        <select id="idSelect" name="id" class="select" v-model="district" >
                             <option v-for="option in districtList" :key="option.Id" :value="option.DistCode"
                                 class="option">
                                 {{ option.NameTh }}
@@ -133,8 +128,7 @@
                     </div>
                     <div class="col-3">
                         <label class="form-label">รหัสไปรษณีย์</label>
-                        <input type="text" class="form-input" v-model="postelCode"
-                            onkeydown="return event.keyCode !== 69" maxlength="5" @input="restrictPostCode($event)">
+                        <input type="text" class="form-input" v-model="postelCode" onkeydown="return event.keyCode !== 69" maxlength="5" @input="restrictPostCode($event)">
                     </div>
                 </div>
                 <div class="buttons" style="margin-bottom: 20px;">
@@ -158,9 +152,9 @@ import { useForm } from 'vue-hooks-form'
 import { getDbdData } from '@/api/getUserInfoById'
 import { getTitle, getEnumGroup, getProvince, getDistrict, getSubDistrict } from '@/api/getMaster'
 import { getRegisterData } from '@/api/getUserData'
-
+ 
 export default {
-    setup() {
+    setup () {
         const router = useRouter()
 
         const status = ref('')
@@ -200,9 +194,9 @@ export default {
         const telephoneNumber = useField('telephoneNumber', { rule: [{ min: 9, message: "กรุณากรอกเบอร์ติดต่อให้ถูกต้อง" }] })
         const mobileNumber = useField('mobileNumber', { rule: [{ min: 10, message: "กรุณากรอกเบอร์ติดต่อให้ถูกต้อง" }] })
 
-        const onConfirmClick = async () => {
+        const onConfirmClick = async() => {
             spinner.value = true
-            if (dbdId.value) {
+            if(dbdId.value) {
                 const provinceLabel = provinceList.value.find((p) => p.PvCode == province.value);
                 const districtLabel = districtList.value.find((d) => d.DistCode == district.value);
                 const subdistrictLabel = subDistrictList.value.find((s) => s.SubdistCode == subDistrict.value);
@@ -224,10 +218,10 @@ export default {
                     IsActive: true
                 }
                 console.log("Dbd user data to register :", userData)
-                localStorage.setItem('email', email.value)
-                const getRegister = await getRegisterData(userData)
+                localStorage.setItem('email',email.value)
+                const getRegister = await getRegisterData (userData)
                 console.log("Registeration success :", getRegister.data)
-                localStorage.setItem('email', email.value)
+                localStorage.setItem('email',email.value)
                 localStorage.setItem('token', getRegister.data.accessToken)
                 router.push('/verify-register')
                 spinner.value = false
@@ -261,9 +255,9 @@ export default {
                     IsActive: true
                 }
                 console.log("Individual user data to register :", userData)
-                const getRegister = await getRegisterData(userData)
+                const getRegister = await getRegisterData (userData)
                 console.log("Registeration success :", getRegister.data)
-                if (getRegister.data.info === "'/Email' Invalid email address") {
+                if(getRegister.data.info === "'/Email' Invalid email address") {
                     emailErrorText.value = "กรุณาตรวจสอบรูปแบบอีเมล"
                     spinner.value = false
                 }
@@ -272,23 +266,23 @@ export default {
                     spinner.value = false
                 }
                 else {
-                    localStorage.setItem('email', email.value)
+                    localStorage.setItem('email',email.value)
                     localStorage.setItem('token', getRegister.data.accessToken)
                     router.push('/verify-register')
                     spinner.value = false
                 }
             }
-
+            
         }
 
         const onBackClick = () => {
             router.push('/to-register')
         }
 
-        const fetchDbdData = async () => {
+        const fetchDbdData = async() => {
             if (dbdId.value) {
                 const dbdData = await getDbdData(dbdId.value)
-                console.log('DBD data :', dbdData.data)
+                console.log('DBD data :',dbdData.data)
                 companyName.value = dbdData.data.juristicNameTH
                 // importerType.value = dbdData.data.
                 // title.value = dbdData.data.
@@ -309,7 +303,7 @@ export default {
 
         const fetchUserType = async () => {
             const enumGroup = 'FtUserType'
-            const getUserType = await getEnumGroup(enumGroup)
+            const getUserType = await getEnumGroup (enumGroup)
             userTypes.value = getUserType.data
         }
 
@@ -318,21 +312,21 @@ export default {
             titleList.value = titleData.data
         }
 
-        const fetchProvince = async () => {
+        const fetchProvince = async() => {
             const provinceData = await getProvince()
             provinceList.value = provinceData.data
         }
 
-        watch(province, async (selectedProvince) => {
+        watch (province, async(selectedProvince) => {
             if (selectedProvince) {
-                const getDistrictData = await getDistrict(selectedProvince)
+                const getDistrictData = await getDistrict (selectedProvince)
                 districtList.value = getDistrictData.data
             }
         })
 
-        watch([province, district], async ([selectedProvince, selectedDistrict]) => {
+        watch ([province,district], async([selectedProvince,selectedDistrict]) => {
             if (selectedProvince && selectedDistrict) {
-                const getSubDistrictData = await getSubDistrict(selectedProvince, selectedDistrict)
+                const getSubDistrictData = await getSubDistrict (selectedProvince, selectedDistrict)
                 subDistrictList.value = getSubDistrictData.data
             }
         })
@@ -352,7 +346,7 @@ export default {
             postelCode.value = number.replace(/\D/g, '');
         }
 
-        onMounted(() => {
+        onMounted (() => {
             dbdId.value = localStorage.getItem('dbdId')
             individualId.value = localStorage.getItem('individualId')
             passportId.value = localStorage.getItem('passportId')
@@ -362,7 +356,7 @@ export default {
             fetchDbdData();
             fetchTitle();
             fetchProvince();
-
+            
             if (dbdId.value) {
                 importerType.value = 'นิติบุคคล'
                 userType.value = 20
