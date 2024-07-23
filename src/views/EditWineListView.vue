@@ -26,79 +26,83 @@
         <div v-for="wine in itemsArray" :key="wine.Id">
             <div v-if="wine.isCorrect === false">
                 <!-- <div v-if="newAddedWine"> -->
-                    <div v-if="isNewWine === true" class="product-card">
-                        <div class="row">
-                            <div class="col-lg-2 d-flex align-items-center justify-content-center">
-                                <div class="wine-image-card">
-                                    <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${addArray.Path}`"
-                                        alt="" class="card-image">
+                <div v-if="isNewWine === true" class="product-card">
+                    <div class="row">
+                        <div class="col-lg-2 d-flex align-items-center justify-content-center">
+                            <div class="wine-image-card">
+                                <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${addArray.Path}`"
+                                    alt="" class="card-image">
+                            </div>
+                        </div>
+                        <div class="col-lg-7 horizontal-divider">
+                            <div class="d-flex justify-content-between" style="padding-top: 10px;">
+                                <div class="category">
+                                    <p class="category-name" style="margin-bottom: 0px;"><span
+                                            class="category-icon"><img src="../assets/img/wine-img1.png"
+                                                class="category-image"></span>{{ addArray.CategoryName }}</p>
+                                </div>
+                                <div class="year">
+                                    <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต<span
+                                            class="manu-year">{{ addArray.WineLiquorYear }}</span></p>
                                 </div>
                             </div>
-                            <div class="col-lg-7 horizontal-divider">
-                                <div class="d-flex justify-content-between" style="padding-top: 10px;">
-                                    <div class="category">
-                                        <p class="category-name" style="margin-bottom: 0px;"><span
-                                                class="category-icon"><img src="../assets/img/wine-img1.png"
-                                                    class="category-image"></span>{{ addArray.CategoryName }}</p>
-                                    </div>
-                                    <div class="year">
-                                        <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต<span
-                                                class="manu-year">{{ addArray.WineLiquorYear }}</span></p>
-                                    </div>
-                                </div>
-                                <div class="row text-start">
-                                    <!-- <div v-if="wine.isCorrect === false" class="wine-name-incorrect" @click="onWineNameChangeClick(wine.Id)">{{ wine.WineLiquor.DisplayName }}</div> -->
-                                    <p class="wine-name-display">{{ addArray.WineName }}</p>
+                            <div class="row text-start">
+                                <!-- <div v-if="wine.isCorrect === false" class="wine-name-incorrect" @click="onWineNameChangeClick(wine.Id)">{{ wine.WineLiquor.DisplayName }}</div> -->
+                                <p class="wine-name-display">{{ addArray.WineName }}</p>
 
+                            </div>
+                            <div class="row text-start">
+                                <div class="col-3">
+                                    <label class="form-label">ประเทศที่ผลิต</label>
+                                    <p style="margin-bottom: 0px;">{{ addArray.Country }}</p>
                                 </div>
-                                <div class="row text-start">
-                                    <div class="col-3">
-                                        <label class="form-label">ประเทศที่ผลิต</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.Country }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                        <p style="margin-bottom: 0px;">alc. {{ addArray.AVB }} % vol.</p>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.BottleSize }}</p>
-                                    </div>
+                                <div class="col-3">
+                                    <label class="form-label">ปริมาณแอลกอฮอล์</label>
+                                    <p style="margin-bottom: 0px;">alc. {{ addArray.AVB }} % vol.</p>
                                 </div>
-                                <div class="row text-start">
-                                    <div class="col-3">
-                                        <label class="form-label">ภาษีสรรพสามิต</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.ExciseTax }} บาท</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <label class="form-label">ภาษีท้องถิ่น</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.LocalTax }} บาท</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <label class="form-label">เงินบำรุงกองทุน</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.Fund }} บาท</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <label class="form-label">ภาษีศุลกากร</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.CustomsDuty }} บาท</p>
-                                    </div>
+                                <div class="col-6">
+                                    <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
+                                    <p style="margin-bottom: 0px;">{{ addArray.BottleSize }}</p>
                                 </div>
                             </div>
-                            <div class="col-lg-3 price-col text-end">
-                                <label class="form-label bold">มูลค่าเบื้องต้น</label>
-                                <p class="price-text" style="margin-bottom: 0px;">{{ addArray.RecommendMinPrice }} บาท
-                                </p>
-                                <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
-                                <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
-                                <p class="price-text" style="margin-bottom: 0px;">{{ addArray.externalTotal }} บาท</p>
-                                <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ addArray.quantity }} ขวด</p>
-                                <div>
-                                    <button class="btn-checked-correct">ตรวจสอบสุราเรียบร้อยแล้ว</button>
+                            <div class="row text-start">
+                                <div class="col-3">
+                                    <label class="form-label">ภาษีสรรพสามิต</label>
+                                    <p style="margin-bottom: 0px;">{{ addArray.exciseTaxByTotal }} บาท</p>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">ภาษีท้องถิ่น</label>
+                                    <p style="margin-bottom: 0px;">{{ addArray.externalLocal }} บาท</p>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">เงินบำรุงกองทุน</label>
+                                    <p style="margin-bottom: 0px;">{{ addArray.externalFund }} บาท</p>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">ภาษีศุลกากร</label>
+                                    <p style="margin-bottom: 0px;">{{ (addArray.exciseTaxByDuty || 0).toLocaleString('en-US', {
+                                        minimumFractionDigits: 2, maximumFractionDigits: 2
+                                    }) }} บาท</p>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-3 price-col text-end">
+                            <label class="form-label bold">มูลค่าเบื้องต้น</label>
+                            <p class="price-text" style="margin-bottom: 0px;">{{ addArray.RecommendMinPrice.toLocaleString('en-US', {
+                                minimumFractionDigits: 2, maximumFractionDigits: 2
+                            }) }} บาท
+                            </p>
+                            <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
+                            <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
+                            <p class="price-text" style="margin-bottom: 0px;">{{ addArray.externalTotal }} บาท</p>
+                            <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ addArray.quantity }} ขวด</p>
+                            <div>
+                                <button class="btn-checked-correct">ตรวจสอบสุราเรียบร้อยแล้ว</button>
+                            </div>
+                        </div>
                     </div>
-                    
+                </div>
+
                 <!-- </div> -->
                 <div v-else>
                     <div class="product-card">
@@ -326,13 +330,13 @@
         </div>
     </div>
     <div v-if="notFoundAlert" class="d-flex justify-content-center">
-            <div class="not-found-alert">
-                <div class="alert alert-primary" role="alert">
-                    <p style="margin-bottom: 0px;">ไม่พบข้อมูลไวน์ที่ต้องการค้นหา</p>
-                    <!-- <button @click="onOkayClick()" type="button">Ok</button> -->
-                </div>
+        <div class="not-found-alert">
+            <div class="alert alert-primary" role="alert">
+                <p style="margin-bottom: 0px;">ไม่พบข้อมูลไวน์ที่ต้องการค้นหา</p>
+                <!-- <button @click="onOkayClick()" type="button">Ok</button> -->
             </div>
         </div>
+    </div>
     <div v-if="spinner" class="overlay"></div>
 
     <div v-if="spinner" class="text-center-spinner">
@@ -388,10 +392,10 @@ export default {
         const isConfirmed = ref(false)
         const notFoundAlert = ref(false)
 
-        const taxByPrice = ref(5)
-        const taxByValue = ref(1000)
+        // const taxByPrice = ref(5)
+        // const taxByValue = ref(1000)
         // const taxByDuty = ref(0)
-        const taxByFund = ref(1.175)
+        // const taxByFund = ref(1.175)
         // const exciseTaxByDuty = ref(0)
         // const exciseTaxByValue = ref(0)
         // const calTaxByDuty = ref(0)
@@ -466,7 +470,7 @@ export default {
         const onSearchClick = async () => {
             spinner.value = true
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
-            if ( wineSearchData.code === 404) {
+            if (wineSearchData.code === 404) {
                 spinner.value = false
                 await showNotFoundAlert()
             }
@@ -529,7 +533,33 @@ export default {
             });
             console.log("Add array:", addArray.value)
             isNewWine.value = true
+
+            console.log(item);
+
+            calculateSummary([item]);
         }
+
+        const calculateSummary = (Items) => {
+            console.log("Calculate summary:", Items);
+            totalLiter.value = Items?.reduce((acc, cur) => {
+                const q = cur.WineLiquorTotal || cur.quantity;
+                return acc + (q * (cur.BottleSize === 'Bottle (750ml)' || cur.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(cur.BottleSize) / 1000 : extractBottleSizeL(cur.BottleSize)));
+            }, 0)
+            totalQty.value = Items?.reduce((acc, cur) => {
+                const q = cur.WineLiquorTotal || cur.quantity;
+                return acc + q;
+            }, 0);
+            totalInitialValue.value = Items?.reduce((acc, cur) => {
+                const q = cur.WineLiquorTotal || cur.quantity;
+                const value = cur.InitialValue || cur.RecommendMinPrice;
+                return acc + (q * value)
+            }, 0);
+            totalTaxAll.value = Items?.reduce((acc, cur) => {
+                const q = cur.WineLiquorTotal || cur.quantity;
+                const t = cur.TotalTax || parseFloat(cur.externalTotal.replace(/,/g, ""));
+                return acc + (q * t)
+            }, 0);
+        };
 
         const extractBottleSizeMl = (bottleSize) => {
             const match = bottleSize.match(/(\d+(\.\d+)?)\s*ml/i);
@@ -565,17 +595,19 @@ export default {
         // }
 
         const calculateValues = (item) => {
-            if (!item.BottleSize) {
-                throw new Error("BottleSize is not defined");
-            }
+            const TAX_BY_VALUE = 1000;
+            const TAX_BY_PRICE = 5;
+            const TAX_BY_FUND = 1.175;
+
             const bottleSizeToCalculate = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
-            const itemExciseTaxByDuty = item.RecommendMinPrice * taxByPrice.value * 0.01;
-            const itemExciseTaxByValue = (item.AVB / 100) * bottleSizeToCalculate * taxByValue.value;
-            const itemCalTaxByDuty = (item.RecommendMinPrice + itemExciseTaxByDuty) * (taxByPrice.value / 100);
-            const itemCalTaxByValue = itemExciseTaxByValue * taxByFund.value * (taxByPrice.value / 100);
-            const itemCalTaxByFund = 1 - taxByFund.value * (taxByPrice.value / 100);
+            const itemExciseTaxByDuty = item.RecommendMinPrice * 0 * 0.01;
+            const itemExciseTaxByValue = (item.AVB / 100) * bottleSizeToCalculate * TAX_BY_VALUE;
+            const itemCalTaxByDuty = (item.RecommendMinPrice + itemExciseTaxByDuty) * (TAX_BY_PRICE / 100);
+            const itemCalTaxByValue = itemExciseTaxByValue * TAX_BY_FUND * (TAX_BY_PRICE / 100);
+            const itemCalTaxByFund = 1 - TAX_BY_FUND * (TAX_BY_PRICE / 100);
+            // console.log({ itemExciseTaxByValue, itemCalTaxByDuty, itemCalTaxByValue, itemCalTaxByFund })
             const itemExciseTaxByPrice = (itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund;
-            const itemExciseTaxByTotal = itemExciseTaxByDuty + itemExciseTaxByPrice;
+            const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty) * item.quantity;
             const itemExternalLocal = 0.1 * itemExciseTaxByTotal;
             const itemExternalFund = 0.075 * itemExciseTaxByTotal;
             const itemExternalTotal = itemExciseTaxByTotal + itemExternalLocal + itemExternalFund;
@@ -657,12 +689,8 @@ export default {
                     ...item,
                     isCorrect: isCorrect.value
                 }
-            })
-            totalLiter.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * (cur.BottleSize === 'Bottle (750ml)' || cur.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(cur.BottleSize) / 1000 : extractBottleSizeL(cur.BottleSize))), 0)
-            totalQty.value = cartItems.value.Items?.reduce((acc, cur) => acc + cur.WineLiquorTotal, 0);
-            totalInitialValue.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * cur.InitialValue), 0);
-            totalTaxAll.value = cartItems.value.Items?.reduce((acc, cur) => acc + (cur.WineLiquorTotal * cur.TotalTax), 0);
-            console.log("Cart Items after map", itemsArray.value)
+            });
+            calculateSummary(cartItems.value.Items);
             spinner.value = false
         }
 
@@ -688,7 +716,7 @@ export default {
             return years;
         }
 
-        const showNotFoundAlert = async() => {
+        const showNotFoundAlert = async () => {
             notFoundAlert.value = true;
             setTimeout(() => {
                 notFoundAlert.value = false;
