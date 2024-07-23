@@ -399,6 +399,14 @@
             </div>
         </div>
     </div>
+    <div v-if="notFoundAlert" class="d-flex justify-content-center">
+        <div class="not-found-alert">
+            <div class="alert alert-primary" role="alert">
+                <p style="margin-bottom: 0px;">ไม่พบข้อมูลไวน์ที่ต้องการค้นหา</p>
+                <!-- <button @click="onOkayClick()" type="button">Ok</button> -->
+            </div>
+        </div>
+    </div>
     <div v-if="spinner" class="overlay"></div>
 
     <div v-if="spinner" class="text-center-spinner">
@@ -452,6 +460,7 @@ export default {
         const years = ref([])
         const spinner = ref(false)
         const isConfirmed = ref(false)
+        const notFoundAlert = ref(false)
 
         const taxByPrice = ref(5)
         const taxByValue = ref(1000)
@@ -531,13 +540,19 @@ export default {
         const onSearchClick = async () => {
             spinner.value = true
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
-            wineSearch.value = wineSearchData.data.map(wine => {
-                const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(wine.BottleSize) / 1000 : extractBottleSizeL(wine.BottleSize);
-                // const wineLiter = bottleSizeMl / 1000;
-                return { ...wine, quantity: 1, wineLiter };
-            });
-            console.log("Updated wine search array:", wineSearch.value)
-            spinner.value = false
+            if (wineSearchData.code === 404) {
+                spinner.value = false
+                await showNotFoundAlert()
+            }
+            else {
+                wineSearch.value = wineSearchData.data.map(wine => {
+                    const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(wine.BottleSize) / 1000 : extractBottleSizeL(wine.BottleSize);
+                    // const wineLiter = bottleSizeMl / 1000;
+                    return { ...wine, quantity: 1, wineLiter };
+                });
+                console.log("Updated wine search array:", wineSearch.value)
+                spinner.value = false
+            }
         }
 
         const decreaseQuantity = (wineId) => {
@@ -747,6 +762,13 @@ export default {
             return years;
         }
 
+        const showNotFoundAlert = async () => {
+            notFoundAlert.value = true;
+            setTimeout(() => {
+                notFoundAlert.value = false;
+            }, 5000);
+        };
+
         onMounted(() => {
             importCartId.value = localStorage.getItem('importCartId')
             token.value = localStorage.getItem('token')
@@ -800,6 +822,8 @@ export default {
             onSaveClick,
             onConfirmSaveClick,
             formatNumber,
+            showNotFoundAlert,
+            notFoundAlert,
 
             totalLiter,
             totalQty,
@@ -1083,5 +1107,22 @@ export default {
     border-radius: 5px;
     border: none;
     margin-left: 3px;
+}
+
+.not-found-alert {
+    position: fixed;
+    top: 15%;
+    padding: 10px 30%;
+    z-index: 1;
+    text-align: center;
+}
+
+.alert>button {
+    vertical-align: middle;
+    background-color: #2B476D;
+    color: #FFFFFF;
+    padding: 7px 20px;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
 }
 </style>
