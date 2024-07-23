@@ -65,7 +65,7 @@ export default {
           }
         }
         // const sarabunFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-        const fontSize = 12;
+        const fontSize = 10;
 
         const cartData = {
           importDate: formatDate(cartItems.value.ImportPurpose.PurposeDate),
@@ -112,7 +112,7 @@ export default {
 
         page.drawText(`${cartData.importerName}`, {
           x: 120,
-          y: height - 140,
+          y: height - 142,
           size: fontSize,
           font: sarabunFont,
           color: rgb(0, 0, 0),
@@ -168,7 +168,7 @@ export default {
         let XAxis = 222;
         for (const bit of importerIdBits) {
           page.drawText(bit, {
-            x: XAxis+=13,
+            x: XAxis += 13,
             y: height - 208,
             size: 13,
             font: sarabunFont,
@@ -424,7 +424,6 @@ export default {
 
 
 <style scoped>
-Copy code
 .pdf-container {
   position: relative;
   background-color: #3D3E3E;
@@ -444,8 +443,9 @@ Copy code
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: calc(100% - 40px); /* Adjust width based on padding */
-  box-sizing: border-box; /* Ensure padding is included in width calculation */
+  /* width: calc(100% - 40px); Adjust width based on padding */
+  box-sizing: border-box;
+  /* Ensure padding is included in width calculation */
 }
 
 .button-session .btn-back {

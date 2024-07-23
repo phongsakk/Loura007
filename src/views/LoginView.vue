@@ -1,4 +1,4 @@
-<template> 
+<template>
     <div class="login-page">
         <div class="login-card">
             <img src="../assets/img/excise-logo.png" alt="" class="img-fluid">
@@ -13,7 +13,7 @@
                 <p class="error-text" v-if="passwordErrorText">{{ passwordErrorText }}</p>
             </div>
             <div class="login-buttons">
-                <button class="btn-cancel">สร้างบัญชี</button>
+                <button class="btn-cancel" @click="onRegisterClick">สร้างบัญชี</button>
                 <button class="btn-login" @click="onLoginClick">ลงชื่อเข้าใช้</button>
             </div>
             <div class="forgot-password">
@@ -34,7 +34,7 @@ import { useRouter } from 'vue-router'
 import { getLonginUser } from '@/api/getUserData'
 
 export default {
-    setup () {
+    setup() {
         const router = useRouter()
 
         const email = ref('')
@@ -71,7 +71,11 @@ export default {
             }
         };
 
-        const onForgotPasswordClick = async() => {
+        const onRegisterClick = () => {
+            router.push('/to-register')
+        }
+
+        const onForgotPasswordClick = async () => {
 
         }
 
@@ -82,6 +86,7 @@ export default {
             emailErrorText,
             passwordErrorText,
             onLoginClick,
+            onRegisterClick,
             onForgotPasswordClick,
         }
     }

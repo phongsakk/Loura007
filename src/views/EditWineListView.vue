@@ -388,10 +388,10 @@
             <div style="padding: 0px 70px;">
                 <p v-if="isConfirmed === true" class="tax-confirm text-center">ยืนยันการรับชำระเงินภาษี</p>
                 <div class="d-flex justify-content-center">
-                    <button class="btn-previous" @click="onPreviousClick">ตรวจสอบด้วยตนเอง</button>
+                    <button class="btn-previous" @click="onPreviousClick">ย้อนกลับ</button>
                     <!-- <div> -->
-                    <button class="btn-save" v-if="isConfirmed === false" @click="onConfirmSaveClick">สแกนฉลาก</button>
-                    <button class="btn-save" v-else @click="onSaveClick">สแกนฉลาก</button>
+                    <button class="btn-save" v-if="isConfirmed === false" @click="onConfirmSaveClick">ยืนยัน</button>
+                    <button class="btn-save" v-else @click="onSaveClick">ยืนยัน</button>
                     <!-- </div> -->
                 </div>
                 <!-- <button class="btn-previous" @click="onPreviousClick">ย้อนกลับ</button> -->

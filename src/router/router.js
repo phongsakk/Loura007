@@ -16,6 +16,9 @@ import CheckTheCorrectness from "@/views/CheckTheCorrectnessView.vue"
 import ImportWineListUser from "@/views/ImportWineListUserView.vue"
 import PdfView from "@/views/PdfView.vue";
 import LoginView from "@/views/LoginView.vue";
+import ToRegisterView from "@/views/ToRegisterView.vue"
+import CreateAccountView from "@/views/CreateAccountView.vue";
+import RegistrationVerifyViewVue from "@/views/RegistrationVerifyView.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -113,6 +116,21 @@ const routes = [
     component: LoginView,
   },
   {
+    path: "/to-register",
+    name: "/to-register",
+    component: ToRegisterView,
+  },
+  {
+    path: "/create-account",
+    name: "create-account",
+    component: CreateAccountView,
+  },
+  {
+    path: "/verify-register",
+    name: "verify-register",
+    component: RegistrationVerifyViewVue
+  },
+  {
     path: "/pdf-view",
     name: "pdf-view",
     component: PdfView,
@@ -129,7 +147,7 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const userTypeId = localStorage.getItem("userTypeId");
 
-  if (to.path == "/" || to.path == "/your-cart" || to.path == "/register") {
+  if (to.path == "/" || to.path == "/your-cart") {
     if (isLoggedIn && userTypeId === "21") {
       next({ path: "/import-wine-list" })
     } else {
