@@ -25,7 +25,7 @@
 
         <div v-for="wine in itemsArray" :key="wine.Id">
             <div v-if="wine.isCorrect === false">
-                <div v-if="newAddedWine">
+                <!-- <div v-if="newAddedWine"> -->
                     <div v-if="isNewWine === true" class="product-card">
                         <div class="row">
                             <div class="col-lg-2 d-flex align-items-center justify-content-center">
@@ -42,7 +42,7 @@
                                                     class="category-image"></span>{{ addArray.CategoryName }}</p>
                                     </div>
                                     <div class="year">
-                                        <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
+                                        <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต<span
                                                 class="manu-year">{{ addArray.WineLiquorYear }}</span></p>
                                     </div>
                                 </div>
@@ -98,82 +98,8 @@
                             </div>
                         </div>
                     </div>
-                    <div v-else>
-                        <div class="product-card" style="padding: 20px 0px;">
-                            <div class="row">
-                                <div class="col-lg-2 d-flex justify-content-center align-items-center">
-                                    <div class="search-image-card">
-                                        <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${newAddedWine.Path}`"
-                                            alt="" class="search-image">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 horizontal-divider">
-                                    <div class="d-flex justify-content-between" style="padding-top: 0px;">
-                                        <div class="category">
-                                            <p class="category-name" style="margin-bottom: 10px;"><span
-                                                    class="category-icon"><img src="../assets/img/wine-img1.png"
-                                                        class="category-image"></span>{{ newAddedWine.CategoryName }}
-                                            </p>
-                                        </div>
-                                        <div class="year">
-                                            <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
-                                                    class="wine-detail-text">{{ newAddedWine.Year }}</span></p>
-                                        </div>
-                                    </div>
-                                    <div class="wine-name text-start">{{ newAddedWine.WineName }}</div>
-                                    <div class="row text-start">
-                                        <div class="col-4">
-                                            <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                            <p class="wine-detail-text">{{ newAddedWine.AVB }} %</p>
-                                        </div>
-                                        <div class="col-8">
-                                            <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
-                                            <p class="wine-detail-text">{{ newAddedWine.BottleSize }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 horizontal-divider text-start">
-                                    <p>ประเทศที่ผลิต</p>
-                                    <p class="wine-detail-text">{{ newAddedWine.Country }}</p>
-                                    <p>มาตรฐาน</p>
-                                    <p class="wine-detail-text">{{ newAddedWine.ClassDescription }}</p>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="price-col">
-                                        <div class="d-flex justify-content-between">
-                                            <label class="form-label">มูลค่าเบื้องต้น</label>
-                                            <p class="wine-price">{{ newAddedWine.RecommendMinPrice }} บาท</p>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <label class="form-label">ปริมาตรสุราทั้งหมด(ลิตร)</label>
-                                            <p class="wine-price">{{ newAddedWine.wineLiter }}ลิตร</p>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <label class="form-label">จำนวนขวด</label>
-                                            <div class="quantity-count">
-                                                <button class="btn-count"
-                                                    @click="decreaseQuantity(newAddedWine.Id)">-</button>
-                                                <input type="text" class="quantity-input text-center"
-                                                    v-model="newAddedWine.quantity" disabled>
-                                                <button class="btn-count"
-                                                    @click="increaseQuantity(newAddedWine.Id)">+</button>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-end" style="margin-top: 10px;">
-                                            <!-- <button class="btn-detail">รายละเอียดเพิ่มเติม</button> -->
-                                            <button class="btn-add-to-cart"
-                                                @click="onAddToCartClick(newAddedWine.Id)">เพิ่มเข้าตะกร้า</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="confirm-buttons">
-                                <button class="btn-cancel" @click="onCancelClick">ย้อนกลับ</button>
-                                <button class="btn-confirm" @click="onAddConfirmClick(newAddedWine.Id)">ยืนยัน</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    
+                <!-- </div> -->
                 <div v-else>
                     <div class="product-card">
                         <div class="row text-start" style="padding: 10px 20px 20px 20px;">
@@ -577,12 +503,12 @@ export default {
             // cartChannel.postMessage ("It's new item adding to cart")
         }
 
-        const onAddToCartClick = async (wineId) => {
-            newAddedWine.value = wineSearch.value.find(w => w.Id === wineId);
-            console.log("New object:", newAddedWine.value)
-        }
+        // const onAddToCartClick = async (wineId) => {
+        //     newAddedWine.value = wineSearch.value.find(w => w.Id === wineId);
+        //     console.log("New object:", newAddedWine.value)
+        // }
 
-        const onAddConfirmClick = async (WineLiquorId) => {
+        const onAddToCartClick = async (WineLiquorId) => {
             const wine = wineSearch.value.find(w => w.Id === WineLiquorId);
             addArray.value = wine
             const item = addArray.value;
@@ -818,7 +744,7 @@ export default {
             onAddToCartClick,
             onCorrectClick,
             onIncorrectClick,
-            onAddConfirmClick,
+            // onAddConfirmClick,
             onSaveClick,
             onConfirmSaveClick,
             formatNumber,

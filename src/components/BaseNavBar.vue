@@ -101,7 +101,7 @@ export default {
         }
 
         const onStampClosingClick = () => {
-            router.push('./check-the-correctness')
+            router.push('./import-wine-list/check-the-correctness')
         }
 
         const onImportLiquorListClick = () => {

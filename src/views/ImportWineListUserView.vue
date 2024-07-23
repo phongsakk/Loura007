@@ -22,8 +22,8 @@
                         <td style="text-decoration: underline; cursor: pointer;">{{ wine.ImportPurpose && wine.ImportPurpose.PurposeDate ? formatDate(wine.ImportPurpose.PurposeDate) : ''}}</td>
                         <td class="text-start" style="text-decoration: underline; cursor: pointer;">{{ wine.ImportPurpose && wine.ImportPurpose.PurposeLabel ? wine.ImportPurpose.PurposeLabel : ''}}</td>
                         <td>{{ wine.ImportPurpose && wine.ImportPurpose.CheckpointLabel ? wine.ImportPurpose.CheckpointLabel : '' }}</td>
-                        <td>{{ calculateTotalQuantity(wine.WineLiquorTotal) }}  ขวด</td>
-                        <td>{{ formatNumber(calculateTotalPrice(wine.InitialValue)) }} บาท</td>
+                        <td>{{ calculateTotalQuantity(wine.Items) }}  ขวด</td>
+                        <td>{{ formatNumber(calculateTotalPrice(wine.Items)) }} บาท</td>
                         <td>
                             <span v-if="wine.IsStatus === 0" class="red-text" >สุรายังไม่ถูกนำเข้า</span>
                             <span v-else class="blue-text">สุราถูกนำเข้าแล้ว</span>
