@@ -3,7 +3,7 @@
         <div class="register-card text-start">
             <div class="sub-header text-center">ลงทะเบียนเพื่อเข้าใช้งาน</div>
             <label class="form-label text-start">สัญชาติผู้นำเข้า</label>
-            <select id="idSelect" name="id" class="select" v-model="status">
+            <select id="idSelect" name="id" class="select" v-model="status" @change="() => idErrorMessage = ''">
                 <option value="" disabled selected></option>
                 <option v-for="option in statusList" :key="option.Id" :value="option.Id" class="option">
                     {{ option.EnumName }}
@@ -12,15 +12,17 @@
             <div v-if="status !== 4" class="text-start">
                 <label class="form-label text-start">เลขบัตรประจำตัวประชาชน/เลขนิติบุคคล</label>
                 <input type="text" class="form-input" onkeydown="return event.keyCode !== 69" maxlength="13"
-                    v-model="idNumber" @input="onIdNumberInput($event)">
+                    v-model="idNumber" @input="onIdNumberInput($event)" :disabled="!status">
                 <p v-if="validationMessage" class="error-text">{{ validationMessage }}</p>
+                <p class="error-text" v-if="idErrorMessage">{{ idErrorMessage }}</p>
                 <label class="form-label text-start">ประเภทผู้นำเข้า</label>
                 <input type="text" class="form-input input-grey" v-model="idLabel" disabled>
-
             </div>
             <div v-if="status === 4" class="text-start">
                 <label class="form-label text-start">เลขที่พาสปอร์ต</label>
                 <input type="text" class="form-input" v-model="passportNumber">
+                <p class="error-text" v-if="idErrorMessage">{{ idErrorMessage }}</p>
+
             </div>
             <!-- <div v-else class="text-start">onkeydown="return event.keyCode !== 69"
                         <label class="form-label text-start">Input yout id number</label>
@@ -48,6 +50,8 @@ export default {
         const idLabel = ref('')
         const passportNumber = ref('')
         const validationMessage = ref('')
+        const statusErrorMessage = ref('')
+        const idErrorMessage = ref('')
 
         const statusList = ref([])
         const status = ref('')
@@ -57,34 +61,45 @@ export default {
         }
 
         const onRegisterClick = async() => {
-            if (idNumber.value) {
-                if (idNumber.value.startsWith('0')){
-                    const getDbd = await getDbdData(idNumber.value)
-                    console.log("DBD data :", getDbd.data)
-                    localStorage.setItem('dbdId',idNumber.value)
-                    localStorage.removeItem('individualId')
-                    localStorage.removeItem('passportId')
+            if (!idNumber.value && !passportNumber.value) {
+                idErrorMessage.value = 'กรุณากรอกข้อมูล'
+            }
+            else {
+                if (idNumber.value) {
+                    if (idNumber.value.startsWith('0')){
+                        const getDbd = await getDbdData(idNumber.value)
+                        console.log("DBD data :", getDbd.data)
+                        localStorage.setItem('dbdId',idNumber.value)
+                        localStorage.removeItem('individualId')
+                        localStorage.removeItem('passportId')
+                    }
+                    else {
+                        localStorage.setItem('individualId',idNumber.value)
+                        localStorage.removeItem('dbdId')
+                        localStorage.removeItem('passportId')
+                    }
                 }
-                else {
-                    localStorage.setItem('individualId',idNumber.value)
+                if (passportNumber.value) {
+                    localStorage.setItem('passportId', passportNumber.value)
                     localStorage.removeItem('dbdId')
-                    localStorage.removeItem('passportId')
+                    localStorage.removeItem('individualId')
                 }
+                localStorage.setItem('status',status.value)
+                router.push('/create-account')
             }
-            if (passportNumber.value) {
-                localStorage.setItem('passportId', passportNumber.value)
-                localStorage.removeItem('dbdId')
-                localStorage.removeItem('individualId')
-            }
-            localStorage.setItem('status',status.value)
-            router.push('/create-account')
         }
 
         const onIdNumberInput = (event) => {
-            const number = event.target.value;
-            idNumber.value = number.replace(/\D/g, '');
-            idLabel.value = idNumber.value.startsWith('0') ? 'นิติบุคคล' : 'บุคคลธรรมดา';
-            validationMessage.value = validateId(idNumber.value);
+            if (!status.value) {
+                statusErrorMessage.value = 'Please select status'
+            }
+            else {
+                const number = event.target.value;
+                idNumber.value = number.replace(/\D/g, '');
+                idLabel.value = idNumber.value.startsWith('0') ? 'นิติบุคคล' : 'บุคคลธรรมดา';
+                validationMessage.value = validateId(idNumber.value);
+                idErrorMessage.value = ''
+            }
         }
 
         const validateEmpty = (value, text) => {
@@ -153,6 +168,9 @@ export default {
             passportNumber,
             statusList,
             status,
+            idErrorMessage,
+            statusErrorMessage,
+            validationMessage,
             onCancelClick,
             onRegisterClick,
             onIdNumberInput

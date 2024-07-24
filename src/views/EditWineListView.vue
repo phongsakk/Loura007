@@ -607,7 +607,7 @@ export default {
             const itemCalTaxByFund = 1 - TAX_BY_FUND * (TAX_BY_PRICE / 100);
             // console.log({ itemExciseTaxByValue, itemCalTaxByDuty, itemCalTaxByValue, itemCalTaxByFund })
             const itemExciseTaxByPrice = (itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund;
-            const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty) * item.quantity;
+            const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty);
             const itemExternalLocal = 0.1 * itemExciseTaxByTotal;
             const itemExternalFund = 0.075 * itemExciseTaxByTotal;
             const itemExternalTotal = itemExciseTaxByTotal + itemExternalLocal + itemExternalFund;

@@ -147,7 +147,7 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const userTypeId = localStorage.getItem("userTypeId");
 
-  if (to.path == "/" || to.path == "/your-cart") {
+  if (to.path == "/" || (to.path == "/your-cart" || to.path == "/register" || to.path == "/verify-email")) {
     if (isLoggedIn && userTypeId === "21") {
       next({ path: "/import-wine-list" })
     } else {

@@ -84,8 +84,8 @@
                 </div>
                 <div class="row">
                     <div class="col-3">
-                        <label class="form-label">ที่อยู่</label>
-                        <input type="text" class="form-input" v-model="addressName">
+                        <label class="form-label">ที่อยู่ <span class="required-text">*</span></label>
+                        <input type="text" class="form-input" v-model="addressName" required>
                     </div>
                     <div class="col-3">
                         <label class="form-label">หมู่ที่</label>
@@ -102,8 +102,8 @@
                 </div>
                 <div class="row">
                     <div class="col-3">
-                        <label class="form-label">จังหวัด</label>
-                        <select id="idSelect" name="id" class="select" v-model="province">
+                        <label class="form-label">จังหวัด <span class="required-text">*</span></label>
+                        <select id="idSelect" name="id" class="select" v-model="province" required >
                             <option v-for="option in provinceList" :key="option.Id" :value="option.PvCode"
                                 class="option">
                                 {{ option.NameTh }}
@@ -111,8 +111,8 @@
                         </select>
                     </div>
                     <div class="col-3">
-                        <label class="form-label">อำเภอ/เขต</label>
-                        <select id="idSelect" name="id" class="select" v-model="district" >
+                        <label class="form-label">อำเภอ/เขต <span class="required-text">*</span></label>
+                        <select id="idSelect" name="id" class="select" v-model="district" required >
                             <option v-for="option in districtList" :key="option.Id" :value="option.DistCode"
                                 class="option">
                                 {{ option.NameTh }}
@@ -120,8 +120,8 @@
                         </select>
                     </div>
                     <div class="col-3">
-                        <label class="form-label">ตำบล/แขวง</label>
-                        <select id="idSelect" name="id" class="select" v-model="subDistrict">
+                        <label class="form-label">ตำบล/แขวง <span class="required-text">*</span></label>
+                        <select id="idSelect" name="id" class="select" v-model="subDistrict" required>
                             <option v-for="option in subDistrictList" :key="option.Id" :value="option.SubdistCode"
                                 class="option">
                                 {{ option.NameTh }}
@@ -129,8 +129,8 @@
                         </select>
                     </div>
                     <div class="col-3">
-                        <label class="form-label">รหัสไปรษณีย์</label>
-                        <input type="text" class="form-input" v-model="postelCode" onkeydown="return event.keyCode !== 69" maxlength="5" @input="restrictPostCode($event)">
+                        <label class="form-label">รหัสไปรษณีย์ <span class="required-text">*</span></label>
+                        <input type="text" class="form-input" v-model="postelCode" onkeydown="return event.keyCode !== 69" maxlength="5" @input="restrictPostCode($event)" required >
                     </div>
                 </div>
                 <div class="buttons">

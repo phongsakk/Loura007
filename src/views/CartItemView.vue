@@ -113,8 +113,9 @@
                     </select>
                     <div v-if="status !== 4" class="text-start">
                         <label class="form-label text-start">เลขบัตรประจำตัวประชาชน/เลขนิติบุคคล</label>
-                        <input type="text" class="form-input" onkeydown="return event.keyCode !== 69" maxlength="13" v-model="idNumber" @input="onIdNumberInput($event)">
+                        <input type="text" class="form-input" onkeydown="return event.keyCode !== 69" maxlength="13" v-model="idNumber" @input="onIdNumberInput($event)" :disabled="!status">
                         <p v-if="validationMessage" class="error-text">{{ validationMessage }}</p>
+                        <p class="error-text" v-if="idErrorMessage">{{ idErrorMessage }}</p>
                         <label class="form-label text-start">ประเภทผู้นำเข้า</label>
                         <input type="text" class="form-input input-grey" v-model="idLabel" disabled>
                         
@@ -178,6 +179,7 @@ export default {
         const externalTotal = ref(0)
         const fAndI = ref(0)
         const validationMessage = ref('')
+        const idErrorMessage = ref('')
 
         const statusList = ref([])
         const status = ref('')
@@ -233,27 +235,33 @@ export default {
         }
 
         const onRegisterClick = async() => {
-            if (idNumber.value) {
-                if (idNumber.value.startsWith('0')){
-                    const getDbd = await getDbdData(idNumber.value)
-                    console.log("DBD data :", getDbd.data)
-                    localStorage.setItem('dbdId',idNumber.value)
-                    localStorage.removeItem('individualId')
-                    localStorage.removeItem('passportId')
+            if (!idNumber.value && !passportNumber.value) {
+                idErrorMessage.value = 'กรุณากรอกข้อมูล'
+            }
+            else {
+                if (idNumber.value) {
+                    if (idNumber.value.startsWith('0')){
+                        const getDbd = await getDbdData(idNumber.value)
+                        console.log("DBD data :", getDbd.data)
+                        localStorage.setItem('dbdId',idNumber.value)
+                        localStorage.removeItem('individualId')
+                        localStorage.removeItem('passportId')
+                    }
+                    else {
+                        localStorage.setItem('individualId',idNumber.value)
+                        localStorage.removeItem('dbdId')
+                        localStorage.removeItem('passportId')
+                    }
                 }
-                else {
-                    localStorage.setItem('individualId',idNumber.value)
+                if (passportNumber.value) {
+                    localStorage.setItem('passportId', passportNumber.value)
                     localStorage.removeItem('dbdId')
-                    localStorage.removeItem('passportId')
+                    localStorage.removeItem('individualId')
                 }
+                localStorage.setItem('status',status.value)
+                // localStorage.setItem('isLoggedIn','true')
+                router.push('/register')
             }
-            if (passportNumber.value) {
-                localStorage.setItem('passportId', passportNumber.value)
-                localStorage.removeItem('dbdId')
-                localStorage.removeItem('individualId')
-            }
-            localStorage.setItem('status',status.value)
-            router.push('/register')
         }
 
         const onModalCancelClick = () => {
@@ -322,7 +330,7 @@ export default {
             const itemCalTaxByFund = 1 - taxByFund.value * (taxByPrice.value / 100);
             console.log({itemExciseTaxByValue, itemCalTaxByDuty,itemCalTaxByValue,itemCalTaxByFund})
             const itemExciseTaxByPrice = (itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund;
-            const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty)*item.quantity;
+            const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty);
             const itemExternalLocal = 0.1 * itemExciseTaxByTotal;
             const itemExternalFund = 0.075 * itemExciseTaxByTotal;
             const itemExternalTotal = itemExciseTaxByTotal + itemExternalLocal + itemExternalFund;
@@ -367,6 +375,7 @@ export default {
             idNumber.value = number.replace(/\D/g, '');
             idLabel.value = idNumber.value.startsWith('0') ? 'นิติบุคคล' : 'บุคคลธรรมดา';
             validationMessage.value = validateId(idNumber.value);
+            idErrorMessage.value = ''
         }
 
         const validateEmpty = (value, text) => {
@@ -495,7 +504,8 @@ export default {
             extractBottleSizeL,
             registerModal,
             isTotalLitersExceeded,
-            validationMessage
+            validationMessage,
+            idErrorMessage
         }
     }
 }
