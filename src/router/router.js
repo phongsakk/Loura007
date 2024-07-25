@@ -147,7 +147,9 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const userTypeId = localStorage.getItem("userTypeId");
 
-  if (to.path == "/" || (to.path == "/your-cart" || to.path == "/register" || to.path == "/verify-email")) {
+  console.log("to path", to.path);
+  const excludedPaths = ["/", "/your-cart", "/register", "/verify-email"];
+  if (excludedPaths.includes(to.path)) {
     if (isLoggedIn && userTypeId === "21") {
       next({ path: "/import-wine-list" })
     } else {
@@ -155,19 +157,19 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some((record) => record.meta.requiresAdmin)) {
     if (isLoggedIn && userTypeId === "21") {
-        next();
+      next();
     } else if (isLoggedIn && userTypeId !== "21") {
-        next({ path: "/" });
+      next({ path: "/" });
     } else {
-        next({ path: "/login" });
+      next({ path: "/login" });
     }
   } else if (to.matched.some((record) => record.meta.requiresUser)) {
-    if (isLoggedIn &&  userTypeId !== 21) {
-        next();
-    } else if (isLoggedIn &&  userTypeId === 21) {
-        next({ path: "/import-wine-list" });
+    if (isLoggedIn && userTypeId !== 21) {
+      next();
+    } else if (isLoggedIn && userTypeId === 21) {
+      next({ path: "/import-wine-list" });
     } else {
-        next({ path:"/login" });
+      next({ path: "/login" });
     }
   } else {
     next();
