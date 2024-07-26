@@ -96,6 +96,7 @@ export default {
         })
 
         onMounted (() => {
+            localStorage.removeItem('password')
             cartId.value = localStorage.getItem('cartId')
             token.value = localStorage.getItem('token')
             fetchImportPurpose();

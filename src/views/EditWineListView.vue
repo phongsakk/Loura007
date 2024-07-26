@@ -187,7 +187,7 @@
                                     <div class="price-col">
                                         <div class="d-flex justify-content-between">
                                             <label class="form-label">มูลค่าเบื้องต้น</label>
-                                            <p class="wine-price">{{ wine.RecommendMinPrice }} บาท</p>
+                                            <p class="wine-price">{{ formatNumber(wine.RecommendMinPrice) }} บาท</p>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <label class="form-label">ปริมาตรสุราทั้งหมด(ลิตร)</label>
@@ -999,6 +999,7 @@ export default {
 }
 
 .btn-add-to-cart {
+    font-family: "Prompt", sans-serif;
     background-color: #2B476D;
     color: #FFFFFF;
     border: none;

@@ -68,9 +68,10 @@ export default {
         const token = ref('')
         const cartItems = ref([])
         const items = ref([])
+        // const status = ref('')
 
         const fetchCartItems = async() => {
-            const getCartData = await getCartItem (cartId.value, token.value)
+            const getCartData = await getCartItem (cartId.value , token.value)
             cartItems.value = getCartData.data
             items.value = cartItems.value.Items
             console.log('Cart data :', items.value)

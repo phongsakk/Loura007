@@ -116,6 +116,27 @@ export async function getCartItem(cartId, token) {
     }
 }
 
+export async function getAllCartItem(token, status) {
+    try {
+        if (!status) { return '' }
+        const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-getFtCart?status=${status}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        if (!response.ok) {
+            throw new Error('Error: Unable to fetch data');
+        }
+        const data = await response.json();
+        return data
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
 export async function updateCart (wineData, cartId, token) {
     try {
         const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-updateFtCart/${cartId}`, {

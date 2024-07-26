@@ -5,29 +5,19 @@
         </div>
         <form @submit.prevent="onConfirmClick">
             <div class="register-card text-start">
-                <div class="row">
-                    <div class="col-6">
-                        <label class="form-label">สัญชาติผู้นำเข้า</label>
-                        <input type="text" class="form-input input-grey" v-model="nationality" disabled>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">ประเภทผู้นำเข้า</label>
-                        <input type="text" class="form-input input-grey" v-model="importerType" disabled>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <label class="form-label">เลขบัตรประจำตัวประชาชน</label>
-                        <input type="text" class="form-input input-grey" v-if="dbdId" v-model="dbdId" disabled>
-                        <input type="text" class="form-input input-grey" v-else-if="individualId" v-model="individualId" disabled>
-                        <input type="text" class="form-input input-grey" v-else v-model="passportId" disabled>
-                    </div>
-                    <div class="col-6">
-                        <div v-if="userType === 20">
-                            <label for="" class="form-label">ชื่อบริษัท</label>
-                            <input type="text" class="form-input input-grey" v-model="companyName">
+                <div v-if="passportId">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">สัญชาติผู้นำเข้า</label>
+                            <input type="text" class="form-input input-grey" v-model="nationality" disabled>
                         </div>
-                        <div v-if="userType === 19">
+                        <div class="col-6">
+                            <label class="form-label">เลขที่พาสปอร์ต</label>
+                            <input type="text" class="form-input input-grey" v-model="passportId" disabled>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
                             <label class="form-label">คำนำหน้าชื่อ <span class="required-text">*</span></label>
                             <select id="idSelect" name="id" class="select" v-model="title" required>
                                 <option v-for="option in titleList" :key="option.Id" :value="option.Id"
@@ -36,101 +26,212 @@
                                 </option>
                             </select>
                         </div>
+                        <div class="col-6">
+                            <label class="form-label">ชื่อผู้นำเข้า <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="firstName" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">นามสกุล <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="lastName" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">อีเมล <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="email" @input="()=>emailErrorText=''" required>
+                            <p v-if="emailErrorText" class="error-text">{{ emailErrorText }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">เบอร์โทรศัพท์ <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" name="mobileNumber" v-model="mobileNumber.value" :ref="mobileNumber.ref" onkeydown="return event.keyCode !== 69" maxlength="10" @input="restrictMobileNumber($event)" required>
+                            <p class="error-text" v-if="mobileNumber.error">{{ mobileNumber.error.message }}</p>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">เลขทะเบียนสรรพสามิต(ถ้ามี)</label>
+                            <input type="text" class="form-input" v-model="regNumber">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">ที่อยู่ <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="addressName" required>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">หมู่ที่</label>
+                            <input type="text" class="form-input" v-model="village">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">ตรอก/ซอย</label>
+                            <input type="text" class="form-input" v-model="alley">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">ถนน</label>
+                            <input type="text" class="form-input" v-model="street">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">จังหวัด <span class="required-text">*</span></label>
+                            <select id="idSelect" name="id" class="select" v-model="province" required >
+                                <option v-for="option in provinceList" :key="option.Id" :value="option.PvCode"
+                                    class="option">
+                                    {{ option.NameTh }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">อำเภอ/เขต <span class="required-text">*</span></label>
+                            <select id="idSelect" name="id" class="select" v-model="district" required >
+                                <option v-for="option in districtList" :key="option.Id" :value="option.DistCode"
+                                    class="option">
+                                    {{ option.NameTh }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">ตำบล/แขวง <span class="required-text">*</span></label>
+                            <select id="idSelect" name="id" class="select" v-model="subDistrict" required>
+                                <option v-for="option in subDistrictList" :key="option.Id" :value="option.SubdistCode"
+                                    class="option">
+                                    {{ option.NameTh }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">รหัสไปรษณีย์ <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="postelCode" onkeydown="return event.keyCode !== 69" maxlength="5" @input="restrictPostCode($event)" required >
+                        </div>
                     </div>
                 </div>
-                <div v-if="userType === 19" class="row">
-                    <div class="col-6">
-                        <label class="form-label">ชื่อผู้นำเข้า <span class="required-text">*</span></label>
-                        <input type="text" class="form-input" v-model="firstName" required>
+                <div v-else class="register-card text-start">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">สัญชาติผู้นำเข้า</label>
+                            <input type="text" class="form-input input-grey" v-model="nationality" disabled>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">ประเภทผู้นำเข้า</label>
+                            <input type="text" class="form-input input-grey" v-model="importerType" disabled>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label">นามสกุล <span class="required-text">*</span></label>
-                        <input type="text" class="form-input" v-model="lastName" required>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">เลขบัตรประจำตัวประชาชน</label>
+                            <input type="text" class="form-input input-grey" v-if="dbdId" v-model="dbdId" disabled>
+                            <input type="text" class="form-input input-grey" v-else v-model="individualId" disabled>
+                        </div>
+                        <div class="col-6">
+                            <div v-if="userType === 20">
+                                <label for="" class="form-label">ชื่อบริษัท</label>
+                                <input type="text" class="form-input input-grey" v-model="companyName">
+                            </div>
+                            <div v-if="userType === 19">
+                                <label class="form-label">คำนำหน้าชื่อ <span class="required-text">*</span></label>
+                                <select id="idSelect" name="id" class="select" v-model="title" required>
+                                    <option v-for="option in titleList" :key="option.Id" :value="option.Id"
+                                        class="option">
+                                        {{ option.FullTitleName }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div v-if="userType === 20" class="row">
-                    <div class="col-6">
-                        <label class="form-label">สาขา</label>
-                        <input type="text" class="form-input" v-model="branch">
+                    <div v-if="userType === 19" class="row">
+                        <div class="col-6">
+                            <label class="form-label">ชื่อผู้นำเข้า <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="firstName" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">นามสกุล <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="lastName" required>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label">เลขทะเบียนสรรพสามิต(ถ้ามี)</label>
-                        <input type="text" class="form-input" v-model="regNumber">
+                    <div v-if="userType === 20" class="row">
+                        <div class="col-6">
+                            <label class="form-label">สาขา</label>
+                            <input type="text" class="form-input" v-model="branch">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">เลขทะเบียนสรรพสามิต(ถ้ามี)</label>
+                            <input type="text" class="form-input" v-model="regNumber">
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <label class="form-label">อีเมล <span class="required-text">*</span></label>
-                        <input type="text" class="form-input" v-model="email" @input="()=>emailErrorText=''" required>
-                        <p v-if="emailErrorText" class="error-text">{{ emailErrorText }}</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">อีเมล <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="email" @input="()=>emailErrorText=''" required>
+                            <p v-if="emailErrorText" class="error-text">{{ emailErrorText }}</p>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">เบอร์โทรศัพท์ <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-if="userType === 20" name="telephoneNumber" v-model="telephoneNumber.value" :ref="telephoneNumber.ref" onkeydown="return event.keyCode !== 69" maxlength="9" @input="restrictPhoneNumber($event)" required>
+                            <input type="text" class="form-input" v-else name="mobileNumber" v-model="mobileNumber.value" :ref="mobileNumber.ref" onkeydown="return event.keyCode !== 69" maxlength="10" @input="restrictMobileNumber($event)" required>
+                            <p class="error-text" v-if="telephoneNumber.error">{{ telephoneNumber.error.message }}</p>
+                            <p class="error-text" v-if="mobileNumber.error">{{ mobileNumber.error.message }}</p>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label">เบอร์โทรศัพท์ <span class="required-text">*</span></label>
-                        <input type="text" class="form-input" v-if="userType === 20" name="telephoneNumber" v-model="telephoneNumber.value" :ref="telephoneNumber.ref" onkeydown="return event.keyCode !== 69" maxlength="9" @input="restrictPhoneNumber($event)" required>
-                        <input type="text" class="form-input" v-else name="mobileNumber" v-model="mobileNumber.value" :ref="mobileNumber.ref" onkeydown="return event.keyCode !== 69" maxlength="10" @input="restrictMobileNumber($event)" required>
-                        <p class="error-text" v-if="telephoneNumber.error">{{ telephoneNumber.error.message }}</p>
-                        <p class="error-text" v-if="mobileNumber.error">{{ mobileNumber.error.message }}</p>
+                    <div v-if="userType === 19" class="row">
+                        <div class="col-6">
+                            <label class="form-label">เลขทะเบียนสรรพสามิต(ถ้ามี)</label>
+                            <input type="text" class="form-input" v-model="regNumber">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">เลขที่พาสปอร์ต</label>
+                            <input type="text" class="form-input" v-model="ppNumber">
+                        </div>
                     </div>
-                </div>
-                <div v-if="userType === 19" class="row">
-                    <div class="col-6">
-                        <label class="form-label">เลขทะเบียนสรรพสามิต(ถ้ามี)</label>
-                        <input type="text" class="form-input" v-model="regNumber">
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">ที่อยู่ <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="addressName" required>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">หมู่ที่</label>
+                            <input type="text" class="form-input" v-model="village">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">ตรอก/ซอย</label>
+                            <input type="text" class="form-input" v-model="alley">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">ถนน</label>
+                            <input type="text" class="form-input" v-model="street">
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label">เลขที่พาสปอร์ต</label>
-                        <input type="text" class="form-input" v-model="ppNumber">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <label class="form-label">ที่อยู่ <span class="required-text">*</span></label>
-                        <input type="text" class="form-input" v-model="addressName" required>
-                    </div>
-                    <div class="col-3">
-                        <label class="form-label">หมู่ที่</label>
-                        <input type="text" class="form-input" v-model="village">
-                    </div>
-                    <div class="col-3">
-                        <label class="form-label">ตรอก/ซอย</label>
-                        <input type="text" class="form-input" v-model="alley">
-                    </div>
-                    <div class="col-3">
-                        <label class="form-label">ถนน</label>
-                        <input type="text" class="form-input" v-model="street">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <label class="form-label">จังหวัด <span class="required-text">*</span></label>
-                        <select id="idSelect" name="id" class="select" v-model="province" required >
-                            <option v-for="option in provinceList" :key="option.Id" :value="option.PvCode"
-                                class="option">
-                                {{ option.NameTh }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <label class="form-label">อำเภอ/เขต <span class="required-text">*</span></label>
-                        <select id="idSelect" name="id" class="select" v-model="district" required >
-                            <option v-for="option in districtList" :key="option.Id" :value="option.DistCode"
-                                class="option">
-                                {{ option.NameTh }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <label class="form-label">ตำบล/แขวง <span class="required-text">*</span></label>
-                        <select id="idSelect" name="id" class="select" v-model="subDistrict" required>
-                            <option v-for="option in subDistrictList" :key="option.Id" :value="option.SubdistCode"
-                                class="option">
-                                {{ option.NameTh }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <label class="form-label">รหัสไปรษณีย์ <span class="required-text">*</span></label>
-                        <input type="text" class="form-input" v-model="postelCode" onkeydown="return event.keyCode !== 69" maxlength="5" @input="restrictPostCode($event)" required >
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">จังหวัด <span class="required-text">*</span></label>
+                            <select id="idSelect" name="id" class="select" v-model="province" required >
+                                <option v-for="option in provinceList" :key="option.Id" :value="option.PvCode"
+                                    class="option">
+                                    {{ option.NameTh }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">อำเภอ/เขต <span class="required-text">*</span></label>
+                            <select id="idSelect" name="id" class="select" v-model="district" required >
+                                <option v-for="option in districtList" :key="option.Id" :value="option.DistCode"
+                                    class="option">
+                                    {{ option.NameTh }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">ตำบล/แขวง <span class="required-text">*</span></label>
+                            <select id="idSelect" name="id" class="select" v-model="subDistrict" required>
+                                <option v-for="option in subDistrictList" :key="option.Id" :value="option.SubdistCode"
+                                    class="option">
+                                    {{ option.NameTh }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">รหัสไปรษณีย์ <span class="required-text">*</span></label>
+                            <input type="text" class="form-input" v-model="postelCode" onkeydown="return event.keyCode !== 69" maxlength="5" @input="restrictPostCode($event)" required >
+                        </div>
                     </div>
                 </div>
                 <div class="buttons">
@@ -242,8 +343,9 @@ export default {
                     FirstName: firstName.value,
                     LastName: lastName.value,
                     IDCard: individualId.value,
+                    // Passport: passportId.value,
                     Mobile: mobileNumber.value,
-                    Passport: ppNumber.value,
+                    Passport: ppNumber.value ? ppNumber.value : passportId.value,
                     ExciseNo: regNumber.value,
                     AddrNo: addressName.value,
                     Moo: village.value,

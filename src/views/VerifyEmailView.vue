@@ -3,7 +3,7 @@
         <div class="header-card">
             <h1 class="text-start">ลงทะเบียนผู้นำเข้าสุรา</h1>
         </div>
-        <div v-if="showVerifyEmailCard" class="verify-email-card text-center">
+        <div v-if="showVerifyEmailCard && isVerified === false" class="verify-email-card text-center">
             <h1 class="fw-bold">ยืนยันตัวตน</h1>
             <p class="email-text">กรุณากรอกรหัสยืนยันตัวตนของคุณ<br/>ที่ถูกส่งไปที่อีเมล {{ email }}</p>
             <input type="text" class="form-input" style="width: 370px;" v-model="verificationCode" onkeydown="return event.keyCode !== 69" maxlength="6" @input="restrictVerificationCode($event)">
@@ -62,6 +62,7 @@ export default {
         const emailSendSuccess = ref(false)
         const spinner = ref(false)
         const userData = ref([])
+        const isVerified = ref(false)
 
         const restrictVerificationCode = (event) => {
             const number = event.target.value
@@ -83,6 +84,9 @@ export default {
                     password.value = getVerifyEmail.data.password
                     showVerifyEmailCard.value = false
                     await fetchUserProfile()
+                    localStorage.setItem('isLoggedIn', true)
+                    localStorage.setItem('exciseIdNumber', exciseIdNumber.value)
+                    localStorage.setItem('password', password.value)
                 }
             }
             else {
@@ -117,13 +121,21 @@ export default {
 
         const fetchUserProfile = async () => {
             const getUserData = await getUserProfile(token.value)
-            userData.value = getUserData.data
-            console.log("User data :", getUserData.data.code)
+            if (getUserData.data.code === 403) {
+                isVerified.value = false
+            }
+            else {
+                isVerified.value = true
+                userData.value = getUserData.data
+                console.log("User data :", getUserData.data.code)
+            }
         }
 
         onMounted ( async() => {
             email.value = localStorage.getItem('email')
             token.value = localStorage.getItem('token')
+            exciseIdNumber.value = localStorage.getItem('exciseIdNumber')
+            password.value = localStorage.getItem('password')
 
             await fetchUserProfile();
         })
@@ -137,6 +149,7 @@ export default {
             codeErrorText,
             emailSendSuccess,
             spinner,
+            isVerified,
             restrictVerificationCode,
             onConfirmClick,
             onBackClick,
