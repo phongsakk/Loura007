@@ -448,8 +448,13 @@ export default {
             // const bottle = ''
             // const bCode = ''
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
-            console.log("Wine Search Data:", wineSearchData.data)
+            console.log("Wine Search Data:", wineSearchData)
             if ( wineSearchData.code === 404) {
+                spinner.value = false
+                await showNotFoundAlert()
+            }
+            else if ( wineSearchData.code === 500) {
+                console.log("This is code 500!!!!!!!!!")
                 spinner.value = false
                 await showNotFoundAlert()
             }
@@ -918,7 +923,7 @@ export default {
     overflow-y: auto;
     position: absolute;
     background-color: white;
-    z-index: 1000;
+    z-index: 90;
 }
 
 .autocomplete-results li {

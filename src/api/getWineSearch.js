@@ -11,6 +11,10 @@ export async function getWineSearch(wineName, vintage, location, avb, bottleSize
                 const data = await response.json();
                 return data
             }
+            if (response.status === 500) {
+                const data = await response.json();
+                return data
+            }
             throw new Error('Error: Unable to fetch data');
         }
         const data = await response.json();
@@ -99,6 +103,26 @@ export async function addToCart (wineData, token) {
 export async function getCartItem(cartId, token) {
     try {
         const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-getFtCart/${cartId}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        if (!response.ok) {
+            throw new Error('Error: Unable to fetch data');
+        }
+        const data = await response.json();
+        return data
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+export async function getCartItemOfficer( token) {
+    try {
+        const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-getFtCart?limit=9999`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

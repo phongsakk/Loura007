@@ -20,7 +20,7 @@
                     <tr v-for="(wine, index) in paginatedItems" :key="wine.Id">
                         <td>{{ (currentPage - 1) * itemsPerPage + index + 1 }}</td>
                         <td style="text-decoration: underline; cursor: pointer;">{{ wine.ImportPurpose && wine.ImportPurpose.PurposeDate ? formatDate(wine.ImportPurpose.PurposeDate) : ''}}</td>
-                        <td class="text-start" style="text-decoration: underline; cursor: pointer;">{{ wine.ImportPurpose && wine.ImportPurpose.PurposeLabel ? wine.ImportPurpose.PurposeLabel : ''}}</td>
+                        <td class="text-start" style="text-decoration: underline; cursor: pointer;" @click="onDetailsClick(wine.Id)">{{ wine.ImportPurpose && wine.ImportPurpose.PurposeLabel ? wine.ImportPurpose.PurposeLabel : ''}}</td>
                         <td>{{ wine.ImportPurpose && wine.ImportPurpose.CheckpointLabel ? wine.ImportPurpose.CheckpointLabel : '' }}</td>
                         <td>{{ calculateTotalQuantity(wine.Items) }}  ขวด</td>
                         <td>{{ formatNumber(calculateTotalPrice(wine.Items)) }} บาท</td>
@@ -56,25 +56,42 @@
             </div>
         </div>
     </div>
+    <div v-if="spinner" class="overlay"></div>
+
+    <div v-if="spinner" class="text-center-spinner">
+        <div class="spinner-border" role="status"></div>
+    </div>
 </template>
 
 <script>
 import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { getCartItem } from '@/api/getWineSearch'
 
 export default {
     setup () {
+        const router = useRouter()
+
         const cartId = ref('')
         const token = ref('')
         const cartItems = ref([])
         const items = ref([])
         // const status = ref('')
 
+        const spinner = ref(false)
+
+        const onDetailsClick = (userCartId) => {
+            localStorage.setItem('userCartId', userCartId)
+            router.push('/cart-details')
+        }
+
         const fetchCartItems = async() => {
+            spinner.value = true
             const getCartData = await getCartItem (cartId.value , token.value)
             cartItems.value = getCartData.data
             items.value = cartItems.value.Items
             console.log('Cart data :', items.value)
+            spinner.value = false
         }
 
         const formatDate = (data) => {
@@ -179,7 +196,9 @@ export default {
             formatDate,
             formatNumber,
             calculateTotalQuantity,
-            calculateTotalPrice
+            calculateTotalPrice,
+            spinner,
+            onDetailsClick
         }
     }
 }

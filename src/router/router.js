@@ -13,7 +13,9 @@ import WineListInCart from "@/views/WineListInCartView.vue";
 import ImportWineListInCart from "@/views/ImportWineListInCartView.vue";
 import CheckWineByUpload from "@/views/CheckWineByUploadView.vue";
 import CheckTheCorrectness from "@/views/CheckTheCorrectnessView.vue"
+import WineListDetails from "@/views/WineListDetailView.vue"
 import ImportWineListUser from "@/views/ImportWineListUserView.vue"
+import CartDetailView from "@/views/CartDetailView.vue";
 import PdfView from "@/views/PdfView.vue";
 import LoginView from "@/views/LoginView.vue";
 import ToRegisterView from "@/views/ToRegisterView.vue"
@@ -72,6 +74,11 @@ const routes = [
         path: "your-import-wine-list",
         name: "your-import-wine-list",
         component: ImportWineListUser,
+      },
+      {
+        path: 'cart-details',
+        name: 'cart-details',
+        component: CartDetailView,
       }
     ],
     meta: { requiresUser: true },
@@ -106,6 +113,11 @@ const routes = [
         path: "check-the-correctness",
         name: "check-the-correctness",
         component: CheckTheCorrectness,
+      },
+      {
+        path: "wine-list-details",
+        name: "wine-list-details",
+        component: WineListDetails,
       }
     ],
     meta: { requiresAdmin: true },

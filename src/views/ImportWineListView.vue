@@ -70,14 +70,14 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue'
-import { getCartItem } from '@/api/getWineSearch'
+import { getCartItemOfficer } from '@/api/getWineSearch'
 import { useRouter } from 'vue-router'
 
 export default {
     setup() {
         const router = useRouter()
 
-        const cartId = ref('')
+        // const cartId = ref('')
         const token = ref('')
         const userTypeId = ref('')
         const cartItems = ref([])
@@ -111,7 +111,7 @@ export default {
 
         const fetchCartItem = async () => {
             spinner.value = true
-            const getCartData = await getCartItem (cartId.value, token.value)
+            const getCartData = await getCartItemOfficer (token.value)
             cartItems.value = getCartData.data
             console.log('Cart data :', cartItems.value)
             // importCheckpoint.value = cartItems.value.ImportPurpose.CheckpointLabel

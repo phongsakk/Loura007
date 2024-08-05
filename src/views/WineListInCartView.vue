@@ -48,7 +48,7 @@
                             </div>
                             <div class="col-6">
                                 <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
-                                <p>{{ wine.BottleSize }}</p>
+                                <p>{{ wine.BottleSize ? wine.BottleSize : '' }}</p>
                             </div>
                         </div>
                         <div class="row text-start">
@@ -143,7 +143,7 @@ export default {
 
         const totalLiters = computed(() => {
             return (cartItems.value?.Items || []).reduce((sum, item) => {
-                const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
+                const bottleSize = item.BottleSize ? (item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize)) : '';
                 return sum + (bottleSize * item.WineLiquorTotal);
             }, 0);
         });

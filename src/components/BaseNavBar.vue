@@ -9,14 +9,45 @@
                     <div class="nav-item" v-if="userTypeId !== '21'">
                         <p class="cart-list">ปริมาณสุราในตะกร้า {{ totalLiters ? totalLiters : '0' }} /10 ลิตร</p>
                     </div>
-                    <div class="nav-item" v-if="userTypeId !== '21'">
-                        <a class="cart-icon" href="#" role="button">
-                            <img src="../assets/img/cart-logo.png" alt="" class="nav-image" @click="onCartClick">
+                    <div class="nav-item menu-icon" v-if="userTypeId !== '21'">
+                        <a class="cart-icon text-reset dropdown-toggle hidden-arrow" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="../assets/img/cart-logo.png" alt="" class="nav-image">
                             <div v-if="cartItems && cartItems.length > 0">
                                 <span class="badge">{{ cartItems ? cartItems.reduce( (sum, item) => sum + item.quantity, 0) : 0 }}</span>
                             </div>
-                            <!-- <span class="badge" v-else>0</span> -->
                         </a>
+                        <ul v-if="cartItems && cartItems.length > 0" class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown" style="width: 500px; right: -100px; padding: 20px 10px;">
+                            <li v-for="item in cartItems" :key="item.Id">
+                                <div class="row" style="padding: 10px 20px;">
+                                    <div class="col-4">
+                                        <div class="cart-image text-center">
+                                            <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${item.Path}`" alt="" class="wine-image">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <p class="wine-name text-start">{{ item.WineName }}</p>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="cart-label text-start">จำนวนขวด</p>
+                                            <div class="quantity-count">
+                                                <button class="btn-count" @click="decreaseQuantity(item.Id)" :disabled="item.quantity <= 1">-</button>
+                                                <input type="text" class="quantity-input text-center" v-model="item.quantity" disabled>
+                                                <button class="btn-count" @click="increaseQuantity(item.Id)" :disabled="totalLiters + (item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(item.BottleSize) / 1000) : extractBottleSizeL(item.BottleSize)) > 10.00">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="cart-label text-start" style="margin-bottom: 5px;">มูลค่าเบื้องต้น</p>
+                                            <p class="cart-label fw-bold text-end" style="margin-bottom: 5px;">{{ formatNumber(item.RecommendMinPrice) }} บาท</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <div style="padding:0px 20px;">
+                                <hr class="divider-line">
+                            </div>
+                            <li >
+                                <p class="view-all-cart-item text-center" @click="onCartClick">รายการไวน์ในตระกร้าทั้งหมด</p>
+                            </li>
+                        </ul>
                     </div>
                     <div class="nav-item menu-icon">
                         <a class="text-reset dropdown-toggle hidden-arrow" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-left: 10px; margin-right: 10px;">
@@ -97,7 +128,12 @@ export default {
         }
 
         const onLogoClick = () => {
-            router.push('./')
+            if ( userTypeId.value === '21') {
+                router.push('/import-wine-list')
+            }
+            else {
+                router.push('/')
+            }
         }
 
         const onStampClosingClick = () => {
@@ -156,6 +192,11 @@ export default {
             phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile
         }
 
+        const formatNumber = (value) =>{
+            const floatValue = parseFloat(value);
+            return floatValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
         onMounted ( async () => {
             userTypeId.value = localStorage.getItem('userTypeId')
             cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
@@ -180,7 +221,10 @@ export default {
             onStampClosingClick,
             onImportLiquorListClick,
             onLogoutClick,
-            onLoginClick
+            onLoginClick,
+            extractBottleSizeL,
+            extractBottleSizeMl,
+            formatNumber
         }
     }
 }
@@ -304,4 +348,39 @@ export default {
     font-weight: 500;
     color: #898989;
 }
+
+.wine-name {
+    font-size: 20px;
+    color: #000000;
+}
+
+.cart-image {
+    width: 125px;
+    height: 125px;
+    margin-right: 10px;
+    box-shadow: 0px 3px 6px #00000065;
+    border-radius: 6px;
+    padding: 10px;
+
+}
+
+.wine-image {
+    width: auto;
+    height: 100%;
+}
+
+.cart-label {
+    font-size: 16px;
+    color: #2B476D;
+}
+
+.view-all-cart-item {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2B476D;
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 5px;
+}
+
 </style>

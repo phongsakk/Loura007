@@ -250,29 +250,33 @@
                                 <div class="row text-start">
                                     <div class="col-3">
                                         <label class="form-label">ภาษีสรรพสามิต</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.ExciseTax }} บาท</p>
+                                        <p style="margin-bottom: 0px;">{{ addArray.exciseTaxByTotal }} บาท</p>
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label">ภาษีท้องถิ่น</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.TotalTax }} บาท</p>
+                                        <p style="margin-bottom: 0px;">{{ addArray.externalLocal }} บาท</p>
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label">เงินบำรุงกองทุน</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.Fund }} บาท</p>
+                                        <p style="margin-bottom: 0px;">{{ addArray.externalFund }} บาท</p>
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label">ภาษีศุลกากร</label>
-                                        <p style="margin-bottom: 0px;">{{ addArray.CustomsDuty }} บาท</p>
+                                        <p style="margin-bottom: 0px;">{{ (addArray.exciseTaxByDuty || 0).toLocaleString('en-US', {
+                                        minimumFractionDigits: 2, maximumFractionDigits: 2
+                                    }) }} บาท</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3 price-col text-end">
                                 <label class="form-label bold">มูลค่าเบื้องต้น</label>
-                                <p class="price-text" style="margin-bottom: 0px;">{{ addArray.InitialValue }} บาท</p>
+                                <p class="price-text" style="margin-bottom: 0px;">{{ addArray.RecommendMinPrice.toLocaleString('en-US', {
+                                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                                }) }} บาท</p>
                                 <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
                                 <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
-                                <p class="price-text" style="margin-bottom: 0px;">{{ addArray.TotalTax }} บาท</p>
-                                <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ addArray.WineLiquorTotal }}
+                                <p class="price-text" style="margin-bottom: 0px;">{{ addArray.externalTotal }} บาท</p>
+                                <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ addArray.quantity }}
                                     ขวด</p>
                                 <!-- <div v-if="wine.isCorrect === true"> -->
                                 <button class="btn-checked-correct">ตรวจสอบสุราเรียบร้อยแล้ว</button>
@@ -319,28 +323,30 @@
         <div class="modal">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div v-if="algoliaImageResults.length > 0">
-                        <p class="form-label fw-bold text-start" style="margin-bottom: 10px;">ค้นหาด้วยรูปภาพ</p>
-                        <div v-for="result in algoliaImageResults" :key="result.objectID">
-                            <div class="image-search-results" @click="onImageResultClick(result.name, result.alcohol)">
-                                <div class="result-name d-flex align-items-center">
-                                    <img :src="result.image_label" alt="" class="bottle-image">
-                                    <p class="wine-name" style="margin-bottom: 0px;">{{ result.name }}</p>
-                                </div>
-                                <div class="result-country">
-                                    <p class="country-text">{{ result.country }}</p>
+                    <div class="image-search-list">
+                        <div v-if="algoliaImageResults.length > 0">
+                            <p class="form-label fw-bold text-start" style="margin-bottom: 10px;">ค้นหาด้วยรูปภาพ</p>
+                            <div v-for="result in algoliaImageResults" :key="result.objectID">
+                                <div class="image-search-results" @click="onImageResultClick(result.name, result.alcohol)">
+                                    <div class="result-name d-flex align-items-center">
+                                        <img :src="result.image_label" alt="" class="bottle-image">
+                                        <p class="wine-name" style="margin-bottom: 0px;">{{ result.name }}</p>
+                                    </div>
+                                    <div class="result-country">
+                                        <p class="country-text">{{ result.country }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div v-else class="upload-session">
-                        <input type="file" class="image-input" id="image-input" accept="image/*"
-                            @change="onUploadClick($event)">
-                        <label for="image-input" class="upload-label">
-                            <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
-                            <h3>ค้นหารูปภาพ</h3>
-                            <p>วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป</p>
-                        </label>
+                        <div v-else class="upload-session">
+                            <input type="file" class="image-input" id="image-input" accept="image/*"
+                                @change="onUploadClick($event)">
+                            <label for="image-input" class="upload-label">
+                                <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
+                                <h3>ค้นหารูปภาพ</h3>
+                                <p>วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป</p>
+                            </label>
+                        </div>
                     </div>
                     <div class="text-center" style="margin-top: 20px;">
                         <button class="btn-back" @click="onModalCancelClick">ปิด</button>
@@ -1035,5 +1041,10 @@ border-radius: 6px; */
     padding: 7px 20px;
     border: 1px solid transparent;
     border-radius: 0.5rem;
+}
+
+.image-search-list {
+    max-height: 500px;
+    overflow-y: auto
 }
 </style>
