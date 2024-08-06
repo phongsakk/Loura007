@@ -105,38 +105,6 @@
                 <!-- After upload -->
                 <div v-else>
                     <div v-if="isNewWine === false">
-                        <div class="product-card">
-                            <div class="row text-start" style="padding: 10px 20px 20px 20px;">
-                                <div class="col-7 position-relative">
-                                    <label class="form-label">ค้นหาด้วยชื่อ</label>
-                                    <input type="text" class="search-input" placeholder="ชื่อสุรา" v-model="wineName"
-                                        @input="onWineNameSearch">
-                                </div>
-                                <div class="col-1">
-                                    <label class="form-label">ปีที่ผลิต</label>
-                                    <select id="idSelect" name="years" class="search-input" v-model="vintage">
-                                        <option value="" disabled selected>ไม่เลือกปีที่ผลิต</option>
-                                        <option v-for="option in years" :key="option" :value="option" class="option">
-                                            {{ option }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <label class="form-label">ขนาดบรรจุภัณฑ์</label>
-                                    <select id="idSelect" name="id" class="search-input" v-model="bottleSize">
-                                        <option v-for="option in bottleSizes" :key="option.Id" :value="option.EnumName"
-                                            class="option">
-                                            {{ option.EnumName }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-1">
-                                    <div class="search-button" style="margin-top: 10px;">
-                                        <button class="btn-search" @click="onSearchClick">ค้นหา</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="search-result-session" v-if="wineSearch.length > 0">
                             <div v-for="wine in wineSearch" :key="wine.id" class="wine-detail-card">
                                 <div class="row">

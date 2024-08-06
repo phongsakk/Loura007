@@ -591,8 +591,15 @@ export default {
 
         const onSaveClick = async () => {
             console.log("Add & remove array :", addArray.value, removeArray.value)
+            const allItemsCorrect = itemsArray.value.every(item => item.isCorrect === true);
+
+            if (!allItemsCorrect) {
+                console.log("Not all items are correct. Save operation aborted.");
+                return;
+            }
             if (addArray.value && addArray.value.length > 0) {
                 const wineData = {
+                    isStatus : 1,
                     Add: [{
                         WineLiquorId: addArray.value.WineLiquorId,
                         Year: addArray.value.Year,
@@ -624,6 +631,14 @@ export default {
                         TotalTax: removeArray.value[0].TotalTax,
                         IsStatus: '',
                     }]
+                }
+                console.log("Wine Data :", wineData)
+                const updateCartItem = await updateCart(wineData, importCartId.value, token.value)
+                console.log("Updating cart :", updateCartItem.data)
+            }
+            else {
+                const wineData = {
+                    IsStatus : 1,
                 }
                 console.log("Wine Data :", wineData)
                 const updateCartItem = await updateCart(wineData, importCartId.value, token.value)

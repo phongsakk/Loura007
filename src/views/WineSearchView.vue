@@ -449,12 +449,12 @@ export default {
             // const bCode = ''
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
             console.log("Wine Search Data:", wineSearchData)
-            if ( wineSearchData.code === 404) {
+            if ( wineSearchData === 500) {
+                console.log("This is code 500!!!!!!!!!")
                 spinner.value = false
                 await showNotFoundAlert()
             }
-            else if ( wineSearchData.code === 500) {
-                console.log("This is code 500!!!!!!!!!")
+            else if ( wineSearchData.code === 404) {
                 spinner.value = false
                 await showNotFoundAlert()
             }

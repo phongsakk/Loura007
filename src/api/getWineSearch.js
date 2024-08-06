@@ -7,11 +7,11 @@ export async function getWineSearch(wineName, vintage, location, avb, bottleSize
             }
         })
         if (!response.ok) {
-            if (response.status === 404) {
-                const data = await response.json();
-                return data
-            }
             if (response.status === 500) {
+                console.log("Status:", response.status);
+                return { statusCode: 500 };
+            }
+            if (response.status === 404) {
                 const data = await response.json();
                 return data
             }
