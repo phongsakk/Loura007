@@ -154,11 +154,51 @@ export default {
             router.push('/login')
         }
 
+        // const decreaseQuantity = (wineId) => {
+        //     const index = cartItems.value.findIndex(item => item.Id === wineId);
+        //     if (index !== -1 && cartItems.value[index].quantity > 1) {
+        //         cartItems.value[index].quantity--;
+        //         updateLocalStorage();
+        //         // updateBroadcastChannel();
+        //     }
+        // };
+
+        // const increaseQuantity = (wineId) => {
+        //     const index = cartItems.value.findIndex(item => item.Id === wineId);
+        //     if (index !== -1) {
+        //         const item = cartItems.value[index];
+        //         const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
+        //         const newTotalLiters = totalLiters.value + (bottleSize * item.quantity);
+        //         if (newTotalLiters <= 10) {
+        //             cartItems.value[index].quantity++;
+        //             updateLocalStorage();
+        //             // updateBroadcastChannel();
+        //         }
+        //     }
+        // };
+
+        // const updateLocalStorage = () => {
+        //     localStorage.setItem('cartItems', JSON.stringify(cartItems.value));
+        //     const totalLitersValue = cartItems.value.reduce((sum, item) => {
+        //         const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
+        //         return sum + (bottleSize * item.quantity);
+        //     }, 0);
+        //     localStorage.setItem('totalLitersToShow', totalLitersValue);
+        //     totalLiters.value = totalLitersValue;
+        // };
+
+        // const updateBroadcastChannel = () => {
+        //     // const channel = new BroadcastChannel("cart_channel");
+        //     channel.postMessage({ type: 'UPDATE_CART', cartItems: cartItems.value, totalLiters: totalLiters.value });
+        // };
+
         const channel = new BroadcastChannel("cart_channel");
         channel.onmessage = (event) => {
             console.log(event.data)
             cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
             totalLitersToShow.value = localStorage.getItem('totalLitersToShow')
+            // cartItems.value = event.data.cartItems;
+            // totalLitersToShow.value = event.data.totalLiters;
         }
 
         const totalLiters = computed(() => {
@@ -224,7 +264,9 @@ export default {
             onLoginClick,
             extractBottleSizeL,
             extractBottleSizeMl,
-            formatNumber
+            formatNumber,
+            // decreaseQuantity,
+            // increaseQuantity
         }
     }
 }

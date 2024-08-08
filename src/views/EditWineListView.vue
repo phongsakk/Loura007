@@ -107,7 +107,16 @@
                                     <div class="price-col">
                                         <div class="d-flex justify-content-between">
                                             <label class="form-label">มูลค่าเบื้องต้น</label>
-                                            <p class="wine-price">{{ formatNumber(wine.RecommendMinPrice) }} บาท</p>
+                                            <div v-if="wine.RecommendMinPrice === 0">
+                                                <p v-if="isEdit === false" class="red-text text-end" style="font-size: 18px; font-weight: 700; margin: 10px 0px 0px 0px;" @click="onEditPriceClick(wine.Id)">
+                                                    ไม่พบราคาในระบบ
+
+                                                </p>
+                                                <div v-else >
+                                                    <input type="text" class="price-input text-end" v-model="wine.newPrice">
+                                                </div>
+                                            </div>
+                                            <p v-else class="wine-price">{{ formatNumber(wine.RecommendMinPrice) }} บาท</p>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <label class="form-label">ปริมาตรสุราทั้งหมด(ลิตร)</label>
@@ -128,6 +137,21 @@
                                                 @click="onAddToCartClick(wine.Id)">เพิ่มเข้าตะกร้า</button>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div v-if="isEdit === true" class="upload-session">
+                                <div class="upload-card">
+                                    <input type="file" class="image-input" id="file-input" @change="uploadWineFile($event, wine.Id)">
+                                    <label for="file-input" class="upload-label" style="cursor: pointer;">
+                                        <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
+                                        <h3 style="margin-bottom: 5px;">อัพโหลดภาพ</h3>
+                                        <h3 style="margin-bottom: 5px;">หลักฐานการชำระเงิน</h3>
+                                        <p>วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป</p>
+                                    </label>
+                                </div>
+                                <div class="price-edit-buttons">
+                                    <button class="btn-cancel" @click="onPriceCancelClick">ย้อนกลับ</button>
+                                    <button class="btn-save" @click="onPriceConfirmClick(wine.Id)">ยืนยัน</button>
                                 </div>
                             </div>
                         </div>
@@ -202,6 +226,11 @@
                             <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ wine.WineLiquorTotal }} ขวด</p>
                             <div v-if="wine.isCorrect === true">
                                 <button class="btn-checked-correct">ตรวจสอบสุราเรียบร้อยแล้ว</button>
+                                <div v-if="wine.uploadFile">
+                                    <button class="btn-display-file" @click="onFileDisplayClick(wine.Id)">
+                                        <img src="../assets/img/eye-icon.webp" alt="" style="height: 14px; width: auto; margin-right: 5px;">ซ่อนหลักฐานการชำระเงิน
+                                    </button>
+                                </div>
                             </div>
                             <div v-else>
                                 <div class="check-buttons">
@@ -210,7 +239,12 @@
                                     <button class="btn-correct" @click="onCorrectClick(wine.Id)">สินค้าถูกต้อง</button>
                                 </div>
                             </div>
+
+                            
                         </div>
+                    </div>
+                    <div v-if="wine.displayFile === true" class="file-display">
+                        <iframe :src="wine.uploadFile" frameborder="0" class="file-display-frame w-100"></iframe>
                     </div>
                 </div>
                 
@@ -275,6 +309,9 @@ import algoliasearch from 'algoliasearch';
 import { useRouter } from 'vue-router'
 import { getWineSearch, getBottleSize, updateCart } from '@/api/getWineSearch.js'
 import { getEnumGroup } from '@/api/getMaster'
+import { uploadFileV4 } from '@/api/uploadFile'
+import { getQRCode } from '@/api/getQRData'
+import QRCode from 'qrcode';
 
 export default {
     setup() {
@@ -316,6 +353,8 @@ export default {
         const isConfirmed = ref(false)
         const notFoundAlert = ref(false)
         const disabledIncorrect = ref(false)
+        const isEdit = ref(false)
+        const displayFile = ref(false)
 
         const defaultArray = ref([])
 
@@ -417,11 +456,22 @@ export default {
                 await showNotFoundAlert()
             }
             else {
-                wineSearch.value = wineSearchData.data.map(wine => {
-                    const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(wine.BottleSize) / 1000 : extractBottleSizeL(wine.BottleSize);
-                    // const wineLiter = bottleSizeMl / 1000;
+                if (Array.isArray(wineSearchData.data)) {
+                    wineSearch.value = wineSearchData.data.map(wine => {
+                    const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
+                        ? extractBottleSizeMl(wine.BottleSize) / 1000
+                        : extractBottleSizeL(wine.BottleSize);
                     return { ...wine, quantity: 1, wineLiter };
-                });
+                    });
+                } else if (typeof wineSearchData.data === 'object') {
+                    const wine = wineSearchData.data;
+                    const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
+                    ? extractBottleSizeMl(wine.BottleSize) / 1000
+                    : extractBottleSizeL(wine.BottleSize);
+                    wineSearch.value = [{ ...wine, quantity: 1, wineLiter }];
+                } else {
+                    console.error('Unexpected data format:', wineSearchData.data);
+                }
                 console.log("Updated wine search array:", wineSearch.value)
                 spinner.value = false
             }
@@ -454,6 +504,46 @@ export default {
         //     console.log("New object:", newAddedWine.value)
         // }
 
+        const onEditPriceClick = (wineId) => {
+            const wine = wineSearch.value.find(w => w.Id === wineId);
+            isEdit.value = true
+
+            return { ...wine, newPrice: 0 , uploadFile: '', fileType: ''};
+        }
+
+        const onFileUpload = (event, wineId) => {
+            const wine = wineSearch.value.find(w => w.Id === wineId);
+            wine.uploadFile = event.target.files[0]
+            wine.fileType = event.target.files[0].type
+            console.log("Uploaded file:", wine.uploadFile)
+        }
+
+
+        const onPriceConfirmClick = (wineId) => {
+            const wine = wineSearch.value.find(w => w.Id === wineId);
+            wine.RecommendMinPrice = wine.newPrice
+            console.log("Wine after confirm price :", wine)
+            isEdit.value = false
+        }
+
+        const uploadWineFile = async (event, wineId) => {
+            const wine = wineSearch.value.find(w => w.Id === wineId);
+            const file = event.target.files[0];
+            if (!file) {
+                alert('No file selected!');
+                return;
+            }
+
+            try {
+                const data = await uploadFileV4(file, token.value);
+                console.log('File uploaded successfully:', data);
+                wine.uploadFile = data.data.publicURL
+                wine.fileType = data.data.contentType
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            }
+        };
+
         const onAddToCartClick = async (WineLiquorId) => {
             const wine = wineSearch.value.find(w => w.Id === WineLiquorId);
             const editingItem = itemsArray.value.find(i => i.isEditing);
@@ -482,7 +572,8 @@ export default {
             console.log("Add array:", addArray.value)
             isNewWine.value = true
             itemsArray.value.push({ WineLiquor: { DisplayName: addArray.value.WineName, CategoryLabel: addArray.value.CategoryName, Country: addArray.value.Country }, 
-            WineLiquorPic: {WineLiquorYear: addArray.value.Year, Alcohol: addArray.value.AVB, Path: addArray.value.Path}, BottleSize: addArray.value.BottleSize, InitialValue : addArray.value.RecommendMinPrice, ExciseTax: addArray.value.exciseTaxByTotal, LocalTax: addArray.value.externalLocal, Fund: addArray.value.externalFund, CustomsDuty: addArray.value.exciseTaxByDuty, TotalTax: addArray.value.externalTotal, WineLiquorTotal: addArray.value.quantity, isNewWine: true, isCorrect: true})
+            WineLiquorPic: {WineLiquorYear: addArray.value.Year, Alcohol: addArray.value.AVB, Path: addArray.value.Path}, BottleSize: addArray.value.BottleSize, InitialValue : addArray.value.RecommendMinPrice, ExciseTax: addArray.value.exciseTaxByTotal, LocalTax: addArray.value.externalLocal, Fund: addArray.value.externalFund, CustomsDuty: addArray.value.exciseTaxByDuty, TotalTax: addArray.value.externalTotal, WineLiquorTotal: addArray.value.quantity, isNewWine: true, isCorrect: true,
+            uploadFile: addArray.value.uploadFile, fileType: addArray.value.fileType})
             console.log("Updated items array : ", itemsArray.value);
             disabledIncorrect.value = false
 
@@ -494,6 +585,11 @@ export default {
             // vintage.value = '';
             // bottleSize.value = '';
             wineSearch.value = [];
+        }
+
+        const onFileDisplayClick = (wineId) => {
+            const wine = itemsArray.value.find(w => w.Id === wineId);
+            wine.displayFile = wine.displayFile ? false : true
         }
 
         const calculateSummary = (Items) => {
@@ -647,6 +743,30 @@ export default {
             router.push('/import-wine-list')
         }
 
+        const onDownloadQRCodeClick = async () => {
+            console.log("Downloading QR Code!!!!!!!!");
+            
+            const getQR = await getQRCode(importCartId.value, token.value)
+            console.log('GET QR DATA', getQR.data)
+
+            const qrData = getQR.data; 
+
+            QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H' }, (err, url) => {
+                if (err) {
+                console.error(err);
+                return;
+                }
+
+                // Create a link element to download the QR code
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'qr-code.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+
         const fetchCartItem = async () => {
             spinner.value = true
             const getCartData = await getCartItem(importCartId.value, token.value)
@@ -757,6 +877,14 @@ export default {
             totalQty,
             totalInitialValue,
             totalTaxAll,
+            isEdit,
+            onEditPriceClick,
+            onFileUpload,
+            uploadWineFile,
+            onPriceConfirmClick,
+            onFileDisplayClick,
+            displayFile,
+            onDownloadQRCodeClick
         }
     }
 }
@@ -1053,5 +1181,75 @@ export default {
     padding: 7px 20px;
     border: 1px solid transparent;
     border-radius: 0.5rem;
+}
+
+.upload-icon {
+    width: 50px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.price-input {
+    width: 168px;
+    height: 32px;
+    box-shadow: 0px 3px 6px #00000029;
+    border: 1px solid #CACACA;
+    border-radius: 5px;
+}
+
+.price-edit-buttons {
+    margin-top: 10px;
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.price-edit-buttons .btn-cancel {
+    width: 167px;
+    height: 44px;
+    background-color: #77818A;
+    border: none;
+    border-radius: 5px;
+    margin-right: 3px
+}
+
+.price-edit-buttons .btn-save {
+    width: 167px;
+    height: 44px;
+    background-color: #2B476D;
+    border: none;
+    border-radius: 5px;
+    margin-left: 3px
+}
+
+.upload-session {
+    margin: 0px 20px 20px 20px;
+}
+
+.image-input {
+    display: none;
+    position: absolute;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.upload-card {
+    margin: 25px 0px;
+    padding: 20px;
+    border: 1px dashed #2B476D;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.upload-card h3 {
+    color: #2B476D;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.upload-card p {
+    color: #2B476D;
+    font-size: 14px;
 }
 </style>

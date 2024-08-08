@@ -252,6 +252,7 @@ export default {
         // const items = [
         //   ...cartItems.value
         // ];
+        
 
         const tableTop = height - 540;
         const tableLeft = 80;
@@ -278,6 +279,32 @@ export default {
               color: rgb(0, 0, 0)
             });
           }
+          // const splitText = (text, maxWidth, font, size) => {
+          //   const words = text.split(' ');
+          //   let lines = [];
+          //   let currentLine = '';
+
+          //   words.forEach(word => {
+          //     const testLine = currentLine + word + ' ';
+          //     const { width: testWidth } = font.widthOfTextAtSize(testLine, size);
+
+          //     if (testWidth > maxWidth && currentLine !== '') {
+          //       lines.push(currentLine.trim());
+          //       currentLine = word + ' ';
+          //     } else {
+          //       currentLine = testLine;
+          //     }
+          //   });
+          //   lines.push(currentLine.trim());
+          //   return lines;
+          // };
+
+          // if (item.WineLiquor.DisplayName) {
+          //   const displayNameLines = splitText(String(item.WineLiquor.DisplayName), 80, sarabunFont, 10);
+          //   displayNameLines.forEach((line, i) => {
+          //     page.drawText(line, tableLeft + 85, y - (i * rowHeight), sarabunFont, 10, rgb(0, 0, 0));
+          //   });
+          // }
 
           if (item.WineLiquor.DisplayName) {
             page.drawText(String(item.WineLiquor.DisplayName), {

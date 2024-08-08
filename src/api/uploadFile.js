@@ -1,5 +1,6 @@
 export const uploadFileV4 = async (file, accessToken) => {
     const myHeaders = new Headers();
+    if (!accessToken) { return false }
     myHeaders.append("Authorization", `Bearer ${accessToken}`);
     
     const formdata = new FormData();

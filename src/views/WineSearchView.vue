@@ -278,8 +278,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import algoliasearch from 'algoliasearch';
 import { BroadcastChannel } from 'broadcast-channel';
 import { getWineSearch, getBottleSize, uploadWineSearchImage } from '@/api/getWineSearch.js'
-import { storage } from '@/firebase'
-import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage"
+import { uploadFileV4 } from '@/api/uploadFile.js';
 
 export default {
     // components: {
@@ -320,6 +319,7 @@ export default {
         const wineNameFromImage = ref('')
         const algoliaImageResults = ref([])
         const imageSearchModal = ref(false)
+        const token = ref('')
 
         const cartChannel = new BroadcastChannel('cart_channel');
 
@@ -540,44 +540,20 @@ export default {
         }
 
         const uploadWineFile = async (event, wineId) => {
-            const uploadedFile = event.target.files[0]
             const wine = wineSearch.value.find(w => w.Id === wineId);
-            console.log("Uploaded File :", uploadedFile)
-            if (wine && uploadedFile) {
-                const fileRef = storageRef(storage, `wine_files/${uploadedFile.name}`);
-                console.log("Storage Ref :", fileRef)
-                try {
-                    const snapshot = await uploadBytes(fileRef, uploadedFile);
-                    const downloadURL = await getDownloadURL(snapshot.ref);
-                    wine.uploadFile = {
-                        name: uploadedFile.name,
-                        size: uploadedFile.size,
-                        type: uploadedFile.type,
-                        lastModified: uploadedFile.lastModified,
-                        url: downloadURL
-                    };
-                    console.log('File uploaded successfully, URL:', downloadURL);
+            const file = event.target.files[0];
+            if (!file) {
+                alert('No file selected!');
+                return;
+            }
 
-                    // Update localStorage with the new uploadFile URL
-                    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-                    const existingItemIndex = cartItems.findIndex(item => item.Id === wineId);
-
-                    if (existingItemIndex !== -1) {
-                        cartItems[existingItemIndex].uploadFile = wine.uploadFile;
-                    } else {
-                        cartItems.push({
-                            ...wine,
-                            uploadFile: wine.uploadFile
-                        });
-                    }
-                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-                    localStorage.setItem('totalLitersToShow', totalLiters.value)
-
-                } catch (error) {
-                    console.error('File upload failed:', error);
-                }
-            } else {
-                console.error('No file to upload or wine not found.');
+            try {
+                const data = await uploadFileV4(file, token.value);
+                console.log('File uploaded successfully:', data);
+                wine.uploadFile = data.data.publicURL
+                wine.fileType = data.data.contentType
+            } catch (error) {
+                console.error('Error uploading file:', error);
             }
         };
 
@@ -664,6 +640,8 @@ export default {
         onMounted ( () => {
             fetchBottleSizes();
             generateYearsArray();
+
+            token.value = localStorage.getItem('token')
 
             addedCartItems.value = JSON.parse(localStorage.getItem('cartItems'))
             if(addedCartItems.value && addedCartItems.value.length > 0) {

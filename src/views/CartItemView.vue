@@ -67,10 +67,18 @@
                                 <button class="btn-count" @click="increaseQuantity(wine.Id)" :disabled="totalLiters + (wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(wine.BottleSize) / 1000) : extractBottleSizeL(wine.BottleSize)) > 10.00">+</button>
                             </div>
                         </div>
+                        <div v-if="wine.uploadFile">
+                            <button class="btn-display-file" @click="onFileDisplayClick()">
+                                <img src="../assets/img/eye-icon.webp" alt="" style="height: 14px; width: auto; margin-right: 5px;">ซ่อนหลักฐานการชำระเงิน
+                            </button>
+                        </div>
                         <div>
                             <button class="delete-product" @click="onDeleteCartItemClick(wine.Id)">ลบรายการสินค้า</button>
                         </div>
                     </div>
+                </div>
+                <div v-if="wine.displayFile" class="file-display">
+                    <iframe :src="wine.uploadFile" frameborder="0" class="file-display-frame w-100"></iframe>
                 </div>
             </div>
             <div class="summary-card">
@@ -184,12 +192,18 @@ export default {
         const statusList = ref([])
         const status = ref('')
         const spinner = ref(false)
+        const displayFile = ref(false)
 
         const isLoggedIn = ref(false)
 
         const cartChannel = new BroadcastChannel('cart_channel');
 
         const isTotalLitersExceeded = computed(() => totalLiters.value > 10);
+
+        const onFileDisplayClick = (wineId) => {
+            const wine = cartItems.value.find(w => w.Id === wineId);
+            wine.displayFile = !!wine.displayFile
+        }
 
         const onConfirmClick = async() => {
             const newParseFloat = (val) => parseFloat(`${val}`.replace(/,/g, ""));
@@ -505,7 +519,9 @@ export default {
             registerModal,
             isTotalLitersExceeded,
             validationMessage,
-            idErrorMessage
+            idErrorMessage,
+            onFileDisplayClick,
+            displayFile
         }
     }
 }

@@ -123,15 +123,6 @@
                     <button class="btn-previous" @click="onPreviousClick">ย้อนกลับ</button>
                     <button class="btn-downloadQr" @click="onDownloadQRCodeClick">ดาวน์โหลดคิวอาร์โค้ดและแบบฟอร์ม</button>
                 </div>
-                <div v-else>
-                    <div class="payment-success">
-                        <p class="payment-success-text">ทำการชำระภาษีสำเร็จ</p>
-                    </div>
-                    <!-- <div class="summary-button"> -->
-                        <button class="btn-home" @click="onBackToHomeClick">กลับหน้าแรก</button>
-                        <button class="btn-downloadQr" @click="onDownloadQRCodeClick">ดาวน์โหลดคิวอาร์โค้ดและแบบฟอร์ม</button>
-                    <!-- </div> -->
-                </div>
             </div>
         </div>
     </div>
@@ -147,6 +138,8 @@ import { ref, onMounted, computed } from 'vue'
 import { getCartItem } from '@/api/getWineSearch'
 import { useRouter } from 'vue-router'
 import { getEnumGroup } from '@/api/getMaster'
+import { getQRCode } from '@/api/getQRData'
+import QRCode from 'qrcode';
 
 export default {
     props: ['cardId'],
@@ -225,8 +218,28 @@ export default {
             router.push('/import-wine-list')
         }
 
-        const onDownloadQRCodeClick = () => {
+        const onDownloadQRCodeClick = async() => {
+            console.log("Downloading QR Code!!!!!!!!");
             
+            const getQR = await getQRCode(importCartId.value, token.value)
+            console.log('GET QR DATA', getQR.data)
+
+            const qrData = getQR.data; 
+
+            QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H' }, (err, url) => {
+                if (err) {
+                console.error(err);
+                return;
+                }
+
+                // Create a link element to download the QR code
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'qr-code.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
         }
 
         const fetchCartItem = async () => {

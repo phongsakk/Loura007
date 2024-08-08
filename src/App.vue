@@ -405,4 +405,36 @@ tbody, td, tfoot, th, thead, tr {
     font-size: 22px;
     font-weight: 500;
 }
+
+
+.btn-display-file {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 10px;
+    width: 100%;
+    height: 44px;
+    background-color: #2B476D;
+    border: none;
+    color: #FFFFFF;
+    border-radius: 5px;
+}
+
+.file-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: 60%; */
+  height: 100vh; /* or any other height you prefer */
+  padding-left: 20%;
+  padding-right: 20%;
+  padding-bottom: 20px;
+}
+
+.file-display-frame {
+  width: 100%; /* Ensure it takes the full width of the parent */
+  height: 100%; /* Ensure it takes the full height of the parent */
+  border: none;
+
+}
 </style>

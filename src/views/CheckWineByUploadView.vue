@@ -38,7 +38,8 @@
                                     <div class="category">
                                         <p class="category-name" style="margin-bottom: 0px;"><span
                                                 class="category-icon"><img src="../assets/img/wine-img1.png"
-                                                    class="category-image"></span>{{ wine.WineLiquor.CategoryLabel }}</p>
+                                                    class="category-image"></span>{{ wine.WineLiquor.CategoryLabel }}
+                                        </p>
                                     </div>
                                     <div class="year">
                                         <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
@@ -84,14 +85,17 @@
                             </div>
                             <div class="col-lg-3 price-col text-end">
                                 <label class="form-label bold">มูลค่าเบื้องต้น</label>
-                                <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.InitialValue) }} บาท</p>
+                                <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.InitialValue) }}
+                                    บาท</p>
                                 <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
                                 <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
-                                <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท</p>
+                                <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท
+                                </p>
                                 <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ wine.WineLiquorTotal }} ขวด
                                 </p>
                                 <div v-if="isChecked === false">
-                                    <button class="btn-scan" @click="onScanClick(wine.Id)"><img src="../assets/img/scan-icon.png" alt="" class="scan-icon">สแกนฉลาก</button>
+                                    <button class="btn-scan" @click="onScanClick(wine.Id)"><img
+                                            src="../assets/img/scan-icon.png" alt="" class="scan-icon">สแกนฉลาก</button>
                                 </div>
                                 <div v-else>
                                     <div v-if="isUploaded === true">
@@ -230,17 +234,19 @@
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label">ภาษีศุลกากร</label>
-                                        <p style="margin-bottom: 0px;">{{ (addArray.exciseTaxByDuty || 0).toLocaleString('en-US', {
-                                        minimumFractionDigits: 2, maximumFractionDigits: 2
-                                    }) }} บาท</p>
+                                        <p style="margin-bottom: 0px;">{{ (addArray.exciseTaxByDuty ||
+                                            0).toLocaleString('en-US', {
+                                                minimumFractionDigits: 2, maximumFractionDigits: 2
+                                            }) }} บาท</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3 price-col text-end">
                                 <label class="form-label bold">มูลค่าเบื้องต้น</label>
-                                <p class="price-text" style="margin-bottom: 0px;">{{ addArray.RecommendMinPrice.toLocaleString('en-US', {
-                                    minimumFractionDigits: 2, maximumFractionDigits: 2
-                                }) }} บาท</p>
+                                <p class="price-text" style="margin-bottom: 0px;">{{
+                                    addArray.RecommendMinPrice.toLocaleString('en-US', {
+                                        minimumFractionDigits: 2, maximumFractionDigits: 2
+                                    }) }} บาท</p>
                                 <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
                                 <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
                                 <p class="price-text" style="margin-bottom: 0px;">{{ addArray.externalTotal }} บาท</p>
@@ -295,7 +301,8 @@
                         <div v-if="algoliaImageResults.length > 0">
                             <p class="form-label fw-bold text-start" style="margin-bottom: 10px;">ค้นหาด้วยรูปภาพ</p>
                             <div v-for="result in algoliaImageResults" :key="result.objectID">
-                                <div class="image-search-results" @click="onImageResultClick(result.name, result.alcohol)">
+                                <div class="image-search-results"
+                                    @click="onImageResultClick(result.name, result.alcohol)">
                                     <div class="result-name d-flex align-items-center">
                                         <img :src="result.image_label" alt="" class="bottle-image">
                                         <p class="wine-name" style="margin-bottom: 0px;">{{ result.name }}</p>
@@ -342,6 +349,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCartItem, uploadWineSearchImage, getWineSearch, updateCart } from '@/api/getWineSearch'
 import { getBottleSize } from '@/api/getWineSearch.js'
+import { getQRCode } from '@/api/getQRData'
 import { getEnumGroup } from '@/api/getMaster'
 import algoliasearch from 'algoliasearch';
 
@@ -405,6 +413,7 @@ export default {
         const totalTaxAll = ref(0)
 
         const onScanClick = (wineId) => {
+            console.log(wineId);
             const wine = cartItems.value.Items.find(w => w.Id === wineId);
             const removeWine = itemsArray.value.find(w => w.Id === wineId)
             console.log("wine to replace :", removeWine)
@@ -610,7 +619,7 @@ export default {
         }
 
         const calculateSummary = (Items) => {
-            console.log("Calculate summary:", Items);
+            // console.log("Calculate summary:", Items);
             totalLiter.value = Items?.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
                 return acc + (q * (cur.BottleSize === 'Bottle (750ml)' || cur.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(cur.BottleSize) / 1000 : extractBottleSizeL(cur.BottleSize)));
@@ -643,23 +652,32 @@ export default {
 
         const fetchCartItem = async () => {
             spinner.value = true
-            const getCartData = await getCartItem(importCartId.value, token.value)
-            cartItems.value = getCartData.data
-            console.log('Cart data :', cartItems.value)
+            const [cartResponse, qrCodeResponse] = await Promise.all([
+                getCartItem(importCartId.value, token.value), 
+                getQRCode(importCartId.value, token.value)
+            ])
+            cartItems.value = cartResponse.data
+            // console.log('Cart data :', cartItems.value)
             checkpoint.value = cartItems.value.ImportPurpose.Checkpoint
             importPurpose.value = cartItems.value.ImportPurpose.PurposeId
             importDate.value = new Date(cartItems.value.ImportPurpose.PurposeDate).toISOString().slice(0, 10)
-            console.log("Import values :", importPurpose.value, checkpoint.value, importDate.value)
-            itemsArray.value = cartItems.value.Items.map(item => {
+            // console.log("Import values :", importPurpose.value, checkpoint.value, importDate.value)
+            // console.log(qrCodeResponse);
+
+            itemsArray.value = qrCodeResponse.data.map(item => {
+                const cart = cartResponse.data.Items.find((_item) => _item.Id == item.CartItemId)
                 return {
-                    ...item,
+                    qrId: item.Id,
+                    ...cart,
                     isChecked: isChecked.value,
                     isUploaded: isUploaded.value
                 }
             })
+
             console.log("Cart Items after map", itemsArray.value)
             calculateSummary(cartItems.value.Items);
             spinner.value = false
+
         }
 
         const fetchImportPurpose = async () => {
