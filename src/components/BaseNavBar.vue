@@ -10,11 +10,14 @@
                         <p class="cart-list">ปริมาณสุราในตะกร้า {{ totalLiters ? totalLiters : '0' }} /10 ลิตร</p>
                     </div>
                     <div class="nav-item menu-icon" v-if="userTypeId !== '21'">
-                        <a class="cart-icon text-reset dropdown-toggle hidden-arrow" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a v-if="cartItems && cartItems.length > 0" class="cart-icon text-reset dropdown-toggle hidden-arrow" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="../assets/img/cart-logo.png" alt="" class="nav-image">
                             <div v-if="cartItems && cartItems.length > 0">
                                 <span class="badge">{{ cartItems ? cartItems.reduce( (sum, item) => sum + item.quantity, 0) : 0 }}</span>
                             </div>
+                        </a>
+                        <a v-else class="cart-icon text-reset hidden-arrow" href="#" role="button" aria-expanded="false">
+                            <img src="../assets/img/cart-logo.png" alt="" class="nav-image">
                         </a>
                         <ul v-if="cartItems && cartItems.length > 0" class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown" style="width: 500px; max-height: 650px; overflow-y: auto; overflow-x: hidden; right: -100px; padding: 20px 10px;">
                             <li v-for="item in cartItems" :key="item.Id">
@@ -233,7 +236,7 @@ export default {
             }
             const getUserData = await getUserProfile(token.value)
             userData.value = getUserData.data
-            console.log("User data :", getUserData.data.code)
+            // console.log("User data :", getUserData.data.code)
             userName.value = userData.value.FirstName + ' ' + userData.value.LastName
             emailAddress.value = userData.value.Email
             phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile

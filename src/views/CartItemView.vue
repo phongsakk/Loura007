@@ -56,7 +56,7 @@
                     </div>
                     <div class="col-lg-3 price-col text-end">
                         <label class="form-label" style="font-weight: 700;">มูลค่าเบื้องต้น</label>
-                        <p class="price-text">{{ formatNumber(wine.RecommendMinPrice) }} บาท</p>
+                        <p class="price-text">{{ formatNumber(wine.RecommendMinPrice || wine.newPrice) }} บาท</p>
                         <label class="form-label" style="font-weight: 700;">รวมภาษีและเงินกองทุนทั้งหมด</label>
                         <p class="price-text">{{ wine.externalTotal }} บาท</p>
                         <div class="d-flex justify-content-between">
@@ -345,19 +345,20 @@ export default {
         }
 
         const calculateValues = (item) => {
+            const calPrice = item.RecommendMinPrice > 0 ? item.RecommendMinPrice : Number(item.newPrice);
             const bottleSizeToCalculate = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
-            const itemExciseTaxByDuty = item.RecommendMinPrice * 0 * 0.01;
+            const itemExciseTaxByDuty = calPrice * 0 * 0.01;
             const itemExciseTaxByValue = (item.AVB / 100) * bottleSizeToCalculate * taxByValue.value;
-            const itemCalTaxByDuty = (item.RecommendMinPrice + itemExciseTaxByDuty) * (taxByPrice.value / 100);
+            const itemCalTaxByDuty = (calPrice + itemExciseTaxByDuty) * (taxByPrice.value / 100);
             const itemCalTaxByValue = itemExciseTaxByValue * taxByFund.value * (taxByPrice.value / 100);
             const itemCalTaxByFund = 1 - taxByFund.value * (taxByPrice.value / 100);
-            console.log({itemExciseTaxByValue, itemCalTaxByDuty,itemCalTaxByValue,itemCalTaxByFund})
+            // console.log({itemExciseTaxByValue, itemCalTaxByDuty,itemCalTaxByValue,itemCalTaxByFund})
             const itemExciseTaxByPrice = (itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund;
             const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty);
             const itemExternalLocal = 0.1 * itemExciseTaxByTotal;
             const itemExternalFund = 0.075 * itemExciseTaxByTotal;
             const itemExternalTotal = itemExciseTaxByTotal + itemExternalLocal + itemExternalFund;
-            const itemFAndI = 0.11 * item.RecommendMinPrice;
+            const itemFAndI = 0.11 * calPrice;
 
             return {
                 itemExciseTaxByDuty,
@@ -461,7 +462,7 @@ export default {
             isLoggedIn.value = localStorage.getItem('isLoggedIn')
             cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
             token.value = localStorage.getItem('token')
-            console.log("Cart items from localstorage :", cartItems.value)
+            // console.log("Cart items from localstorage :", cartItems.value)
 
             fetchStatus();
 
