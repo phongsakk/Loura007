@@ -425,16 +425,42 @@ tbody, td, tfoot, th, thead, tr {
   justify-content: center;
   align-items: center;
   /* width: 60%; */
-  height: 100vh; /* or any other height you prefer */
-  padding-left: 20%;
-  padding-right: 20%;
+  height: 650px; /* or any other height you prefer */
+  /* padding-left: 20%;
+  padding-right: 20%; */
   padding-bottom: 20px;
 }
 
 .file-display-frame {
-  width: 100%; /* Ensure it takes the full width of the parent */
-  height: 100%; /* Ensure it takes the full height of the parent */
+  width: 550px;
+  height: fit-content;
   border: none;
 
+}
+
+
+.upload-header {
+    color: #2B476D;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.upload-text {
+    color: #2B476D;
+    font-size: 14px;
+}
+
+.after-upload-image {
+    width: 70px;
+    height: auto;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.price-edit-icon {
+    width: 14px;
+    height: auto;
+    margin-bottom: 5px;
 }
 </style>

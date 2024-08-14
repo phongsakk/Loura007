@@ -23,6 +23,7 @@ import CreateAccountView from "@/views/CreateAccountView.vue";
 import RegistrationVerifyViewVue from "@/views/RegistrationVerifyView.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
+import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
 
 const routes = [
   {
@@ -141,6 +142,11 @@ const routes = [
     path: "/verify-register",
     name: "verify-register",
     component: RegistrationVerifyViewVue
+  },
+  {
+    path: "/forgot-password",
+    name: "forgot-password",
+    component: ForgotPasswordView
   },
   {
     path: "/pdf-view",

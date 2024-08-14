@@ -108,9 +108,9 @@
                                         <div class="d-flex justify-content-between">
                                             <label class="form-label">มูลค่าเบื้องต้น</label>
                                             <div v-if="wine.RecommendMinPrice === 0">
-                                                <p v-if="isEdit === false" class="red-text text-end" style="font-size: 18px; font-weight: 700; margin: 10px 0px 0px 0px;" @click="onEditPriceClick(wine.Id)">
+                                                <p v-if="isEdit === false" class="red-text text-end" style="font-size: 18px; font-weight: 700; margin: 10px 0px 0px 0px;">
                                                     ไม่พบราคาในระบบ
-
+                                                    <img src="../assets/img/price-edit-icon.png" alt="" class="price-edit-icon" style="cursor: pointer;" @click="onEditPriceClick(wine.Id)">
                                                 </p>
                                                 <div v-else >
                                                     <input type="text" class="price-input text-end" v-model="wine.newPrice">
@@ -141,12 +141,20 @@
                             </div>
                             <div v-if="isEdit === true" class="upload-session">
                                 <div class="upload-card">
-                                    <input type="file" class="image-input" id="file-input" @change="uploadWineFile($event, wine.Id)">
+                                    <input type="file" class="image-input" id="file-input" accept="application/pdf,image/*" @change="uploadWineFile($event, wine.Id)">
                                     <label for="file-input" class="upload-label" style="cursor: pointer;">
-                                        <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
-                                        <h3 style="margin-bottom: 5px;">อัพโหลดภาพ</h3>
-                                        <h3 style="margin-bottom: 5px;">หลักฐานการชำระเงิน</h3>
-                                        <p>วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป</p>
+                                        <div v-if="wine.fileName">
+                                            <img v-if="wine.fileType === 'application/pdf'" src="../assets/img/pdf-icon.png" alt="" class="after-upload-image">
+                                            <img v-else src="../assets/img/after-upload-icon.png" alt="" class="after-upload-image">
+                                            <p v-if="wine.fileType === 'application/pdf'" class="upload-header">อัพโหลดไฟล์แล้ว</p>
+                                            <p v-else class="upload-header">อัพโหลดรูปภาพแล้ว</p>
+                                        </div>
+                                        <div v-else>
+                                            <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
+                                            <h3 class="upload-header" style="margin-bottom: 5px;">อัพโหลดภาพ</h3>
+                                            <h3 class="upload-header" style="margin-bottom: 5px;">หลักฐานการชำระเงิน</h3>
+                                            <p class="upload-text">วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป</p>
+                                        </div>
                                     </label>
                                 </div>
                                 <div class="price-edit-buttons">
@@ -219,7 +227,7 @@
                         </div>
                         <div class="col-lg-3 price-col text-end">
                             <label class="form-label bold">มูลค่าเบื้องต้น</label>
-                            <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.InitialValue) }} บาท</p>
+                            <p class="price-text" style="margin-bottom: 0px;">{{ wine.InitialValue ? formatNumber(wine.InitialValue) : formatNumber(wine.newPrice) }} บาท</p>
                             <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
                             <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
                             <p class="price-text" style="margin-bottom: 0px;">{{ wine.TotalTax ? wine.TotalTax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0' }} บาท</p>
@@ -227,8 +235,10 @@
                             <div v-if="wine.isCorrect === true">
                                 <button class="btn-checked-correct">ตรวจสอบสุราเรียบร้อยแล้ว</button>
                                 <div v-if="wine.uploadFile">
-                                    <button class="btn-display-file" @click="onFileDisplayClick(wine.Id)">
-                                        <img src="../assets/img/eye-icon.webp" alt="" style="height: 14px; width: auto; margin-right: 5px;">ซ่อนหลักฐานการชำระเงิน
+                                    <button class="btn-display-file" @click="onFileDisplayClick(wine.Id, wine.newPrice)">
+                                        <img src="../assets/img/eye-icon.webp" alt="" style="height: 14px; width: auto; margin-right: 5px;">
+                                        <span v-if="wine.displayFile === false">ดูหลักฐานการชำระเงิน</span>
+                                        <span v-if="wine.displayFile === true">ซ่อนหลักฐานการชำระเงิน</span>
                                     </button>
                                 </div>
                             </div>
@@ -239,12 +249,12 @@
                                     <button class="btn-correct" @click="onCorrectClick(wine.Id)">สินค้าถูกต้อง</button>
                                 </div>
                             </div>
-
-                            
                         </div>
                     </div>
-                    <div v-if="wine.displayFile === true" class="file-display">
-                        <iframe :src="wine.uploadFile" frameborder="0" class="file-display-frame w-100"></iframe>
+                    <div v-if="wine.displayFile" class="file-display">
+                        <div class="file-display-frame text-center d-flex justify-content-center" align="center">
+                            <iframe :src="wine.uploadFile" frameborder="0" class=" w-100" style="height: 650px;"></iframe>
+                        </div>
                     </div>
                 </div>
                 
@@ -310,7 +320,7 @@ import { useRouter } from 'vue-router'
 import { getWineSearch, getBottleSize, updateCart } from '@/api/getWineSearch.js'
 import { getEnumGroup } from '@/api/getMaster'
 import { uploadFileV4 } from '@/api/uploadFile'
-import { getQRCode } from '@/api/getQRData'
+// import { getQRCode } from '@/api/getQRData'
 import QRCode from 'qrcode';
 
 export default {
@@ -383,6 +393,7 @@ export default {
             const wineIndex = itemsArray.value.findIndex(w => w.Id === wineId);
             if (wineIndex !== -1) {
                 itemsArray.value[wineIndex].isCorrect = true;
+                itemsArray.value[wineIndex].isChecked = true;
                 itemsArray.value = [...itemsArray.value ]; // Ensure reactivity
                 console.log("Correct wine :", itemsArray.value);
             }
@@ -395,6 +406,8 @@ export default {
             if (wineIndex !== -1 && removeIndex !== -1) {
                 cartItems.value.Items[wineIndex].isCorrect = false;
                 itemsArray.value[removeIndex].isCorrect = false;
+                cartItems.value.Items[wineIndex].isChecked = true;
+                itemsArray.value[removeIndex].isChecked = true;
                 disabledIncorrect.value = true;
                 removeArray.value.push(cartItems.value.Items[wineIndex]);
                 itemsArray.value = [...itemsArray.value]; // Ensure reactivity
@@ -499,11 +512,6 @@ export default {
             // cartChannel.postMessage ("It's new item adding to cart")
         }
 
-        // const onAddToCartClick = async (wineId) => {
-        //     newAddedWine.value = wineSearch.value.find(w => w.Id === wineId);
-        //     console.log("New object:", newAddedWine.value)
-        // }
-
         const onEditPriceClick = (wineId) => {
             const wine = wineSearch.value.find(w => w.Id === wineId);
             isEdit.value = true
@@ -527,6 +535,7 @@ export default {
         }
 
         const uploadWineFile = async (event, wineId) => {
+            spinner.value = true;
             const wine = wineSearch.value.find(w => w.Id === wineId);
             const file = event.target.files[0];
             if (!file) {
@@ -537,11 +546,13 @@ export default {
             try {
                 const data = await uploadFileV4(file, token.value);
                 console.log('File uploaded successfully:', data);
-                wine.uploadFile = data.data.publicURL
-                wine.fileType = data.data.contentType
+                wine.uploadFile = data.data.publicURL;
+                wine.fileType = data.data.contentType;
+                wine.fileName = file.name; // Store the file name
             } catch (error) {
                 console.error('Error uploading file:', error);
             }
+            spinner.value = false;
         };
 
         const onAddToCartClick = async (WineLiquorId) => {
@@ -571,15 +582,30 @@ export default {
             });
             console.log("Add array:", addArray.value)
             isNewWine.value = true
-            itemsArray.value.push({ WineLiquor: { DisplayName: addArray.value.WineName, CategoryLabel: addArray.value.CategoryName, Country: addArray.value.Country }, 
-            WineLiquorPic: {WineLiquorYear: addArray.value.Year, Alcohol: addArray.value.AVB, Path: addArray.value.Path}, BottleSize: addArray.value.BottleSize, InitialValue : addArray.value.RecommendMinPrice, ExciseTax: addArray.value.exciseTaxByTotal, LocalTax: addArray.value.externalLocal, Fund: addArray.value.externalFund, CustomsDuty: addArray.value.exciseTaxByDuty, TotalTax: addArray.value.externalTotal, WineLiquorTotal: addArray.value.quantity, isNewWine: true, isCorrect: true,
-            uploadFile: addArray.value.uploadFile, fileType: addArray.value.fileType})
-            console.log("Updated items array : ", itemsArray.value);
+
+            const existingItem = itemsArray.value.find(i => 
+                i.Id === item.Id &&
+                i.InitialValue === item.RecommendMinPrice &&
+                i.WineLiquor.Country === item.Country &&
+                i.WineLiquor.DisplayName === item.WineName &&
+                i.WineLiquorPic.WineLiquorYear === item.Year
+            );
+
+            if (existingItem) {
+                existingItem.WineLiquorTotal += item.quantity;
+                console.log("Updated quantity for existing item:", existingItem);
+            } else {
+                itemsArray.value.push({ WineLiquor: { DisplayName: addArray.value.WineName, CategoryLabel: addArray.value.CategoryName, Country: addArray.value.Country }, 
+                WineLiquorPic: {WineLiquorYear: addArray.value.Year, Alcohol: addArray.value.AVB, Path: addArray.value.Path}, BottleSize: addArray.value.BottleSize, InitialValue : addArray.value.RecommendMinPrice, ExciseTax: addArray.value.exciseTaxByTotal, LocalTax: addArray.value.externalLocal, Fund: addArray.value.externalFund, CustomsDuty: addArray.value.exciseTaxByDuty, TotalTax: addArray.value.externalTotal, WineLiquorTotal: addArray.value.quantity, isNewWine: true, isCorrect: true,
+                uploadFile: addArray.value.uploadFile, fileType: addArray.value.fileType, displayFile: displayFile.value, Id: addArray.value.Id, newPrice: addArray.value?.newPrice, isChecked: true})
+                console.log("Updated items array : ", itemsArray.value);
+            }
+            
             disabledIncorrect.value = false
 
             console.log(item);
 
-            calculateSummary([item]);
+            calculateSummary();
 
             wineName.value = '';
             // vintage.value = '';
@@ -587,30 +613,41 @@ export default {
             wineSearch.value = [];
         }
 
-        const onFileDisplayClick = (wineId) => {
-            const wine = itemsArray.value.find(w => w.Id === wineId);
-            wine.displayFile = wine.displayFile ? false : true
+        const onFileDisplayClick = (wineId, winePrice) => {
+            const wine = itemsArray.value.find(w => w.Id === wineId && w.newPrice === winePrice);
+            console.log("New Price : ", winePrice)
+            if (wine.displayFile === false) {
+                wine.displayFile = true
+            }
+            else {
+                wine.displayFile = false
+            }
         }
 
-        const calculateSummary = (Items) => {
-            console.log("Calculate summary:", Items);
-            totalLiter.value = Items?.reduce((acc, cur) => {
+        const calculateSummary = () => {
+            console.log("Calculate summary:", itemsArray.value);
+            const filteredItems = itemsArray.value.filter(item => item.isCorrect !== false);
+
+            totalLiter.value = filteredItems.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
                 return acc + (q * (cur.BottleSize === 'Bottle (750ml)' || cur.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(cur.BottleSize) / 1000 : extractBottleSizeL(cur.BottleSize)));
-            }, 0)
-            totalQty.value = Items?.reduce((acc, cur) => {
+            }, 0);
+
+            totalQty.value = filteredItems.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
                 return acc + q;
             }, 0);
-            totalInitialValue.value = Items?.reduce((acc, cur) => {
+
+            totalInitialValue.value = filteredItems.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
                 const value = cur.InitialValue || cur.RecommendMinPrice;
-                return acc + (q * value)
+                return acc + (q * value);
             }, 0);
-            totalTaxAll.value = Items?.reduce((acc, cur) => {
+
+            totalTaxAll.value = filteredItems.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
                 const t = cur.TotalTax || parseFloat(cur.externalTotal.replace(/,/g, ""));
-                return acc + (q * t)
+                return acc + (q * t);
             }, 0);
         };
 
@@ -687,15 +724,17 @@ export default {
 
         const onSaveClick = async () => {
             console.log("Add & remove array :", addArray.value, removeArray.value)
-            const allItemsCorrect = itemsArray.value.every(item => item.isCorrect === true);
+            console.log("ItemsArray to save :", itemsArray.value)
+            const allItemsCorrect = itemsArray.value.every(item => item.isChecked === true);
 
             if (!allItemsCorrect) {
                 console.log("Not all items are correct. Save operation aborted.");
                 return;
             }
+
             if (addArray.value && addArray.value.length > 0) {
                 const wineData = {
-                    isStatus : 1,
+                    isStatus : 2,
                     Add: [{
                         WineLiquorId: addArray.value.WineLiquorId,
                         Year: addArray.value.Year,
@@ -734,7 +773,7 @@ export default {
             }
             else {
                 const wineData = {
-                    IsStatus : 1,
+                    IsStatus : 2,
                 }
                 console.log("Wine Data :", wineData)
                 const updateCartItem = await updateCart(wineData, importCartId.value, token.value)
@@ -746,10 +785,10 @@ export default {
         const onDownloadQRCodeClick = async () => {
             console.log("Downloading QR Code!!!!!!!!");
             
-            const getQR = await getQRCode(importCartId.value, token.value)
-            console.log('GET QR DATA', getQR.data)
+            // const getQR = await getQRCode(importCartId.value, token.value)
+            // console.log('GET QR DATA', getQR.data)
 
-            const qrData = getQR.data; 
+            const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`; 
 
             QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H' }, (err, url) => {
                 if (err) {
@@ -1205,6 +1244,10 @@ export default {
 }
 
 .price-edit-buttons .btn-cancel {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
     width: 167px;
     height: 44px;
     background-color: #77818A;
@@ -1214,6 +1257,10 @@ export default {
 }
 
 .price-edit-buttons .btn-save {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
     width: 167px;
     height: 44px;
     background-color: #2B476D;
@@ -1241,15 +1288,4 @@ export default {
     cursor: pointer;
 }
 
-.upload-card h3 {
-    color: #2B476D;
-    font-size: 17px;
-    font-weight: 700;
-    margin-bottom: 20px;
-}
-
-.upload-card p {
-    color: #2B476D;
-    font-size: 14px;
-}
 </style>

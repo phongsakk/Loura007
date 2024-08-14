@@ -3,34 +3,6 @@
         <div class="header-card">
             <h1 class="text-start">รายการไวน์ในตระกร้า</h1>
         </div>
-        <div class="table-card">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col" class="table-header">ลำดับ</th>
-                        <th scope="col" class="table-header">ประเภทสินค้า</th>
-                        <th scope="col" class="table-header">แบบ/รุ่น</th>
-                        <th scope="col" class="table-header">ดีกรี/ปริมาณน้ำตาล<br/>CO2/น้ำหนัก/มวล</th>
-                        <th scope="col" class="table-header">ขนาด</th>
-                        <th scope="col" class="table-header">ปริมาณที่นำเข้า</th>
-                        <th scope="col" class="table-header">ราคาที่ใช้เป็นฐาน ในการคำนานภาษี</th>
-                        <!-- <th scope="col" class="table-header">หมายเหตุ</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(wine, index) in cartItems.Items" :key="wine.Id">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ wine.WineLiquor.CategoryLabel }}</td>
-                        <td>{{ wine.WineLiquorPic.ClassDescription }}</td>
-                        <td>{{ wine.WineLiquorPic.Alcohol }}%</td>
-                        <td>{{ wine.BottleSize }}</td>
-                        <td>{{ wine.WineLiquorTotal }}</td>
-                        <td>{{ formatNumber(wine.InitialValue * wine.WineLiquorTotal) }}บาท</td>
-                        <!-- <td>{{ wine. }}</td> -->
-                    </tr>
-                </tbody>
-            </table>
-        </div>
         <div class="import-card">
             <div class="row text-start">
                 <div class="col-4 horizontal-divider-before">
@@ -47,6 +19,36 @@
                 </div>
             </div>
         </div>
+        <div class="table-card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="table-header blue-text">ลำดับ</th>
+                        <th scope="col" class="table-header blue-text text-start">ประเภทสินค้า</th>
+                        <th scope="col" class="table-header blue-text text-start">ชื่อสินค้า</th>
+                        <th scope="col" class="table-header blue-text">แบบ/รุ่น</th>
+                        <th scope="col" class="table-header blue-text">ดีกรี/ปริมาณน้ำตาล<br/>CO2/น้ำหนัก/มวล</th>
+                        <th scope="col" class="table-header blue-text">ขนาด</th>
+                        <th scope="col" class="table-header blue-text">ปริมาณที่นำเข้า</th>
+                        <th scope="col" class="table-header blue-text">ราคาที่ใช้เป็นฐาน ในการคำนานภาษี</th>
+                        <!-- <th scope="col" class="table-header">หมายเหตุ</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(wine, index) in cartItems.Items" :key="wine.Id">
+                        <td>{{ index + 1 }}</td>
+                        <td class="text-start">{{ wine.WineLiquor.CategoryLabel }}</td>
+                        <td class="text-start">{{ wine.WineLiquor.DisplayName }}</td>
+                        <td>{{ wine.WineLiquorPic.WineLiquorYear }}</td>
+                        <td>{{ wine.WineLiquorPic.Alcohol }}%</td>
+                        <td>{{ wine.BottleSize }}</td>
+                        <td>{{ wine.WineLiquorTotal }} ขวด</td>
+                        <td class="fw-bold">{{ formatNumber(wine.InitialValue * wine.WineLiquorTotal) }} บาท</td>
+                        <!-- <td>{{ wine. }}</td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="summary-card">
             <div class="d-flex justify-content-between">
                 <p class="text-start summary-label">ปริมาตรสุราในตะกร้า</p>
@@ -62,29 +64,18 @@
                     minimumFractionDigits: 2, maximumFractionDigits: 2
                 }) }} บาท</p>
             </div>
-            <div class="d-flex justify-content-between">
-                <p class="text-start summary-label">มูลค่าภาษีเดิมที่ชำระแล้ว</p>
-                <p class="text-end summary-value">{{ totalTaxAll.toLocaleString('en-US', {
-                    minimumFractionDigits: 2, maximumFractionDigits: 2
-                }) }} บาท</p>
-            </div>
-            <div class="d-flex justify-content-between">
-                <p class="text-start summary-label">มูลค่าภาษีใหม่ที่ต้องชำระ</p>
-                <p class="text-end summary-value">{{ totalTaxAll.toLocaleString('en-US', {
-                    minimumFractionDigits: 2, maximumFractionDigits: 2
-                }) }} บาท</p>
-            </div>
             <hr class="divider-line">
             <div class="d-flex justify-content-between">
-                <p class="text-start summary-label" style="font-weight: 700; color: #5896DE;">รวมมูลค่าภาษีที่ต้องชำระ</p>
+                <p class="text-start summary-label" style="font-weight: 700;">รวมมูลค่าภาษีที่ต้องชำระ</p>
                 <p class="text-end summary-value">{{ totalTaxAll.toLocaleString('en-US', {
                     minimumFractionDigits: 2, maximumFractionDigits: 2
                 }) }} บาท</p>
             </div>
             <div class="payment-success">
+                <img src="../assets/img/success-icon.png" alt="" class="success-icon">
                 <p class="payment-success-text">ทำการชำระภาษีสำเร็จ</p>
             </div>
-            <div style="padding: 0px 100px;">
+            <div style="padding: 0px 80px;">
                 <button class="btn-previous" @click="onPreviousClick">กลับหน้าแรก</button>
                 <button class="btn-downloadQr" @click="onDownloadQRCodeClick">ดาวน์โหลดคิวอาร์โค้ดและแบบฟอร์ม</button>
             </div>
@@ -96,6 +87,7 @@
 import { ref, onMounted } from 'vue'
 import { getCartItem } from '@/api/getWineSearch'
 import { useRouter } from 'vue-router'
+import QRCode from 'qrcode';
 
 export default {
     setup() {
@@ -117,6 +109,25 @@ export default {
 
         const onPreviousClick = () => {
             router.push ('/import-wine-list')
+        }
+
+        const onDownloadQRCodeClick = () => {
+            const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`; 
+
+            QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H' }, (err, url) => {
+                if (err) {
+                console.error(err);
+                return;
+                }
+
+                // Create a link element to download the QR code
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'qr-code.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
         }
 
         const fetchCartItem = async () => {
@@ -172,7 +183,7 @@ export default {
             totalInitialPrice,
             totalTax,
             onPreviousClick,
-
+            onDownloadQRCodeClick,
             totalLiter,
             totalQty,
             totalInitialValue,
@@ -184,7 +195,7 @@ export default {
 
 <style scoped>
 .import-card {
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 40px 20%;
     box-shadow: 0px 2px 6px #00000080;
     border-radius: 14px;
@@ -202,9 +213,12 @@ export default {
 }
 
 .btn-previous {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
     width: 100%;
     height: 44px;
-    background-color: #77818A;
+    background-color: #2B476D;
     color: #FFFFFF;
     border: none;
     border-radius: 5px;
@@ -212,11 +226,20 @@ export default {
 }
 
 .btn-downloadQr {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
     width: 100%;
     height: 44px;
     background-color: #FFFFFF;
     color: #3D3E3E;
     border: 2px solid #3D3E3E;
     border-radius: 5px;
+}
+
+.success-icon {
+    width: 60px;
+    height: auto;
+    margin-right: 10px;
 }
 </style>

@@ -16,7 +16,7 @@
                                 <span class="badge">{{ cartItems ? cartItems.reduce( (sum, item) => sum + item.quantity, 0) : 0 }}</span>
                             </div>
                         </a>
-                        <ul v-if="cartItems && cartItems.length > 0" class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown" style="width: 500px; right: -100px; padding: 20px 10px;">
+                        <ul v-if="cartItems && cartItems.length > 0" class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown" style="width: 500px; max-height: 650px; overflow-y: auto; overflow-x: hidden; right: -100px; padding: 20px 10px;">
                             <li v-for="item in cartItems" :key="item.Id">
                                 <div class="row" style="padding: 10px 20px;">
                                     <div class="col-4">
@@ -29,9 +29,9 @@
                                         <div class="d-flex justify-content-between">
                                             <p class="cart-label text-start">จำนวนขวด</p>
                                             <div class="quantity-count">
-                                                <button class="btn-count" @click="decreaseQuantity(item.Id)" :disabled="item.quantity <= 1">-</button>
+                                                <button class="btn-count" @click.stop="decreaseQuantity(item.Id)" :disabled="item.quantity <= 1">-</button>
                                                 <input type="text" class="quantity-input text-center" v-model="item.quantity" disabled>
-                                                <button class="btn-count" @click="increaseQuantity(item.Id)" :disabled="totalLiters + (item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(item.BottleSize) / 1000) : extractBottleSizeL(item.BottleSize)) > 10.00">+</button>
+                                                <button class="btn-count" @click.stop="increaseQuantity(item.Id)" :disabled="totalLiters + (item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(item.BottleSize) / 1000) : extractBottleSizeL(item.BottleSize)) > 10.00">+</button>
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-between">
@@ -154,38 +154,40 @@ export default {
             router.push('/login')
         }
 
-        // const decreaseQuantity = (wineId) => {
-        //     const index = cartItems.value.findIndex(item => item.Id === wineId);
-        //     if (index !== -1 && cartItems.value[index].quantity > 1) {
-        //         cartItems.value[index].quantity--;
-        //         updateLocalStorage();
-        //         // updateBroadcastChannel();
-        //     }
-        // };
+        const decreaseQuantity = (wineId) => {
+            const index = cartItems.value.findIndex(item => item.Id === wineId);
+            if (index !== -1 && cartItems.value[index].quantity > 1) {
+                cartItems.value[index].quantity--;
+                updateLocalStorage();
+                cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
+                // updateBroadcastChannel();
+            }
+        };
 
-        // const increaseQuantity = (wineId) => {
-        //     const index = cartItems.value.findIndex(item => item.Id === wineId);
-        //     if (index !== -1) {
-        //         const item = cartItems.value[index];
-        //         const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
-        //         const newTotalLiters = totalLiters.value + (bottleSize * item.quantity);
-        //         if (newTotalLiters <= 10) {
-        //             cartItems.value[index].quantity++;
-        //             updateLocalStorage();
-        //             // updateBroadcastChannel();
-        //         }
-        //     }
-        // };
+        const increaseQuantity = (wineId) => {
+            const index = cartItems.value.findIndex(item => item.Id === wineId);
+            if (index !== -1) {
+                // const item = cartItems.value[index];
+                // const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
+                // const newTotalLiters = totalLiters.value + (bottleSize * item.quantity);
+                // if (newTotalLiters <= 10) {
+                    cartItems.value[index].quantity++;
+                    updateLocalStorage();
+                    cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
+                    // updateBroadcastChannel();
+                // }
+            }
+        };
 
-        // const updateLocalStorage = () => {
-        //     localStorage.setItem('cartItems', JSON.stringify(cartItems.value));
-        //     const totalLitersValue = cartItems.value.reduce((sum, item) => {
-        //         const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
-        //         return sum + (bottleSize * item.quantity);
-        //     }, 0);
-        //     localStorage.setItem('totalLitersToShow', totalLitersValue);
-        //     totalLiters.value = totalLitersValue;
-        // };
+        const updateLocalStorage = () => {
+            localStorage.setItem('cartItems', JSON.stringify(cartItems.value));
+            const totalLitersValue = cartItems.value.reduce((sum, item) => {
+                const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
+                return sum + (bottleSize * item.quantity);
+            }, 0);
+            localStorage.setItem('totalLitersToShow', totalLitersValue);
+            totalLiters.value = totalLitersValue;
+        };
 
         // const updateBroadcastChannel = () => {
         //     // const channel = new BroadcastChannel("cart_channel");
@@ -222,8 +224,9 @@ export default {
         }
 
         const fetchUserProfile = async () => {
-            if (!token.value) return
-
+            if (!token.value) {
+                router.push('/login')
+            }
             const getUserData = await getUserProfile(token.value)
             userData.value = getUserData.data
             console.log("User data :", getUserData.data.code)
@@ -265,8 +268,8 @@ export default {
             extractBottleSizeL,
             extractBottleSizeMl,
             formatNumber,
-            // decreaseQuantity,
-            // increaseQuantity
+            decreaseQuantity,
+            increaseQuantity
         }
     }
 }

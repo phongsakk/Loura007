@@ -217,6 +217,9 @@ export default {
         onMounted (() => {
             // cartId.value = localStorage.getItem('cartId')
             token.value = localStorage.getItem('token')
+            if (!token.value) {
+                router.push({ name: 'login' })
+            }
             userTypeId.value = localStorage.getItem('userTypeId')
             fetchCartItem()
         })

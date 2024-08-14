@@ -43,7 +43,7 @@
                         <td>{{ wine.WineLiquorPic.Alcohol }}</td>
                         <td>{{ wine.BottleSize }}</td>
                         <td>{{ wine.WineLiquorTotal }} ขวด</td>
-                        <td>{{ formatNumber(wine.InitialValue) }} บาท</td>
+                        <td class="fw-bold">{{ formatNumber(wine.InitialValue) }} บาท</td>
                     </tr>
                 </tbody>
             </table>
@@ -111,6 +111,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCartItem } from '@/api/getWineSearch'
+import QRCode from 'qrcode';
 
 export default {
     setup() {
@@ -128,6 +129,25 @@ export default {
 
         const onBackToHomeClick = () => {
             router.push('/import-wine-list')
+        }
+
+        const onDownloadQRCodeClick = () => {
+            const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`; 
+
+            QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H' }, (err, url) => {
+                if (err) {
+                console.error(err);
+                return;
+                }
+
+                // Create a link element to download the QR code
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'qr-code.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
         }
 
         const fetchCartItem = async () => {
@@ -277,7 +297,8 @@ export default {
             totalQuantity,
             totalInitialPrice,
             totalTaxAmount,
-            onBackToHomeClick
+            onBackToHomeClick,
+            onDownloadQRCodeClick
         }
     }
 }

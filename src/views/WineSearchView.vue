@@ -101,9 +101,9 @@
                                 <div class="d-flex justify-content-between">
                                     <label class="form-label text-start" style="margin-bottom: 0px;">มูลค่าเบื้องต้น</label>
                                     <div v-if="wine.RecommendMinPrice === 0">
-                                        <p v-if="isEdit === false" class="red-text text-end" style="font-size: 18px; font-weight: 700; margin: 10px 0px 0px 0px;" @click="onEditPriceClick(wine.Id)">
+                                        <p v-if="isEdit === false" class="red-text text-end" style="font-size: 18px; font-weight: 700; margin: 10px 0px 0px 0px;">
                                             ไม่พบราคาในระบบ
-
+                                            <img src="../assets/img/price-edit-icon.png" alt="" class="price-edit-icon" style="cursor: pointer;" @click="onEditPriceClick(wine.Id)">
                                         </p>
                                         <div v-else >
                                             <input type="text" class="price-input text-end" v-model="wine.newPrice">
@@ -135,12 +135,20 @@
                     </div>
                     <div v-if="isEdit === true" class="upload-session">
                         <div class="upload-card">
-                            <input type="file" class="image-input" id="file-input" @change="uploadWineFile($event, wine.Id)">
+                            <input type="file" class="image-input" id="file-input" accept="application/pdf,image/*" @change="uploadWineFile($event, wine.Id)">
                             <label for="file-input" class="upload-label" style="cursor: pointer;">
-                                <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
-                                <h3 style="margin-bottom: 5px;">อัพโหลดภาพ</h3>
-                                <h3 style="margin-bottom: 5px;">หลักฐานการชำระเงิน</h3>
-                                <p>วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป</p>
+                                <div v-if="wine.fileName">
+                                    <img v-if="wine.fileType === 'application/pdf'" src="../assets/img/pdf-icon.png" alt="" class="after-upload-image">
+                                    <img v-else src="../assets/img/after-upload-icon.png" alt="" class="after-upload-image">
+                                    <p v-if="wine.fileType === 'application/pdf'" class="upload-header">อัพโหลดไฟล์แล้ว</p>
+                                    <p v-else class="upload-header">อัพโหลดรูปภาพแล้ว</p>
+                                </div>
+                                <div v-else>
+                                    <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
+                                    <h3 class="upload-header" style="margin-bottom: 5px;">อัพโหลดภาพ</h3>
+                                    <h3 class="upload-header" style="margin-bottom: 5px;">หลักฐานการชำระเงิน</h3>
+                                    <p class="upload-text">วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป</p>
+                                </div>
                             </label>
                         </div>
                         <div class="price-edit-buttons">
@@ -395,8 +403,12 @@ export default {
         const onSearchClick = async () => {
             spinner.value = true
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
-            console.log("Wine Search Data:", wineSearchData.data)
+            console.log("Wine Search Data:", wineSearchData)
             if ( wineSearchData.code === 404) {
+                spinner.value = false
+                await showNotFoundAlert()
+            }
+            else if (wineSearchData.statusCode === 500) {
                 spinner.value = false
                 await showNotFoundAlert()
             }
@@ -540,6 +552,7 @@ export default {
         }
 
         const uploadWineFile = async (event, wineId) => {
+            spinner.value = true;
             const wine = wineSearch.value.find(w => w.Id === wineId);
             const file = event.target.files[0];
             if (!file) {
@@ -550,11 +563,13 @@ export default {
             try {
                 const data = await uploadFileV4(file, token.value);
                 console.log('File uploaded successfully:', data);
-                wine.uploadFile = data.data.publicURL
-                wine.fileType = data.data.contentType
+                wine.uploadFile = data.data.publicURL;
+                wine.fileType = data.data.contentType;
+                wine.fileName = file.name; // Store the file name
             } catch (error) {
                 console.error('Error uploading file:', error);
             }
+            spinner.value = false;
         };
 
         const onAddToCartClick = async (wineId) => {
@@ -953,6 +968,10 @@ border-radius: 6px; */
 }
 
 .price-edit-buttons .btn-cancel {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
     width: 167px;
     height: 44px;
     background-color: #77818A;
@@ -962,6 +981,10 @@ border-radius: 6px; */
 }
 
 .price-edit-buttons .btn-save {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
     width: 167px;
     height: 44px;
     background-color: #2B476D;

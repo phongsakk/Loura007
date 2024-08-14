@@ -76,18 +76,23 @@ export default {
         }
 
         const onConfirmClick = async() => {
-            spinner.value = true
-            const liquorData = {
-                CartId: parseInt(cartId.value),
-                PurposeId: importPurpose.value,
-                Checkpoint: checkpoint.value,
-                PurposeDate: importDate.value
+            if (!token.value) {
+                router.push('/login')
             }
-            console.log("Liquor data to save :", liquorData)
-            const importLiquor = await getImportLiquor (liquorData, token.value)
-            console.log("importing liquor :", importLiquor.data)
-            router.push('/wine-list-in-cart')
-            spinner.value = false
+            else {
+                spinner.value = true
+                const liquorData = {
+                    CartId: parseInt(cartId.value),
+                    PurposeId: importPurpose.value,
+                    Checkpoint: checkpoint.value,
+                    PurposeDate: importDate.value
+                }
+                console.log("Liquor data to save :", liquorData)
+                const importLiquor = await getImportLiquor (liquorData, token.value)
+                console.log("importing liquor :", importLiquor.data)
+                router.push('/wine-list-in-cart')
+                spinner.value = false
+            }
         }
 
         const minDate = computed ( () => {
@@ -99,6 +104,9 @@ export default {
             localStorage.removeItem('password')
             cartId.value = localStorage.getItem('cartId')
             token.value = localStorage.getItem('token')
+            if (!token.value) {
+                router.push('/login')
+            }
             fetchImportPurpose();
             fetchCheckpoint();
         })

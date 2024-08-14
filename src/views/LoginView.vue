@@ -76,7 +76,7 @@ export default {
         }
 
         const onForgotPasswordClick = async() => {
-
+            router.push('/forgot-password')
         }
 
         return {

@@ -68,8 +68,10 @@
                             </div>
                         </div>
                         <div v-if="wine.uploadFile">
-                            <button class="btn-display-file" @click="onFileDisplayClick()">
-                                <img src="../assets/img/eye-icon.webp" alt="" style="height: 14px; width: auto; margin-right: 5px;">ซ่อนหลักฐานการชำระเงิน
+                            <button class="btn-display-file" @click="onFileDisplayClick(wine.Id)">
+                                <img src="../assets/img/eye-icon.webp" alt="" style="height: 14px; width: auto; margin-right: 5px;">
+                                <span v-if="wine.displayFile === false">ดูหลักฐานการชำระเงิน</span>
+                                <span v-if="wine.displayFile === true">ซ่อนหลักฐานการชำระเงิน</span>
                             </button>
                         </div>
                         <div>
@@ -78,7 +80,9 @@
                     </div>
                 </div>
                 <div v-if="wine.displayFile" class="file-display">
-                    <iframe :src="wine.uploadFile" frameborder="0" class="file-display-frame w-100"></iframe>
+                    <div class="file-display-frame text-center d-flex justify-content-center" align="center">
+                        <iframe :src="wine.uploadFile" frameborder="0" class=" w-100" style="height: 650px;"></iframe>
+                    </div>
                 </div>
             </div>
             <div class="summary-card">
@@ -200,9 +204,14 @@ export default {
 
         const isTotalLitersExceeded = computed(() => totalLiters.value > 10);
 
-        const onFileDisplayClick = (wineId) => {
+        const onFileDisplayClick = (wineId) => { 
             const wine = cartItems.value.find(w => w.Id === wineId);
-            wine.displayFile = !!wine.displayFile
+            if (wine.displayFile === false) {
+                wine.displayFile = true
+            }
+            else {
+                wine.displayFile = false
+            }
         }
 
         const onConfirmClick = async() => {
@@ -472,7 +481,8 @@ export default {
                 externalLocal: formatNumber(calculatedValues.itemExternalLocal),
                 externalFund: formatNumber(calculatedValues.itemExternalFund),
                 externalTotal: formatNumber(calculatedValues.itemExternalTotal),
-                fAndI: formatNumber(calculatedValues.itemFAndI)
+                fAndI: formatNumber(calculatedValues.itemFAndI),
+                displayFile: displayFile.value
                 };
             });
 

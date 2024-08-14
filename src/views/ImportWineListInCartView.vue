@@ -138,7 +138,7 @@ import { ref, onMounted, computed } from 'vue'
 import { getCartItem } from '@/api/getWineSearch'
 import { useRouter } from 'vue-router'
 import { getEnumGroup } from '@/api/getMaster'
-import { getQRCode } from '@/api/getQRData'
+// import { getQRCode } from '@/api/getQRData'
 import QRCode from 'qrcode';
 
 export default {
@@ -221,10 +221,7 @@ export default {
         const onDownloadQRCodeClick = async() => {
             console.log("Downloading QR Code!!!!!!!!");
             
-            const getQR = await getQRCode(importCartId.value, token.value)
-            console.log('GET QR DATA', getQR.data)
-
-            const qrData = getQR.data; 
+            const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`; 
 
             QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H' }, (err, url) => {
                 if (err) {
