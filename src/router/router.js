@@ -24,6 +24,7 @@ import RegistrationVerifyViewVue from "@/views/RegistrationVerifyView.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
+import dayjs from "dayjs";
 
 const routes = [
   {
@@ -161,10 +162,52 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+router.beforeEach((to, _from, next) => {
+  let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const userTypeId = localStorage.getItem("userTypeId");
+  const accessTokenExpiredAt = localStorage.getItem("accessTokenExpiredAt");
 
+  // token checking
+  if (!accessTokenExpiredAt) {
+    isLoggedIn = false;
+    localStorage.removeItem('token');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userTypeId');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('accessTokenExpiredAt');
+  }
+  const now = dayjs();
+  const accessTokenExpiredIn = dayjs(accessTokenExpiredAt).subtract(1, "hour");
+  if (isLoggedIn && now.isAfter(accessTokenExpiredIn)) {
+    console.log("Access token expired, refreshing user token");
+    const token = localStorage.getItem("token");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify({
+        "refreshToken": refreshToken
+      }),
+    };
+
+    fetch("https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-RefreshToken", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        localStorage.setItem('token', result.data.accessToken);
+        localStorage.setItem('isLoggedIn', "true");
+        localStorage.setItem('userTypeId', result.data.FtUserTypeId);
+        localStorage.setItem('refreshToken', result.data.refreshToken);
+        localStorage.setItem('accessTokenExpiredAt', result.data.expiredAt);
+      })
+      .catch((error) => console.error(error));
+  }
+
+  // redirection
   if (to.path == "/" || to.path == "/your-cart" || to.path == "/register" || to.path == "/verify-email") {
     if (isLoggedIn && userTypeId === "21") {
       next({ path: "/import-wine-list" })
@@ -173,19 +216,19 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some((record) => record.meta.requiresAdmin)) {
     if (isLoggedIn && userTypeId === "21") {
-        next();
+      next();
     } else if (isLoggedIn && userTypeId !== "21") {
-        next({ path: "/" });
+      next({ path: "/" });
     } else {
-        next({ path: "/login" });
+      next({ path: "/login" });
     }
   } else if (to.matched.some((record) => record.meta.requiresUser)) {
-    if (isLoggedIn &&  userTypeId !== 21) {
-        next();
-    } else if (isLoggedIn &&  userTypeId === 21) {
-        next({ path: "/import-wine-list" });
+    if (isLoggedIn && userTypeId !== 21) {
+      next();
+    } else if (isLoggedIn && userTypeId === 21) {
+      next({ path: "/import-wine-list" });
     } else {
-        next({ path:"/login" });
+      next({ path: "/login" });
     }
   } else {
     next();

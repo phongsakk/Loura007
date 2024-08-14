@@ -62,6 +62,8 @@ export default {
                 localStorage.setItem('token', getLogin.data.accessToken);
                 localStorage.setItem('isLoggedIn', isLoggedIn.value);
                 localStorage.setItem('userTypeId', getLogin.data.FtUserTypeId);
+                localStorage.setItem('refreshToken', getLogin.data.refreshToken);
+                localStorage.setItem('accessTokenExpiredAt', getLogin.data.expiredAt);
                 if (getLogin.data.FtUserTypeId === 21) {
                     router.push('/import-wine-list');
                 } else {

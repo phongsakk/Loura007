@@ -145,7 +145,11 @@ export default {
         }
 
         const onLogoutClick = () => {
-            localStorage.clear()
+            localStorage.removeItem('token');
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userTypeId');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('accessTokenExpiredAt');
             router.push('/login')
         }
        
