@@ -232,7 +232,7 @@ export default {
                     CustomsDuty: newParseFloat(wine.exciseTaxByDuty),
                     InitialValue: newParseFloat(wine.RecommendMinPrice),
                     TotalTax: newParseFloat(wine.externalTotal),
-                    NewPrice: wine.NewPrice,
+                    NewPrice: wine.newPrice ? newParseFloat(wine.newPrice) : wine.newPrice,
                     InvoiceFileType: wine.fileType,
                     InvoicePictureUrl: wine.uploadFile
                 }))
@@ -462,7 +462,7 @@ export default {
             isLoggedIn.value = localStorage.getItem('isLoggedIn')
             cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
             token.value = localStorage.getItem('token')
-            // console.log("Cart items from localstorage :", cartItems.value)
+            console.log("Cart items from localstorage :", cartItems.value)
 
             fetchStatus();
 

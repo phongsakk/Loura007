@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <p class="cart-label text-start" style="margin-bottom: 5px;">มูลค่าเบื้องต้น</p>
-                                            <p class="cart-label fw-bold text-end" style="margin-bottom: 5px;">{{ formatNumber(item.RecommendMinPrice) }} บาท</p>
+                                            <p class="cart-label fw-bold text-end" style="margin-bottom: 5px;">{{ item.RecommendMinPrice > 0 ? formatNumber(item.RecommendMinPrice) : formatNumber(item.newPrice)}} บาท</p>
                                         </div>
                                     </div>
                                 </div>
@@ -236,7 +236,7 @@ export default {
             }
             const getUserData = await getUserProfile(token.value)
             userData.value = getUserData.data
-            // console.log("User data :", getUserData.data.code)
+            console.log("User data :", getUserData.data.code)
             userName.value = userData.value.FirstName + ' ' + userData.value.LastName
             emailAddress.value = userData.value.Email
             phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile

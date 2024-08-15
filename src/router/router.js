@@ -24,6 +24,7 @@ import RegistrationVerifyViewVue from "@/views/RegistrationVerifyView.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
+import ResetPasswordView from "@/views/ResetPasswordView.vue";
 import dayjs from "dayjs";
 
 const routes = [
@@ -148,6 +149,11 @@ const routes = [
     path: "/forgot-password",
     name: "forgot-password",
     component: ForgotPasswordView
+  },
+  {
+    path: "/reset-password",
+    name: "reset-password",
+    component: ResetPasswordView
   },
   {
     path: "/pdf-view",

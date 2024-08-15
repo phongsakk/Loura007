@@ -353,6 +353,9 @@ export default {
         const onWineNameSearch = async (event) => {
             if (event) {
                 wineName.value = event.target.value;
+                imageSearchModal.value = false
+                wineImage.value = ''
+                wineNameFromImage.value = ''
             }
             if (wineName.value) {
                 await algoliaSearch();
@@ -389,6 +392,7 @@ export default {
             wineName.value = value
             autocompleteResults.value = []
             algoliaResults.value = []
+            wineImage.value = ''
         };
 
         watch (bottleSize, (selectedBottleSize) => {
@@ -435,6 +439,7 @@ export default {
         }
 
         const onImageSearch = async(event) => {
+            algoliaResults.value = []
             spinner.value = true
             const selectedImage = event.target.files[0]
             wineImage.value = selectedImage
@@ -581,6 +586,14 @@ export default {
                 let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
                 console.log("Cart items to save to localstorage :", localStorage.getItem('cartItems'))
                 const existingItemIndex = cartItems.findIndex(item => item.Id === newObject.Id);
+
+                // const existingItem = itemsArray.value.find(i => 
+                //     i.Id === newObject.Id &&
+                //     i.InitialValue === newObject.RecommendMinPrice &&
+                //     i.WineLiquor.Country === newObject.Country &&
+                //     i.WineLiquor.DisplayName === newObject.WineName &&
+                //     i.WineLiquorPic.WineLiquorYear === item.Year
+                // );
 
                 if (existingItemIndex !== -1) {
                     cartItems[existingItemIndex].quantity += newObject.quantity;

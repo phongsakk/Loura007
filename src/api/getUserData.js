@@ -130,6 +130,34 @@ export async function forgotPassword(userData) {
             body: JSON.stringify(userData),
         })
         if (!response.ok) {
+            if (response.status === 400) {
+                const data = await response.json();
+                return data
+            }
+            throw new Error('Error: Unable to fetch data');
+        }
+        const data = await response.json();
+        return data
+    } catch {
+        throw new Error("Login failed")
+    }
+}
+
+export async function resetPassword(userData) {
+    try {
+        const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-FtResetPassword`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                // "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(userData),
+        })
+        if (!response.ok) {
+            if (response.status === 400) {
+                const data = await response.json();
+                return data
+            }
             throw new Error('Error: Unable to fetch data');
         }
         const data = await response.json();

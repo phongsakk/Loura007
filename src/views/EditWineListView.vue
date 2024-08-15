@@ -252,8 +252,11 @@
                         </div>
                     </div>
                     <div v-if="wine.displayFile" class="file-display">
-                        <div class="file-display-frame text-center d-flex justify-content-center" align="center">
+                        <div v-if="wine.fileType === 'application/pdf'" class="file-display-frame text-center d-flex justify-content-center" align="center">
                             <iframe :src="wine.uploadFile" frameborder="0" class=" w-100" style="height: 650px;"></iframe>
+                        </div>
+                        <div v-else class="uploaded-image-display">
+                            <img :src="wine.uploadFile" alt="" class="uploaded-wine-image">
                         </div>
                     </div>
                 </div>
@@ -688,20 +691,22 @@ export default {
             const TAX_BY_VALUE = 1000;
             const TAX_BY_PRICE = 5;
             const TAX_BY_FUND = 1.175;
-
+            const calPrice = item.RecommendMinPrice > 0 ? item.RecommendMinPrice : Number(item.newPrice)
+            console.log("Calculate price:", calPrice);
+            
             const bottleSizeToCalculate = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
-            const itemExciseTaxByDuty = item.RecommendMinPrice * 0 * 0.01;
+            const itemExciseTaxByDuty = calPrice * 0 * 0.01;
             const itemExciseTaxByValue = (item.AVB / 100) * bottleSizeToCalculate * TAX_BY_VALUE;
-            const itemCalTaxByDuty = (item.RecommendMinPrice + itemExciseTaxByDuty) * (TAX_BY_PRICE / 100);
+            const itemCalTaxByDuty = (calPrice + itemExciseTaxByDuty) * (TAX_BY_PRICE / 100);
             const itemCalTaxByValue = itemExciseTaxByValue * TAX_BY_FUND * (TAX_BY_PRICE / 100);
             const itemCalTaxByFund = 1 - TAX_BY_FUND * (TAX_BY_PRICE / 100);
-            // console.log({ itemExciseTaxByValue, itemCalTaxByDuty, itemCalTaxByValue, itemCalTaxByFund })
+            // console.log({itemExciseTaxByValue, itemCalTaxByDuty,itemCalTaxByValue,itemCalTaxByFund})
             const itemExciseTaxByPrice = (itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund;
             const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty);
             const itemExternalLocal = 0.1 * itemExciseTaxByTotal;
             const itemExternalFund = 0.075 * itemExciseTaxByTotal;
             const itemExternalTotal = itemExciseTaxByTotal + itemExternalLocal + itemExternalFund;
-            const itemFAndI = 0.11 * item.RecommendMinPrice;
+            const itemFAndI = 0.11 * calPrice;
 
             return {
                 itemExciseTaxByDuty,
@@ -732,7 +737,9 @@ export default {
                 return;
             }
 
+
             if (addArray.value && addArray.value.length > 0) {
+                spinner.value = true
                 const wineData = {
                     isStatus : 2,
                     Add: [{
@@ -770,16 +777,20 @@ export default {
                 console.log("Wine Data :", wineData)
                 const updateCartItem = await updateCart(wineData, importCartId.value, token.value)
                 console.log("Updating cart :", updateCartItem.data)
+                spinner.value = false
+                router.push('/import-wine-list')
             }
             else {
+                spinner.value = true
                 const wineData = {
                     IsStatus : 2,
                 }
                 console.log("Wine Data :", wineData)
                 const updateCartItem = await updateCart(wineData, importCartId.value, token.value)
                 console.log("Updating cart :", updateCartItem.data)
+                spinner.value = false
+                router.push('/import-wine-list')
             }
-            router.push('/import-wine-list')
         }
 
         const onDownloadQRCodeClick = async () => {

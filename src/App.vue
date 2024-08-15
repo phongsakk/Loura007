@@ -433,9 +433,23 @@ tbody, td, tfoot, th, thead, tr {
 
 .file-display-frame {
   width: 550px;
-  height: fit-content;
+  height: auto;
   border: none;
 
+}
+
+.uploaded-wine-image {
+    max-width: 90%;
+    height: fit-content;
+}
+
+.uploaded-image-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    max-height: 500px;
+    max-width: 100%;
 }
 
 
