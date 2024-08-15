@@ -162,6 +162,7 @@ import { addToCart } from '@/api/getWineSearch'
 import { getDbdData } from '@/api/getUserInfoById'
 import { getEnumGroup } from '@/api/getMaster'
 import { BroadcastChannel } from 'broadcast-channel';
+import number2Decimal from '@/js/number2Decimal'
 
 
 export default {
@@ -345,20 +346,19 @@ export default {
         }
 
         const calculateValues = (item) => {
-            const calPrice = item.RecommendMinPrice > 0 ? item.RecommendMinPrice : Number(item.newPrice);
-            const bottleSizeToCalculate = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
-            const itemExciseTaxByDuty = calPrice * 0 * 0.01;
-            const itemExciseTaxByValue = (item.AVB / 100) * bottleSizeToCalculate * taxByValue.value;
-            const itemCalTaxByDuty = (calPrice + itemExciseTaxByDuty) * (taxByPrice.value / 100);
-            const itemCalTaxByValue = itemExciseTaxByValue * taxByFund.value * (taxByPrice.value / 100);
-            const itemCalTaxByFund = 1 - taxByFund.value * (taxByPrice.value / 100);
-            // console.log({itemExciseTaxByValue, itemCalTaxByDuty,itemCalTaxByValue,itemCalTaxByFund})
-            const itemExciseTaxByPrice = (itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund;
-            const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty);
-            const itemExternalLocal = 0.1 * itemExciseTaxByTotal;
-            const itemExternalFund = 0.075 * itemExciseTaxByTotal;
-            const itemExternalTotal = itemExciseTaxByTotal + itemExternalLocal + itemExternalFund;
-            const itemFAndI = 0.11 * calPrice;
+            const calPrice = number2Decimal(item.RecommendMinPrice > 0 ? item.RecommendMinPrice : Number(item.newPrice));
+            const bottleSizeToCalculate = number2Decimal(item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize));
+            const itemExciseTaxByDuty = number2Decimal(calPrice * 0 * 0.01);
+            const itemExciseTaxByValue = number2Decimal((item.AVB / 100) * bottleSizeToCalculate * taxByValue.value);
+            const itemCalTaxByDuty = number2Decimal((calPrice + itemExciseTaxByDuty) * (taxByPrice.value / 100));
+            const itemCalTaxByValue = number2Decimal(itemExciseTaxByValue * taxByFund.value * (taxByPrice.value / 100));
+            const itemCalTaxByFund = number2Decimal(1 - taxByFund.value * (taxByPrice.value / 100));
+            const itemExciseTaxByPrice = number2Decimal((itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund);
+            const itemExciseTaxByTotal = number2Decimal((itemExciseTaxByValue + itemCalTaxByDuty));
+            const itemExternalLocal = number2Decimal(0.1 * itemExciseTaxByTotal);
+            const itemExternalFund = number2Decimal(0.075 * itemExciseTaxByTotal);
+            const itemExternalTotal = number2Decimal(itemExciseTaxByTotal + itemExternalLocal + itemExternalFund);
+            const itemFAndI = number2Decimal(0.11 * calPrice);
 
             return {
                 itemExciseTaxByDuty,

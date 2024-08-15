@@ -232,14 +232,18 @@ export default {
 
         const fetchUserProfile = async () => {
             if (!token.value) {
-                router.push('/login')
+                userName.value = userData.value.FirstName + ' ' + userData.value.LastName
+                emailAddress.value = userData.value.Email
+                phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile
             }
-            const getUserData = await getUserProfile(token.value)
-            userData.value = getUserData.data
-            console.log("User data :", getUserData.data.code)
-            userName.value = userData.value.FirstName + ' ' + userData.value.LastName
-            emailAddress.value = userData.value.Email
-            phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile
+            else {
+                const getUserData = await getUserProfile(token.value)
+                userData.value = getUserData.data
+                console.log("User data :", getUserData.data.code)
+                userName.value = userData.value.FirstName + ' ' + userData.value.LastName
+                emailAddress.value = userData.value.Email
+                phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile
+            }
         }
 
         const formatNumber = (value) =>{
