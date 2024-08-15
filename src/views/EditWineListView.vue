@@ -325,6 +325,7 @@ import { getEnumGroup } from '@/api/getMaster'
 import { uploadFileV4 } from '@/api/uploadFile'
 // import { getQRCode } from '@/api/getQRData'
 import QRCode from 'qrcode';
+import number2Decimal from '@/js/number2Decimal';
 
 export default {
     setup() {
@@ -398,13 +399,13 @@ export default {
                 itemsArray.value[wineIndex].isCorrect = true;
                 itemsArray.value[wineIndex].isChecked = true;
                 itemsArray.value = [...itemsArray.value ]; // Ensure reactivity
-                console.log("Correct wine :", itemsArray.value);
+                // console.log("Correct wine :", itemsArray.value);
             }
         }
 
         const onIncorrectClick = async (wineId) => {
             const wineIndex = cartItems.value.Items.findIndex(w => w.Id === wineId);
-            console.log("In incorrect click!!!!!!!!!!!!!")
+            // console.log("In incorrect click!!!!!!!!!!!!!")
             const removeIndex = itemsArray.value.findIndex(w => w.Id === wineId);
             if (wineIndex !== -1 && removeIndex !== -1) {
                 cartItems.value.Items[wineIndex].isCorrect = false;
@@ -415,8 +416,8 @@ export default {
                 removeArray.value.push(cartItems.value.Items[wineIndex]);
                 itemsArray.value = [...itemsArray.value]; // Ensure reactivity
                 itemsArray.value[removeIndex].isEditing = true;
-                console.log("Wine list to remove :", removeArray.value);
-                console.log("InCorrect wine :", cartItems.value.Items[wineIndex]);
+                // console.log("Wine list to remove :", removeArray.value);
+                // console.log("InCorrect wine :", cartItems.value.Items[wineIndex]);
             }
         }
 
@@ -427,7 +428,7 @@ export default {
             const { hits } = await index.search('', { hitsPerPage: 1000 });
             algoliaResults.value = hits
             dropdownVisible.value = true
-            console.log("Algolia search result :", algoliaResults.value)
+            // console.log("Algolia search result :", algoliaResults.value)
         }
 
         const onWineNameSearch = async () => {
@@ -443,7 +444,7 @@ export default {
                     searchObject.value = ''
                 }
             });
-            console.log("Algolia search result :", algoliaResults.value)
+            // console.log("Algolia search result :", algoliaResults.value)
         }
 
         const selectWine = (value) => {
@@ -460,7 +461,7 @@ export default {
             if (selectedBottleSize) {
                 const selected = bottleSizes.value.find(option => option.EnumName === bottleSize.value);
                 bottleCode.value = selected ? selected.EnumCode : ''
-                console.log("Bottle Code :", bottleCode.value)
+                // console.log("Bottle Code :", bottleCode.value)
             }
         })
 
@@ -488,15 +489,15 @@ export default {
                 } else {
                     console.error('Unexpected data format:', wineSearchData.data);
                 }
-                console.log("Updated wine search array:", wineSearch.value)
+                // console.log("Updated wine search array:", wineSearch.value)
                 spinner.value = false
             }
         }
 
         const decreaseQuantity = (wineId) => {
-            console.log("Wine id to decrease:", wineId)
+            // console.log("Wine id to decrease:", wineId)
             const wine = wineSearch.value.find(w => w.Id === wineId);
-            console.log("Decrease wine:", wine)
+            // console.log("Decrease wine:", wine)
             if (wine && wine.quantity > 1) {
                 wine.quantity--;
                 wine.wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(wine.BottleSize) / 1000) * wine.quantity : extractBottleSizeL(wine.BottleSize) * wine.quantity;
@@ -505,9 +506,9 @@ export default {
         }
 
         const increaseQuantity = (wineId) => {
-            console.log("Wine id to increase:", wineId)
+            // console.log("Wine id to increase:", wineId)
             const wine = wineSearch.value.find(w => w.Id === wineId);
-            console.log("Increase wine:", wine)
+            // console.log("Increase wine:", wine)
             if (wine) {
                 wine.quantity++;
                 wine.wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(wine.BottleSize) / 1000) * wine.quantity : extractBottleSizeL(wine.BottleSize) * wine.quantity;
@@ -526,14 +527,14 @@ export default {
             const wine = wineSearch.value.find(w => w.Id === wineId);
             wine.uploadFile = event.target.files[0]
             wine.fileType = event.target.files[0].type
-            console.log("Uploaded file:", wine.uploadFile)
+            // console.log("Uploaded file:", wine.uploadFile)
         }
 
 
         const onPriceConfirmClick = (wineId) => {
             const wine = wineSearch.value.find(w => w.Id === wineId);
             wine.RecommendMinPrice = wine.newPrice
-            console.log("Wine after confirm price :", wine)
+            // console.log("Wine after confirm price :", wine)
             isEdit.value = false
         }
 
@@ -548,7 +549,7 @@ export default {
 
             try {
                 const data = await uploadFileV4(file, token.value);
-                console.log('File uploaded successfully:', data);
+                // console.log('File uploaded successfully:', data);
                 wine.uploadFile = data.data.publicURL;
                 wine.fileType = data.data.contentType;
                 wine.fileName = file.name; // Store the file name
@@ -564,7 +565,7 @@ export default {
             editingItem.isEditing = false;
             // const modifiedArray = 
             addArray.value = wine
-            console.log("Added array ", addArray.value);
+            // console.log("Added array ", addArray.value);
             
             const item = addArray.value;
             const calculatedValues = calculateValues(item);
@@ -583,7 +584,7 @@ export default {
                 fAndI: formatNumber(calculatedValues.itemFAndI),
                 // isNewWine: true
             });
-            console.log("Add array:", addArray.value)
+            // console.log("Add array:", addArray.value)
             isNewWine.value = true
 
             const existingItem = itemsArray.value.find(i => 
@@ -596,17 +597,17 @@ export default {
 
             if (existingItem) {
                 existingItem.WineLiquorTotal += item.quantity;
-                console.log("Updated quantity for existing item:", existingItem);
+                // console.log("Updated quantity for existing item:", existingItem);
             } else {
                 itemsArray.value.push({ WineLiquor: { DisplayName: addArray.value.WineName, CategoryLabel: addArray.value.CategoryName, Country: addArray.value.Country }, 
                 WineLiquorPic: {WineLiquorYear: addArray.value.Year, Alcohol: addArray.value.AVB, Path: addArray.value.Path}, BottleSize: addArray.value.BottleSize, InitialValue : addArray.value.RecommendMinPrice, ExciseTax: addArray.value.exciseTaxByTotal, LocalTax: addArray.value.externalLocal, Fund: addArray.value.externalFund, CustomsDuty: addArray.value.exciseTaxByDuty, TotalTax: addArray.value.externalTotal, WineLiquorTotal: addArray.value.quantity, isNewWine: true, isCorrect: true,
                 uploadFile: addArray.value.uploadFile, fileType: addArray.value.fileType, displayFile: displayFile.value, Id: addArray.value.Id, newPrice: addArray.value?.newPrice, isChecked: true})
-                console.log("Updated items array : ", itemsArray.value);
+                // console.log("Updated items array : ", itemsArray.value);
             }
             
             disabledIncorrect.value = false
 
-            console.log(item);
+            // console.log(item);
 
             calculateSummary();
 
@@ -618,7 +619,7 @@ export default {
 
         const onFileDisplayClick = (wineId, winePrice) => {
             const wine = itemsArray.value.find(w => w.Id === wineId && w.newPrice === winePrice);
-            console.log("New Price : ", winePrice)
+            // console.log("New Price : ", winePrice)
             if (wine.displayFile === false) {
                 wine.displayFile = true
             }
@@ -628,7 +629,7 @@ export default {
         }
 
         const calculateSummary = () => {
-            console.log("Calculate summary:", itemsArray.value);
+            // console.log("Calculate summary:", itemsArray.value);
             const filteredItems = itemsArray.value.filter(item => item.isCorrect !== false);
 
             totalLiter.value = filteredItems.reduce((acc, cur) => {
@@ -692,21 +693,21 @@ export default {
             const TAX_BY_PRICE = 5;
             const TAX_BY_FUND = 1.175;
             const calPrice = item.RecommendMinPrice > 0 ? item.RecommendMinPrice : Number(item.newPrice)
-            console.log("Calculate price:", calPrice);
+            // console.log("Calculate price:", calPrice);
             
-            const bottleSizeToCalculate = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
-            const itemExciseTaxByDuty = calPrice * 0 * 0.01;
-            const itemExciseTaxByValue = (item.AVB / 100) * bottleSizeToCalculate * TAX_BY_VALUE;
-            const itemCalTaxByDuty = (calPrice + itemExciseTaxByDuty) * (TAX_BY_PRICE / 100);
-            const itemCalTaxByValue = itemExciseTaxByValue * TAX_BY_FUND * (TAX_BY_PRICE / 100);
-            const itemCalTaxByFund = 1 - TAX_BY_FUND * (TAX_BY_PRICE / 100);
+            const bottleSizeToCalculate = number2Decimal(item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize));
+            const itemExciseTaxByDuty = number2Decimal(calPrice * 0 * 0.01);
+            const itemExciseTaxByValue = number2Decimal((item.AVB / 100) * bottleSizeToCalculate * TAX_BY_VALUE);
+            const itemCalTaxByDuty = number2Decimal((calPrice + itemExciseTaxByDuty) * (TAX_BY_PRICE / 100));
+            const itemCalTaxByValue = number2Decimal(itemExciseTaxByValue * TAX_BY_FUND * (TAX_BY_PRICE / 100));
+            const itemCalTaxByFund = number2Decimal(1 - TAX_BY_FUND * (TAX_BY_PRICE / 100));
             // console.log({itemExciseTaxByValue, itemCalTaxByDuty,itemCalTaxByValue,itemCalTaxByFund})
-            const itemExciseTaxByPrice = (itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund;
-            const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty);
-            const itemExternalLocal = 0.1 * itemExciseTaxByTotal;
-            const itemExternalFund = 0.075 * itemExciseTaxByTotal;
-            const itemExternalTotal = itemExciseTaxByTotal + itemExternalLocal + itemExternalFund;
-            const itemFAndI = 0.11 * calPrice;
+            const itemExciseTaxByPrice = number2Decimal((itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund);
+            const itemExciseTaxByTotal = number2Decimal(itemExciseTaxByValue + itemCalTaxByDuty);
+            const itemExternalLocal = number2Decimal(0.1 * itemExciseTaxByTotal);
+            const itemExternalFund = number2Decimal(0.075 * itemExciseTaxByTotal);
+            const itemExternalTotal = number2Decimal(itemExciseTaxByTotal + itemExternalLocal + itemExternalFund);
+            const itemFAndI = number2Decimal(0.11 * calPrice);
 
             return {
                 itemExciseTaxByDuty,
@@ -728,12 +729,12 @@ export default {
         }
 
         const onSaveClick = async () => {
-            console.log("Add & remove array :", addArray.value, removeArray.value)
-            console.log("ItemsArray to save :", itemsArray.value)
+            // console.log("Add & remove array :", addArray.value, removeArray.value)
+            // console.log("ItemsArray to save :", itemsArray.value)
             const allItemsCorrect = itemsArray.value.every(item => item.isChecked === true);
 
             if (!allItemsCorrect) {
-                console.log("Not all items are correct. Save operation aborted.");
+                // console.log("Not all items are correct. Save operation aborted.");
                 return;
             }
 
@@ -774,7 +775,7 @@ export default {
                         IsStatus: '',
                     }]
                 }
-                console.log("Wine Data :", wineData)
+                // console.log("Wine Data :", wineData)
                 const updateCartItem = await updateCart(wineData, importCartId.value, token.value)
                 console.log("Updating cart :", updateCartItem.data)
                 spinner.value = false
@@ -785,7 +786,7 @@ export default {
                 const wineData = {
                     IsStatus : 2,
                 }
-                console.log("Wine Data :", wineData)
+                // console.log("Wine Data :", wineData)
                 const updateCartItem = await updateCart(wineData, importCartId.value, token.value)
                 console.log("Updating cart :", updateCartItem.data)
                 spinner.value = false
@@ -794,7 +795,7 @@ export default {
         }
 
         const onDownloadQRCodeClick = async () => {
-            console.log("Downloading QR Code!!!!!!!!");
+            // console.log("Downloading QR Code!!!!!!!!");
             
             // const getQR = await getQRCode(importCartId.value, token.value)
             // console.log('GET QR DATA', getQR.data)
@@ -825,7 +826,7 @@ export default {
             checkpoint.value = cartItems.value.ImportPurpose.Checkpoint
             importPurpose.value = cartItems.value.ImportPurpose.PurposeId
             importDate.value = new Date(cartItems.value.ImportPurpose.PurposeDate).toISOString().slice(0, 10)
-            console.log("Import values :", importPurpose.value, checkpoint.value, importDate.value)
+            // console.log("Import values :", importPurpose.value, checkpoint.value, importDate.value)
             itemsArray.value = cartItems.value.Items.map(item => {
                 return {
                     ...item,
