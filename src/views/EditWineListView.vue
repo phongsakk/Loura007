@@ -644,13 +644,14 @@ export default {
 
             totalInitialValue.value = filteredItems.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
-                const value = cur.InitialValue || cur.RecommendMinPrice;
+                const price = cur.InitialValue || cur.RecommendMinPrice || cur.newPrice;
+                const value = parseFloat(`${price}`.replace(/,/g, ""));
                 return acc + (q * value);
             }, 0);
 
             totalTaxAll.value = filteredItems.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
-                const t = cur.TotalTax || parseFloat(cur.externalTotal.replace(/,/g, ""));
+                const t = cur.TotalTax ? parseFloat(`${cur.TotalTax}`.replace(/,/g, "")) : parseFloat(cur.externalTotal.replace(/,/g, ""));
                 return acc + (q * t);
             }, 0);
         };
