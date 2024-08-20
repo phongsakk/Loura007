@@ -80,8 +80,11 @@
                     </div>
                 </div>
                 <div v-if="wine.displayFile" class="file-display">
-                    <div class="file-display-frame text-center d-flex justify-content-center" align="center">
+                    <div v-if="wine.fileType === 'application/pdf'" class="file-display-frame text-center d-flex justify-content-center" align="center">
                         <iframe :src="wine.uploadFile" frameborder="0" class=" w-100" style="height: 650px;"></iframe>
+                    </div>
+                    <div v-else class="uploaded-image-display">
+                        <img :src="wine.uploadFile" alt="" class="uploaded-wine-image">
                     </div>
                 </div>
             </div>
@@ -462,7 +465,7 @@ export default {
             isLoggedIn.value = localStorage.getItem('isLoggedIn')
             cartItems.value = JSON.parse(localStorage.getItem('cartItems'))
             token.value = localStorage.getItem('token')
-            // console.log("Cart items from localstorage :", cartItems.value)
+            console.log("Cart items from localstorage :", cartItems.value)
 
             fetchStatus();
 

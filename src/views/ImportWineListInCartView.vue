@@ -179,7 +179,7 @@ export default {
 
         const increaseQuantity = (wineId) => {
             const wine = cartItems.value.find(w => w.Id === wineId);
-            // console.log("Increase wine:", wine)
+            console.log("Increase wine:", wine)
             if (wine) {
                 wine.quantity++;
                 wine.wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(wine.BottleSize) / 1000) * wine.quantity : extractBottleSizeL(wine.BottleSize) * wine.quantity;
@@ -189,7 +189,7 @@ export default {
 
         const decreaseQuantity = (wineId) => {
             const wine = cartItems.value.find(w => w.Id === wineId);
-            // console.log("Decrease wine:", wine)
+            console.log("Decrease wine:", wine)
             if (wine) {
                 wine.quantity--;
                 wine.wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(wine.BottleSize) / 1000) * wine.quantity : extractBottleSizeL(wine.BottleSize) * wine.quantity;
@@ -219,7 +219,7 @@ export default {
         }
 
         const onDownloadQRCodeClick = async() => {
-            // console.log("Downloading QR Code!!!!!!!!");
+            console.log("Downloading QR Code!!!!!!!!");
             
             const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`; 
 
@@ -243,8 +243,8 @@ export default {
             spinner.value = true
             const getCartData = await getCartItem (importCartId.value, token.value)
             cartItems.value = getCartData.data
-            // console.log('Cart data :', cartItems.value)
-            // console.log("Import purpose :", cartItems.value.ImportPurpose.CheckpointLabel)
+            console.log('Cart data :', cartItems.value)
+            console.log("Import purpose :", cartItems.value.ImportPurpose.CheckpointLabel)
             importCheckpoint.value = cartItems.value.ImportPurpose.Checkpoint
             importPurpose.value = cartItems.value.ImportPurpose.PurposeId
             importDate.value = new Date(cartItems.value.ImportPurpose.PurposeDate).toISOString().slice(0, 10)

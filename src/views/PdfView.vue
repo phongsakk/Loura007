@@ -1,20 +1,95 @@
 <template>
   <div class="pdf-container">
-    <!-- <img :src="" alt=""> -->
-    <iframe :src="pdfUrl" width="50%" height="900px"></iframe>
-  </div>
-  <div class="button-session">
-    <button class="btn-back" @click="onBackClick">ย้อนกลับ</button>
-    <button class="btn-next" @click="onConfirmClick">ยืนยันแบบฟอร์ม</button>
+    <div>
+      <div class="pdf-file" id="pdf-content">
+        <p class="pdf-header fw-bold">แบบแจ้งข้อมูลการนำเข้าสินค้า</p>
+        <p class="pdf-text text-end">วันที่.........................................</p>
+        <p class="pdf-text text-start text-fit">ชื่อผู้นำเข้า...........................................................................................................................................................</p>
+        <div class="d-flex">
+          <input type="checkbox" class="pdf-checkbox" id="userType19" v-model="userType19">
+          <label for="userType19" class="pdf-text" style="margin-right: 10px;">บุคคลธรรมดา</label>
+          <input type="checkbox" class="pdf-checkbox" id="userType20" v-model="userType20">
+          <label for="userType20" class="pdf-text" style="margin-right: 10px;">นิติบุคคล</label>
+          <input type="checkbox" class="pdf-checkbox">
+          <label for="" class="pdf-text" style="margin-right: 10px;">คณะบุคคล</label>
+          <input type="checkbox" class="pdf-checkbox">
+          <label for="" class="pdf-text" style="margin-right: 10px;">หน่วยงานราชการ</label>
+        </div>
+        <div class="d-flex">
+          <input type="checkbox" class="pdf-checkbox" id="userTypeOther">
+          <label for="userTypeOther" class="pdf-text">อื่นๆ (ระบุ )</label>
+        </div>
+        <div class="d-flex">
+          <p class="pdf-text">เลขประจำตัวประชาชน/ทะเบียนนิต บ ิ ุคคล</p>
+          <div class="blocks-container">
+            <div class="block" v-for="(digit, index) in importerId" :key="index">{{ digit }}</div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <p class="pdf-text">เลขทะเบียนสรรพสามิต (ถ้ามี )</p>
+          <div class="blocks-container">
+            <div class="block" v-for="(digit, index) in exciseId" :key="index">{{ digit }}</div>
+          </div>
+        </div>
+        <p class="pdf-text text-start">เลขที่พาสปอร์ต..................................</p>
+        <p class="pdf-text text-start text-fit">ที่อยู่เลขท.................................................หมู่ที่..............................ตรอก/ซอย.....................................................</p>
+        <p class="pdf-text text-start text-fit">ถนน.................................................ตำบล/แขวง....................................อำเภอ/เขต...........................................</p>
+        <p class="pdf-text text-start text-fit">จังหวัด................................................รหัสไปรษณีย์....................................โทรศัพท์...........................................</p>
+        <p class="pdf-text text-start">ได้นำ เข้าสินค้าที่ไม่ได้จำแนกประเภทไว้ในภาคที ว ่ ่าด้วยของที ไ ่ ด้รับยกเว้นอากรตามกฎหมายว่าด้วยพิกัดอัตราศุลกากร</p>
+        <p class="pdf-text text-start">เพื่อวัตถุประสงค</p>
+        <div class="d-flex" >
+          <input type="checkbox" class="pdf-checkbox">
+          <label for="" class="pdf-text">นำ สินค้าติดตัวเข้ามา</label>
+        </div>
+        <div class="d-flex">
+          <input type="checkbox" class="pdf-checkbox">
+          <label for="" class="pdf-text">นำ สินค้าเข้ามาเพื่อเป็นตัวอย่างสินค้า</label>
+        </div>
+        <div class="d-flex">
+          <input type="checkbox" class="pdf-checkbox">
+          <label for="" class="pdf-text">นำ สินค้าเข้ามาโดยมิใช่เพื่อการค้า</label>
+        </div>
+        <p class="pdf-text text-start">ดังต่อไปน</p>
+        <table class="pdf-table">
+          <tr>
+            <th>ลำดับท<br>(1)</th>
+            <th>ประเภท<br>สินค้า<br>(2)</th>
+            <th>ชื่อสินค้า<br>(3)</th>
+            <th>แบบ/รุ่น<br>(4)</th>
+            <th>ดีกรี /<br>ปริมาณน้ำตาล/<br>CO 2 /<br>น้ำหนัก /มวน<br>(5)</th>
+            <th>ขนาด<br>(6)</th>
+            <th>ปริมาณ<br>ท<br>นำเข้า<br>(7)</th>
+            <th>ราคาที่ใช<br>เป็นฐาน<br>หมายเหต<br>ในการ<br>คำนวณภาษ<br>(8)</th>
+            <th>หมายเหต<br>(9)</th>
+          </tr>
+          <tr>
+
+          </tr>
+        </table>
+        <p class="pdf-text">ข้าพเจ้าขอรับรองว่าข้อความดังกล่าวข้างต้นเป็นจริงและถูกต้องทุกประการ</p>
+        <div class="">
+          <p class="pdf-text text-center">(ลงชื่อ).........................</p>
+          <p class="pdf-text text-center">(...........................)</p>
+          <p class="pdf-text text-center">ผู้นำเข้า</p>
+        </div>
+        
+      </div>
+    </div>
+    <div class="button-session">
+      <button class="btn-back" @click="onBackClick">ย้อนกลับ</button>
+      <button class="btn-next" @click="onConfirmClick">ยืนยันแบบฟอร์ม</button>
+    </div>
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 // import { PDFDocument } from 'pdf-lib'
-import { PDFDocument, rgb } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+// import { PDFDocument, rgb } from 'pdf-lib';
+// import fontkit from '@pdf-lib/fontkit';
 
 import { getUserProfile } from '@/api/getUserData'
 
@@ -25,369 +100,20 @@ export default {
     const pdfUrl = ref('');
     const cartItems = ref([]);
     const importedDate = ref('');
-    const base64 = ref('');
     const wineData = ref([])
-    let sarabunFont = null;
+    // let sarabunFont = null;
     const pdfBase64 = ref('')
     const userData = ref([])
 
-    const fetchImage = async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Failed to load image');
-      }
-      return await response.arrayBuffer();
-    };
+    
 
-    const loadSarabunFont = async (pdfDoc) => {
-      try {
-        const fontBytes = await fetch('/assets/file/Sarabun-Regular.ttf').then((res) => res.arrayBuffer());
-        const sarabunFont = await pdfDoc.embedFont(fontBytes, { subset: true });
-        return sarabunFont;
-      } catch (error) {
-        console.error('Error loading Sarabun font:', error);
-        return null;
-      }
-    };
-
-    const generatePdf = async () => {
-      try {
-        const pdfDoc = await PDFDocument.create();
-        pdfDoc.registerFontkit(fontkit);
-        const pageWidth = 595;
-        const pageHeight = 842;
-        const page = pdfDoc.addPage([pageWidth, pageHeight]);
-
-        if (!sarabunFont) {
-          sarabunFont = await loadSarabunFont(pdfDoc);
-          if (!sarabunFont) {
-            throw new Error('Failed to load Sarabun font.');
-          }
-        }
-        // const sarabunFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-        const fontSize = 10;
-
-        const cartData = {
-          importDate: formatDate(cartItems.value.ImportPurpose.PurposeDate),
-          importerName: userData.value.FirstName + ' ' + userData.value.LastName,
-          importerId: userData.value.IDCard,
-          userType: userData.value.FtUserTypeId,
-          exciseId: userData.value.ExciseNo,
-          passportId: userData.value.Passport,
-          addressName: userData.value.AddrNo,
-          addressMoo: userData.value.Moo,
-          addressSoi: userData.value.Soi,
-          addressRoad: userData.value.Street,
-          addressSubDistrict: userData.value.SubDistrict,
-          addressDistrict: userData.value.District,
-          province: userData.value.Province,
-          postelCode: userData.value.PostCode,
-          phoneNumber: userData.value.Phone ? userData.value.Phone : userData.value.Mobile,
-          importPurpose: cartItems.value.ImportPurpose.PurposeId,
-        };
-
-        // const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-        const { width, height } = page.getSize();
-        // const fontSize = 12;
-        console.log("Width :", width, "Height :", height)
-
-        // Add image
-        const imageURL = '/assets/file/image/fcf82d976c3f6fdb-pages-1.png'; // Ensure this is the correct path to a PNG file
-        const imageBytes = await fetchImage(imageURL);
-        const image = await pdfDoc.embedPng(imageBytes);
-        page.drawImage(image, {
-          x: 0,
-          y: 0,
-          width: pageWidth,
-          height: pageHeight,
-        });
-
-        page.drawText(`${cartData.importDate}`, {
-          x: width - 230,
-          y: height - 100,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.importerName}`, {
-          x: 120,
-          y: height - 142,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        if (cartData.userType === 19) {
-          page.drawText('/', {
-            x: 74,
-            y: height - 165,
-            size: 16,
-            font: sarabunFont,
-            color: rgb(0, 0, 0),
-          });
-        } else if (cartData.userType === 20) {
-          page.drawText('/', {
-            x: 155,
-            y: height - 165,
-            size: fontSize,
-            font: sarabunFont,
-            color: rgb(0, 0, 0),
-          });
-        }
-
-        if (cartData.importPurpose === 22) {
-          page.drawText('/', {
-            x: 127,
-            y: height - 376,
-            size: 16,
-            font: sarabunFont,
-            color: rgb(0, 0, 0),
-          });
-        } else if (cartData.importPurpose === 23) {
-          page.drawText('/', {
-            x: 127,
-            y: height - 397,
-            size: 16,
-            font: sarabunFont,
-            color: rgb(0, 0, 0),
-          });
-        } else if (cartData.importPurpose === 24) {
-          page.drawText('/', {
-            x: 127,
-            y: height - 420,
-            size: 16,
-            font: sarabunFont,
-            color: rgb(0, 0, 0),
-          });
-        }
-
-        // Draw importer's Id
-        console.log(addSpacesBetweenNumbers);
-        const importerIdBits = `${cartData.importerId}`.split("");
-        let XAxis = 222;
-        for (const bit of importerIdBits) {
-          page.drawText(bit, {
-            x: XAxis+=13,
-            y: height - 208,
-            size: 13,
-            font: sarabunFont,
-            color: rgb(0, 0, 0),
-          });
-        }
-
-        page.drawText(`${cartData.addressName}`, {
-          x: 120,
-          y: height - 270,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.addressMoo}`, {
-          x: 280,
-          y: height - 270,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.addressSoi}`, {
-          x: 380,
-          y: height - 270,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.addressRoad}`, {
-          x: 100,
-          y: height - 290,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.addressDistrict}`, {
-          x: 430,
-          y: height - 290,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.addressSubDistrict}`, {
-          x: 280,
-          y: height - 290,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.province}`, {
-          x: 110,
-          y: height - 312,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.postelCode}`, {
-          x: 280,
-          y: height - 312,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(`${cartData.phoneNumber}`, {
-          x: 405,
-          y: height - 312,
-          size: fontSize,
-          font: sarabunFont,
-          color: rgb(0, 0, 0),
-        });
-
-        // Add table
-        // const items = [
-        //   ...cartItems.value
-        // ];
-        
-
-        const tableTop = height - 540;
-        const tableLeft = 80;
-        const rowHeight = 20;
-
-        // let index = 0;
-        wineData.value.forEach((item, index) => {
-          const y = tableTop - rowHeight * (index + 1);
-
-          page.drawText(String(index + 1), {
-            x: tableLeft,
-            y,
-            size: fontSize,
-            font: sarabunFont,
-            color: rgb(0, 0, 0)
-          });
-
-          if (item.WineLiquor.CategoryLabel) {
-            page.drawText(String(item.WineLiquor.CategoryLabel), {
-              x: tableLeft + 30,
-              y,
-              size: fontSize,
-              font: sarabunFont,
-              color: rgb(0, 0, 0)
-            });
-          }
-          // const splitText = (text, maxWidth, font, size) => {
-          //   const words = text.split(' ');
-          //   let lines = [];
-          //   let currentLine = '';
-
-          //   words.forEach(word => {
-          //     const testLine = currentLine + word + ' ';
-          //     const { width: testWidth } = font.widthOfTextAtSize(testLine, size);
-
-          //     if (testWidth > maxWidth && currentLine !== '') {
-          //       lines.push(currentLine.trim());
-          //       currentLine = word + ' ';
-          //     } else {
-          //       currentLine = testLine;
-          //     }
-          //   });
-          //   lines.push(currentLine.trim());
-          //   return lines;
-          // };
-
-          // if (item.WineLiquor.DisplayName) {
-          //   const displayNameLines = splitText(String(item.WineLiquor.DisplayName), 80, sarabunFont, 10);
-          //   displayNameLines.forEach((line, i) => {
-          //     page.drawText(line, tableLeft + 85, y - (i * rowHeight), sarabunFont, 10, rgb(0, 0, 0));
-          //   });
-          // }
-
-          if (item.WineLiquor.DisplayName) {
-            page.drawText(String(item.WineLiquor.DisplayName), {
-              x: tableLeft + 85,
-              y,
-              size: 10,
-              font: sarabunFont,
-              color: rgb(0, 0, 0)
-            });
-          }
-
-          if (item.WineLiquorPic.WineLiquorYear) {
-            page.drawText(String(item.WineLiquorPic.WineLiquorYear), {
-              x: tableLeft + 175,
-              y,
-              size: fontSize,
-              font: sarabunFont,
-              color: rgb(0, 0, 0)
-            });
-          }
-
-          if (item.WineLiquorPic.Alcohol) {
-            page.drawText(String(item.WineLiquorPic.Alcohol), {
-              x: tableLeft + 255,
-              y,
-              size: fontSize,
-              font: sarabunFont,
-              color: rgb(0, 0, 0)
-            });
-          }
-
-          if (item.BottleSize) {
-            page.drawText(formatBottleSize(item.BottleSize), {
-              x: tableLeft + 310,
-              y,
-              size: fontSize,
-              font: sarabunFont,
-              color: rgb(0, 0, 0)
-            });
-          }
-
-          if (item.WineLiquorTotal) {
-            page.drawText(String(item.WineLiquorTotal), {
-              x: tableLeft + 368,
-              y,
-              size: fontSize,
-              font: sarabunFont,
-              color: rgb(0, 0, 0)
-            });
-          }
-
-          page.drawText(formatNumber(item.InitialValue), {
-            x: tableLeft + 395,
-            y,
-            size: fontSize,
-            font: sarabunFont,
-            color: rgb(0, 0, 0)
-          });
-
-          // index += 1;
-        });
-
-        const pdfBytes = await pdfDoc.save();
-        pdfBase64.value = arrayBufferToBase64(pdfBytes);
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        return URL.createObjectURL(blob);
-      } catch (error) {
-        console.error('Error generating PDF:', error);
-        return null;
-      }
-    };
-
-    const arrayBufferToBase64 = (buffer) => {
-      let binary = '';
-      const bytes = new Uint8Array(buffer);
-      const len = bytes.byteLength;
-      for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-      }
-      return btoa(binary);
-    };
-
-    const onConfirmClick = () => {
+    const onConfirmClick = async() => {
+      const pdfContent = document.getElementById('pdf-content');
+      const canvas = await html2canvas(pdfContent);
+      const imgData = canvas.toDataURL('image/png');
+      const doc = new jsPDF();
+      doc.addImage(imgData, 'PNG', 10, 10, 190, 0);
+      pdfBase64.value = doc.output('datauristring');
       localStorage.setItem('generatedPdf', pdfBase64.value);
 
       router.push('/scan-qr');
@@ -395,23 +121,6 @@ export default {
 
     const onBackClick = () => {
       router.push('/wine-list-in-cart');
-    };
-
-    const formatDate = (data) => {
-      const date = new Date(data);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
-    }
-
-    const addSpacesBetweenNumbers = (numberString) => {
-      return numberString?.split('').join('  ') ?? '';
-    };
-
-    const formatBottleSize = (text) => {
-      const match = text.match(/\d+ml/);
-      return match ? match[0] : text;
     };
 
     const fetchUserProfile = async () => {
@@ -433,19 +142,13 @@ export default {
 
       wineData.value = cartItems.value.Items
       console.log("WineData:", wineData.value)
-      const pdfDataUri = await generatePdf();
-      if (pdfDataUri) {
-        pdfUrl.value = pdfDataUri;
-      } else {
-        console.error('Failed to generate PDF.');
-      }
+     
     });
 
     return {
       pdfUrl,
       cartItems,
       importedDate,
-      base64,
       onBackClick,
       onConfirmClick,
       formatNumber
@@ -458,11 +161,21 @@ export default {
 
 <style scoped>
 .pdf-container {
+  display: flex;
+  justify-content: center;
   position: relative;
   background-color: #3D3E3E;
   width: 100%;
   min-height: 100vh;
   padding: 20px;
+}
+
+.pdf-file {
+  width: 750px;
+  height: 100%;
+  padding: 70px;
+  background-color: #FFFFFF;
+  color: #000000;
 }
 
 .button-session {
@@ -505,5 +218,62 @@ export default {
 #pspdfkit {
   width: 100%;
   height: 100%;
+}
+
+.pdf-text {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.pdf-checkbox {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+input[type="checkbox" i] {
+    background-color: initial;
+    cursor: default;
+    appearance: auto;
+    box-sizing: border-box;
+    /* margin: 3px 3px 3px 4px; */
+    padding: initial;
+    border: initial;
+}
+
+.text-fit {
+  width: fit-content;
+  word-break: break-word;
+}
+
+.pdf-table {
+  width: 100%;
+  border-collapse: collapse;
+  /* margin-top: 20px; */
+}
+
+.pdf-table th,
+.pdf-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.blocks-container {
+  display: flex;
+  gap: 2px;
+  margin-left: 10px;
+}
+
+.block {
+  width: 20px;
+  height: 30px;
+  border: 1px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px; /* Adjust text size */
+  line-height: 1;
 }
 </style>

@@ -456,6 +456,7 @@ export default {
         const isNewWine = ref(false)
         const removeArray = ref([])
         const years = ref([])
+        const replacedWine = ref([])
 
         const taxByPrice = ref(5)
         const taxByValue = ref(1000)
@@ -600,6 +601,9 @@ export default {
         const onAddToCartClick = (WineLiquorId) => {
             const wineIdToReplace = localStorage.getItem('wineIdToReplace');
             const wineIndexToReplace = itemsArray.value.findIndex(w => w.Id === Number(wineIdToReplace));
+            replacedWine.value.push(itemsArray.value[wineIdToReplace])
+            console.log("Replaced wine!!!!!!!!!!!!", replacedWine.value);
+            
 
             if (wineIndexToReplace !== -1) {
                 const wineToReplace = itemsArray.value[wineIndexToReplace];
@@ -664,7 +668,6 @@ export default {
             }
 
             console.log("Items array to update to api:", itemsArray.value);
-            
             // if (addArray.value && addArray.value.length > 0) {
                 const wineData = {
                     isStatus: itemsArray.value.every((item) => item.isChecked) ? 1 : 0,

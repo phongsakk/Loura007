@@ -441,6 +441,7 @@ tbody, td, tfoot, th, thead, tr {
 .uploaded-wine-image {
     max-width: 90%;
     height: fit-content;
+    max-height: 500px;
 }
 
 .uploaded-image-display {
@@ -467,7 +468,7 @@ tbody, td, tfoot, th, thead, tr {
 
 .after-upload-image {
     width: 70px;
-    height: auto;
+    height: 90% !important;
     margin-top: 15px;
     margin-bottom: 20px;
 }

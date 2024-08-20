@@ -232,9 +232,9 @@ export default {
 
         const fetchUserProfile = async () => {
             if (!token.value) {
-                userName.value = userData.value.FirstName + ' ' + userData.value.LastName
-                emailAddress.value = userData.value.Email
-                phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile
+                userName.value = ''
+                emailAddress.value = ''
+                phoneNumber.value = ''
             }
             else {
                 const getUserData = await getUserProfile(token.value)

@@ -602,7 +602,7 @@ export default {
                 itemsArray.value.push({ WineLiquor: { DisplayName: addArray.value.WineName, CategoryLabel: addArray.value.CategoryName, Country: addArray.value.Country }, 
                 WineLiquorPic: {WineLiquorYear: addArray.value.Year, Alcohol: addArray.value.AVB, Path: addArray.value.Path}, BottleSize: addArray.value.BottleSize, InitialValue : addArray.value.RecommendMinPrice, ExciseTax: addArray.value.exciseTaxByTotal, LocalTax: addArray.value.externalLocal, Fund: addArray.value.externalFund, CustomsDuty: addArray.value.exciseTaxByDuty, TotalTax: addArray.value.externalTotal, WineLiquorTotal: addArray.value.quantity, isNewWine: true, isCorrect: true,
                 uploadFile: addArray.value.uploadFile, fileType: addArray.value.fileType, displayFile: displayFile.value, Id: addArray.value.Id, newPrice: addArray.value?.newPrice, isChecked: true})
-                // console.log("Updated items array : ", itemsArray.value);
+                console.log("Updated items array : ", itemsArray.value);
             }
             
             disabledIncorrect.value = false
@@ -631,7 +631,8 @@ export default {
         const calculateSummary = () => {
             // console.log("Calculate summary:", itemsArray.value);
             const filteredItems = itemsArray.value.filter(item => item.isCorrect !== false);
-
+            console.log("filteredItems", filteredItems);
+            
             totalLiter.value = filteredItems.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
                 return acc + (q * (cur.BottleSize === 'Bottle (750ml)' || cur.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(cur.BottleSize) / 1000 : extractBottleSizeL(cur.BottleSize)));
@@ -646,12 +647,17 @@ export default {
                 const q = cur.WineLiquorTotal || cur.quantity;
                 const price = cur.InitialValue || cur.RecommendMinPrice || cur.newPrice;
                 const value = parseFloat(`${price}`.replace(/,/g, ""));
+                console.log("Total Init value ", q, price);
+                
                 return acc + (q * value);
             }, 0);
-
+            
             totalTaxAll.value = filteredItems.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
-                const t = cur.TotalTax ? parseFloat(`${cur.TotalTax}`.replace(/,/g, "")) : parseFloat(cur.externalTotal.replace(/,/g, ""));
+                const tax = cur.TotalTax
+                const t = cur.TotalTax ? parseFloat(`${tax}`.replace(/,/g, "")) : parseFloat(cur.externalTotal.replace(/,/g, ""));
+                console.log("Total Tax value :", t);
+                
                 return acc + (q * t);
             }, 0);
         };
@@ -681,14 +687,6 @@ export default {
             return floatValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        // const formatDate = (data) => {
-        //     const date = new Date(data);
-        //     const day = String(date.getDate()).padStart(2, '0');
-        //     const month = String(date.getMonth() + 1).padStart(2, '0');
-        //     const year = date.getFullYear();
-        //     return `${day}/${month}/${year}`;
-        // }
-
         const calculateValues = (item) => {
             const TAX_BY_VALUE = 1000;
             const TAX_BY_PRICE = 5;
@@ -702,27 +700,12 @@ export default {
             const itemCalTaxByDuty = number2Decimal((calPrice + itemExciseTaxByDuty) * (TAX_BY_PRICE / 100));
             const itemCalTaxByValue = number2Decimal(itemExciseTaxByValue * TAX_BY_FUND * (TAX_BY_PRICE / 100));
             const itemCalTaxByFund = number2Decimal(1 - TAX_BY_FUND * (TAX_BY_PRICE / 100));
-            // console.log({itemExciseTaxByValue, itemCalTaxByDuty,itemCalTaxByValue,itemCalTaxByFund})
             const itemExciseTaxByPrice = number2Decimal((itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund);
             const itemExciseTaxByTotal = number2Decimal((itemExciseTaxByValue + itemCalTaxByDuty));
             const itemExternalLocal = number2Decimal(0.1 * itemExciseTaxByTotal);
             const itemExternalFund = number2Decimal(0.075 * itemExciseTaxByTotal);
             const itemExternalTotal = number2Decimal(itemExciseTaxByTotal + itemExternalLocal + itemExternalFund);
             const itemFAndI = number2Decimal(0.11 * calPrice);
-
-            // const calPrice = number2Decimal(item.RecommendMinPrice > 0 ? item.RecommendMinPrice : Number(item.newPrice));
-            // const bottleSizeToCalculate = number2Decimal(item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize));
-            // const itemExciseTaxByDuty = number2Decimal(calPrice * 0 * 0.01);
-            // const itemExciseTaxByValue = number2Decimal((item.AVB / 100) * bottleSizeToCalculate * taxByValue.value);
-            // const itemCalTaxByDuty = number2Decimal((calPrice + itemExciseTaxByDuty) * (taxByPrice.value / 100));
-            // const itemCalTaxByValue = number2Decimal(itemExciseTaxByValue * taxByFund.value * (taxByPrice.value / 100));
-            // const itemCalTaxByFund = number2Decimal(1 - taxByFund.value * (taxByPrice.value / 100));
-            // const itemExciseTaxByPrice = number2Decimal((itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund);
-            // const itemExciseTaxByTotal = number2Decimal((itemExciseTaxByValue + itemCalTaxByDuty));
-            // const itemExternalLocal = number2Decimal(0.1 * itemExciseTaxByTotal);
-            // const itemExternalFund = number2Decimal(0.075 * itemExciseTaxByTotal);
-            // const itemExternalTotal = number2Decimal(itemExciseTaxByTotal + itemExternalLocal + itemExternalFund);
-            // const itemFAndI = number2Decimal(0.11 * calPrice);
 
             return {
                 itemExciseTaxByDuty,
