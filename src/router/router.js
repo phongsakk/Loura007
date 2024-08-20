@@ -183,34 +183,43 @@ router.beforeEach((to, _from, next) => {
     localStorage.removeItem('accessTokenExpiredAt');
   }
   const now = dayjs();
-  const accessTokenExpiredIn = dayjs(accessTokenExpiredAt).subtract(1, "hour");
-  if (isLoggedIn && now.isAfter(accessTokenExpiredIn)) {
-    console.log("Access token expired, refreshing user token");
-    const token = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
-
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify({
-        "refreshToken": refreshToken
-      }),
-    };
-
-    fetch("https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-RefreshToken", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        localStorage.setItem('token', result.data.accessToken);
-        localStorage.setItem('isLoggedIn', "true");
-        localStorage.setItem('userTypeId', result.data.FtUserTypeId);
-        localStorage.setItem('refreshToken', result.data.refreshToken);
-        localStorage.setItem('accessTokenExpiredAt', result.data.expiredAt);
-      })
-      .catch((error) => console.error(error));
+  const accessTokenExpiredIn = dayjs(accessTokenExpiredAt);
+  const accessTokenRefreshIn = accessTokenExpiredIn.clone().subtract(1, "hour");
+  if (isLoggedIn && now.isAfter(accessTokenRefreshIn)) {
+    if (now.isAfter(accessTokenExpiredIn)) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('userTypeId');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('accessTokenExpiredAt');
+      next({ path: "/" });
+    } else {
+      const token = localStorage.getItem("token");
+      const refreshToken = localStorage.getItem("refreshToken");
+  
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", `Bearer ${token}`);
+  
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify({
+          "refreshToken": refreshToken
+        }),
+      };
+  
+      fetch("https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-RefreshToken", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          localStorage.setItem('token', result.data.accessToken);
+          localStorage.setItem('isLoggedIn', "true");
+          localStorage.setItem('userTypeId', result.data.FtUserTypeId);
+          localStorage.setItem('refreshToken', result.data.refreshToken);
+          localStorage.setItem('accessTokenExpiredAt', result.data.expiredAt);
+        })
+        .catch((error) => console.error(error)); 
+    }
   }
 
   // redirection
