@@ -7,22 +7,23 @@
             <div class="row">
                 <div class="col-7 text-start position-relative">
                     <label class="form-label">ค้นหาด้วยชื่อ</label>
-                    <input type="text" class="search-input" placeholder="ชื่อไวน์" v-model="wineName" @input="onWineNameSearch($event)">
+                    <input type="text" class="search-input" placeholder="ชื่อไวน์" v-model="wineName"
+                        @input="onWineNameSearch($event)">
                     <div style="padding-right: 20px;">
                         <ul class="autocomplete-results" v-if="algoliaResults.length">
-                            <li v-for="(result,index) in algoliaResults" :key="index" @click="selectWine(result.name)">
-                                <img :src="result.image_bottle" alt="Bottle Image" class="bottle-image" />{{ result.name }}
+                            <li v-for="(result, index) in algoliaResults" :key="index" @click="selectWine(result.name)">
+                                <img :src="result.image_bottle" alt="Bottle Image" class="bottle-image" />{{ result.name
+                                }}
                             </li>
                         </ul>
                     </div>
-                    
+
                 </div>
                 <div class="col-1 text-start">
                     <label class="form-label">ปีที่ผลิต</label>
                     <select id="idSelect" name="years" class="search-input" v-model="vintage">
                         <option value="" disabled selected>ไม่เลือกปีที่ผลิต</option>
-                        <option v-for="option in years" :key="option" :value="option"
-                            class="option">
+                        <option v-for="option in years" :key="option" :value="option" class="option">
                             {{ option }}
                         </option>
                     </select>
@@ -30,8 +31,7 @@
                 <div class="col-3 text-start">
                     <label class="form-label">ขนาดบรรจุภัณฑ์</label>
                     <select id="idSelect" name="id" class="search-input" v-model="bottleSize">
-                        <option v-for="option in bottleSizes" :key="option.Id" :value="option.EnumName"
-                            class="option">
+                        <option v-for="option in bottleSizes" :key="option.Id" :value="option.EnumName" class="option">
                             {{ option.EnumName }}
                         </option>
                     </select>
@@ -44,20 +44,23 @@
                 </div>
             </div>
             <div class="upload-card text-center">
-                <input type="file" class="image-input" id="image-input" accept="image/*" @change="onImageSearch($event)">
+                <input type="file" class="image-input" id="image-input" accept="image/*"
+                    @change="onImageSearch($event)">
                 <label for="image-input" class="upload-label">
                     <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
                     <h3>ค้นหาโดยใช้รูป</h3>
-                    <p>วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป  *** ขนาดไม่น้อยกว่า640x640 พิกเซล ***</p>
+                    <p>วางไฟล์รูปตรงนี้ หรือ เลือกไฟล์รูป *** ขนาดไม่น้อยกว่า640x640 พิกเซล ***</p>
                 </label>
-               
+
             </div>
         </div>
         <div class="list-header-card" v-if="wineSearch.length > 0">
             <p class="list-header">รายการไวน์</p>
             <div class="list-icons">
-                <img src="../assets/img/list-icon.png" alt="" @click="setViewMode('list')" :class="{ active: viewMode === 'list' }" style="margin-right: 10px;">
-                <img src="../assets/img/grid-icon.png" alt="" @click="setViewMode('grid')" :class="{ active: viewMode === 'grid' }">
+                <img src="../assets/img/list-icon.png" alt="" @click="setViewMode('list')"
+                    :class="{ active: viewMode === 'list' }" style="margin-right: 10px;">
+                <img src="../assets/img/grid-icon.png" alt="" @click="setViewMode('grid')"
+                    :class="{ active: viewMode === 'grid' }">
             </div>
         </div>
         <div class="search-result-session" v-if="wineSearch.length > 0">
@@ -66,16 +69,20 @@
                     <div class="row">
                         <div class="col-lg-2 d-flex justify-content-center align-items-center">
                             <div class="search-image-card">
-                                <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.Path}`" alt="" class="search-image">
+                                <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.Path}`" alt=""
+                                    class="search-image">
                             </div>
                         </div>
                         <div class="col-lg-4 horizontal-divider">
                             <div class="d-flex justify-content-between">
                                 <div class="category">
-                                    <p class="category-name" style="margin-bottom: 0px;"><span class="category-icon"><img src="../assets/img/wine-img1.png" class="category-image"></span>{{ wine.CategoryName }}</p>
+                                    <p class="category-name" style="margin-bottom: 0px;"><span
+                                            class="category-icon"><img src="../assets/img/wine-img1.png"
+                                                class="category-image"></span>{{ wine.CategoryName }}</p>
                                 </div>
                                 <div class="year">
-                                    <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span class="wine-detail-text">{{ wine.Year }}</span></p>
+                                    <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
+                                            class="wine-detail-text">{{ wine.Year }}</span></p>
                                 </div>
                             </div>
                             <div class="wine-name text-start">{{ wine.WineName }}</div>
@@ -99,48 +106,60 @@
                         <div class="col-lg-3">
                             <div class="price-col">
                                 <div class="d-flex justify-content-between">
-                                    <label class="form-label text-start" style="margin-bottom: 0px;">มูลค่าเบื้องต้น</label>
+                                    <label class="form-label text-start"
+                                        style="margin-bottom: 0px;">มูลค่าเบื้องต้น</label>
                                     <div v-if="wine.RecommendMinPrice === 0">
-                                        <p v-if="isEdit === false" class="red-text text-end" style="font-size: 18px; font-weight: 700; margin: 10px 0px 0px 0px;">
+                                        <p v-if="isEdit === false" class="red-text text-end"
+                                            style="font-size: 18px; font-weight: 700; margin: 10px 0px 0px 0px;">
                                             ไม่พบราคาในระบบ
-                                            <img src="../assets/img/price-edit-icon.png" alt="" class="price-edit-icon" style="cursor: pointer;" @click="onEditPriceClick(wine.Id)">
+                                            <img src="../assets/img/price-edit-icon.png" alt="" class="price-edit-icon"
+                                                style="cursor: pointer;" @click="onEditPriceClick(wine.Id)">
                                         </p>
-                                        <div v-else >
+                                        <div v-else>
                                             <input type="text" class="price-input text-end" v-model="wine.newPrice">
                                         </div>
                                     </div>
                                     <div v-else>
-                                        <p class="wine-price text-end" style="margin-top: 10px; margin-bottom: 0px;">{{ formatNumber(wine.RecommendMinPrice) }} บาท</p>
+                                        <p class="wine-price text-end" style="margin-top: 10px; margin-bottom: 0px;">{{
+                                            formatNumber(wine.RecommendMinPrice) }} บาท</p>
                                         <p class="tax-text text-end" style="margin-bottom: 0px;">Excl. 7% sales tax</p>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <label class="form-label text-start">ปริมาตรสุราทั้งหมด(ลิตร)</label>
-                                    <p class="wine-price text-end" style="margin: 10px 0px;">{{ wine.wineLiter }}ลิตร</p>
+                                    <p class="wine-price text-end" style="margin: 10px 0px;">{{ wine.wineLiter }}ลิตร
+                                    </p>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <label class="form-label text-start">จำนวนขวด</label>
                                     <div class="quantity-count">
                                         <button class="btn-count" @click="decreaseQuantity(wine.Id)">-</button>
-                                        <input type="text" class="quantity-input text-center" v-model="wine.quantity" disabled>
-                                        <button class="btn-count" @click="increaseQuantity(wine.Id)" :disabled="wine.wineLiter >= 10">+</button>
+                                        <input type="text" class="quantity-input text-center" v-model="wine.quantity"
+                                            disabled>
+                                        <button class="btn-count" @click="increaseQuantity(wine.Id)"
+                                            :disabled="wine.wineLiter >= 10">+</button>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end" style="margin-top: 10px;">
                                     <!-- <button class="btn-detail">รายละเอียดเพิ่มเติม</button> -->
-                                    <button class="btn-add-to-cart" @click="onAddToCartClick(wine.Id)">เพิ่มเข้าตะกร้า</button>
+                                    <button class="btn-add-to-cart"
+                                        @click="onAddToCartClick(wine.Id)">เพิ่มเข้าตะกร้า</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div v-if="isEdit === true" class="upload-session">
                         <div class="upload-card">
-                            <input type="file" class="image-input" id="file-input" accept="application/pdf,image/*" @change="uploadWineFile($event, wine.Id)">
+                            <input type="file" class="image-input" id="file-input" accept="application/pdf,image/*"
+                                @change="uploadWineFile($event, wine.Id)">
                             <label for="file-input" class="upload-label" style="cursor: pointer;">
                                 <div v-if="wine.fileName">
-                                    <img v-if="wine.fileType === 'application/pdf'" src="../assets/img/pdf-icon.png" alt="" class="after-upload-image">
-                                    <img v-else src="../assets/img/after-upload-icon.png" alt="" class="after-upload-image">
-                                    <p v-if="wine.fileType === 'application/pdf'" class="upload-header">อัพโหลดไฟล์แล้ว</p>
+                                    <img v-if="wine.fileType === 'application/pdf'" src="../assets/img/pdf-icon.png"
+                                        alt="" class="after-upload-image">
+                                    <img v-else src="../assets/img/after-upload-icon.png" alt=""
+                                        class="after-upload-image">
+                                    <p v-if="wine.fileType === 'application/pdf'" class="upload-header">อัพโหลดไฟล์แล้ว
+                                    </p>
                                     <p v-else class="upload-header">อัพโหลดรูปภาพแล้ว</p>
                                 </div>
                                 <div v-else>
@@ -165,15 +184,19 @@
                             <div class="row">
                                 <div class="col-5 d-flex justify-content-center align-items-center">
                                     <div class="search-image-card">
-                                        <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.Path}`" alt="" class="search-image">
+                                        <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.Path}`"
+                                            alt="" class="search-image">
                                     </div>
                                 </div>
                                 <div class="col-7" style="margin-top: 20px;">
                                     <div class="category text-start">
-                                        <p class="category-name"><span class="category-icon"><img src="../assets/img/wine-img1.png" class="category-image"></span>{{ wine.CategoryName }}</p>
+                                        <p class="category-name"><span class="category-icon"><img
+                                                    src="../assets/img/wine-img1.png" class="category-image"></span>{{
+                                            wine.CategoryName }}</p>
                                     </div>
                                     <div class="year text-start">
-                                        <p class="form-label">ปีที่ผลิต <span class="wine-detail-text">{{ wine.Year }}</span></p>
+                                        <p class="form-label">ปีที่ผลิต <span class="wine-detail-text">{{ wine.Year
+                                                }}</span></p>
                                     </div>
                                     <div class="wine-name text-start">{{ wine.WineName }}</div>
                                 </div>
@@ -200,33 +223,39 @@
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <label class="form-label text-start" style="margin-right: 30px;">มูลค่าเบื้องต้น</label>
+                                    <label class="form-label text-start"
+                                        style="margin-right: 30px;">มูลค่าเบื้องต้น</label>
                                     <div>
                                         <div v-if="wine.RecommendMinPrice === 0">
-                                            <p v-if="isEdit === false" class="red-text" style="font-size: 18px; font-weight: 700;">ไม่พบราคาในระบบ</p>
-                                            <div v-else >
+                                            <p v-if="isEdit === false" class="red-text"
+                                                style="font-size: 18px; font-weight: 700;">ไม่พบราคาในระบบ</p>
+                                            <div v-else>
                                                 <input type="text" class="price-input" v-model="wine.newPrice">
                                             </div>
                                         </div>
                                         <div v-else>
-                                            <p class="wine-price" style="margin-top: 10px; margin-bottom: 0px;">{{ formatNumber(wine.RecommendMinPrice) }} บาท</p>
+                                            <p class="wine-price" style="margin-top: 10px; margin-bottom: 0px;">{{
+                                                formatNumber(wine.RecommendMinPrice) }} บาท</p>
                                             <p class="tax-text text-end">Excl. 7% sales tax</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <label class="form-label text-start" style="margin: 0px 0px 16px 0px; ">ปริมาตรสุราทั้งหมด(ลิตร)</label>
+                                    <label class="form-label text-start"
+                                        style="margin: 0px 0px 16px 0px; ">ปริมาตรสุราทั้งหมด(ลิตร)</label>
                                     <p class="wine-price">{{ wine.wineLiter }}ลิตร</p>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <label class="form-label text-start">จำนวนขวด</label>
                                     <div class="quantity-count">
                                         <button class="btn-count" @click="decreaseQuantity(wine.Id)">-</button>
-                                        <input type="text" class="quantity-input text-center" v-model="wine.quantity" disabled>
+                                        <input type="text" class="quantity-input text-center" v-model="wine.quantity"
+                                            disabled>
                                         <button class="btn-count" @click="increaseQuantity(wine.Id)">+</button>
                                     </div>
                                     <!-- <div class="d-flex justify-content-end"> -->
-                                        <button class="btn-add-to-cart" @click="onAddToCartClick(wine.Id)" :disabled="totalLiters + wine.wineLiter > 10">เพิ่มเข้าตะกร้า</button>
+                                    <button class="btn-add-to-cart" @click="onAddToCartClick(wine.Id)"
+                                        :disabled="totalLiters + wine.wineLiter > 10">เพิ่มเข้าตะกร้า</button>
                                     <!-- </div> -->
                                 </div>
                             </div>
@@ -251,10 +280,12 @@
                         <div class="image-search-list">
                             <div v-if="algoliaImageResults.length > 0">
                                 <div v-for="result in algoliaImageResults" :key="result.objectID">
-                                    <div class="image-search-results" @click="onImageResultClick(result.name, result.alcohol)">
+                                    <div class="image-search-results"
+                                        @click="onImageResultClick(result.name, result.alcohol)">
                                         <div class="result-name d-flex align-items-center">
                                             <img :src="result.image_label" alt="" class="bottle-image">
-                                            <p class="wine-name text-start" style="margin-bottom: 0px;">{{ result.name }}</p>
+                                            <p class="wine-name text-start" style="margin-bottom: 0px;">{{ result.name
+                                                }}</p>
                                         </div>
                                         <div class="result-country">
                                             <p class="country-text">{{ result.country }}</p>
@@ -280,7 +311,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, onUpdated } from 'vue'
 // import slider from 'vue3-slider'
 // import 'vue-slider-component/theme/default.css'
 import algoliasearch from 'algoliasearch';
@@ -292,7 +323,7 @@ export default {
     // components: {
     //     slider
     // },
-    
+
     setup() {
         const wineName = ref('')
         const vintage = ref('')
@@ -335,14 +366,14 @@ export default {
         channel.onmessage = (event) => {
             console.log(event.data)
             addedCartItems.value = JSON.parse(localStorage.getItem('cartItems'))
-            
+
             totalLiters.value = addedCartItems.value.reduce((sum, item) => {
-                const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' 
-                    ? extractBottleSizeMl(item.BottleSize) / 1000 
+                const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)'
+                    ? extractBottleSizeMl(item.BottleSize) / 1000
                     : extractBottleSizeL(item.BottleSize);
                 return sum + (bottleSize * item.quantity);
             }, 0);
-            
+
             console.log(`Total Liters: ${totalLiters.value}`);
         }
 
@@ -365,7 +396,7 @@ export default {
         };
 
         const algoliaSearch = async () => {
-            if(wineName.value) {
+            if (wineName.value) {
                 const client = algoliasearch('Q3BB077ZJ4', 'e25233448e08e7b8babe79599f43c5c0');
                 const index = client.initIndex('wine_index');
                 const { hits } = await index.search(wineName.value);
@@ -395,8 +426,8 @@ export default {
             wineImage.value = ''
         };
 
-        watch (bottleSize, (selectedBottleSize) => {
-            if(selectedBottleSize) {
+        watch(bottleSize, (selectedBottleSize) => {
+            if (selectedBottleSize) {
                 const selected = bottleSizes.value.find(option => option.EnumName === bottleSize.value);
                 bottleCode.value = selected ? selected.EnumCode : ''
                 console.log("Bottle Code :", bottleCode.value)
@@ -408,7 +439,7 @@ export default {
             spinner.value = true
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
             console.log("Wine Search Data:", wineSearchData)
-            if ( wineSearchData.code === 404) {
+            if (wineSearchData.code === 404) {
                 spinner.value = false
                 await showNotFoundAlert()
             }
@@ -419,16 +450,16 @@ export default {
             else {
                 if (Array.isArray(wineSearchData.data)) {
                     wineSearch.value = wineSearchData.data.map(wine => {
-                    const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
-                        ? extractBottleSizeMl(wine.BottleSize) / 1000
-                        : extractBottleSizeL(wine.BottleSize);
-                    return { ...wine, quantity: 1, wineLiter };
+                        const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
+                            ? extractBottleSizeMl(wine.BottleSize) / 1000
+                            : extractBottleSizeL(wine.BottleSize);
+                        return { ...wine, quantity: 1, wineLiter };
                     });
                 } else if (typeof wineSearchData.data === 'object') {
                     const wine = wineSearchData.data;
                     const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
-                    ? extractBottleSizeMl(wine.BottleSize) / 1000
-                    : extractBottleSizeL(wine.BottleSize);
+                        ? extractBottleSizeMl(wine.BottleSize) / 1000
+                        : extractBottleSizeL(wine.BottleSize);
                     wineSearch.value = [{ ...wine, quantity: 1, wineLiter }];
                 } else {
                     console.error('Unexpected data format:', wineSearchData.data);
@@ -438,7 +469,7 @@ export default {
             }
         }
 
-        const onImageSearch = async(event) => {
+        const onImageSearch = async (event) => {
             algoliaResults.value = []
             spinner.value = true
             const selectedImage = event.target.files[0]
@@ -457,7 +488,7 @@ export default {
             spinner.value = false
         }
 
-        const onImageResultClick = async(name, alc) => {
+        const onImageResultClick = async (name, alc) => {
             imageSearchModal.value = false
             spinner.value = true
             wineName.value = name
@@ -466,28 +497,28 @@ export default {
             // const bCode = ''
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
             console.log("Wine Search Data:", wineSearchData)
-            if ( wineSearchData === 500) {
+            if (wineSearchData === 500) {
                 console.log("This is code 500!!!!!!!!!")
                 spinner.value = false
                 await showNotFoundAlert()
             }
-            else if ( wineSearchData.code === 404) {
+            else if (wineSearchData.code === 404) {
                 spinner.value = false
                 await showNotFoundAlert()
             }
             else {
                 if (Array.isArray(wineSearchData.data)) {
                     wineSearch.value = wineSearchData.data.map(wine => {
-                    const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
-                        ? extractBottleSizeMl(wine.BottleSize) / 1000
-                        : extractBottleSizeL(wine.BottleSize);
-                    return { ...wine, quantity: 1, wineLiter };
+                        const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
+                            ? extractBottleSizeMl(wine.BottleSize) / 1000
+                            : extractBottleSizeL(wine.BottleSize);
+                        return { ...wine, quantity: 1, wineLiter };
                     });
                 } else if (typeof wineSearchData.data === 'object') {
                     const wine = wineSearchData.data;
                     const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
-                    ? extractBottleSizeMl(wine.BottleSize) / 1000
-                    : extractBottleSizeL(wine.BottleSize);
+                        ? extractBottleSizeMl(wine.BottleSize) / 1000
+                        : extractBottleSizeL(wine.BottleSize);
                     wineSearch.value = [{ ...wine, quantity: 1, wineLiter }];
                 } else {
                     console.error('Unexpected data format:', wineSearchData.data);
@@ -502,7 +533,7 @@ export default {
             imageSearchModal.value = false
         }
 
-        const showNotFoundAlert = async() => {
+        const showNotFoundAlert = async () => {
             notFoundAlert.value = true;
             setTimeout(() => {
                 notFoundAlert.value = false;
@@ -538,7 +569,7 @@ export default {
             const wine = wineSearch.value.find(w => w.Id === wineId);
             isEdit.value = true
 
-            return { ...wine, newPrice: 0 , uploadFile: '', fileType: ''};
+            return { ...wine, newPrice: 0, uploadFile: '', fileType: '' };
         }
 
         const onFileUpload = (event, wineId) => {
@@ -578,10 +609,10 @@ export default {
         };
 
         const onAddToCartClick = async (wineId) => {
-            
+
             const newObject = wineSearch.value.find(w => w.Id === wineId);
             console.log("508", totalLiters.value, newObject.wineLiter);
-            if(totalLiters.value + newObject.wineLiter < 10) {
+            if (totalLiters.value + newObject.wineLiter < 10) {
                 console.log("New object:", newObject)
                 let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
                 console.log("Cart items to save to localstorage :", localStorage.getItem('cartItems'))
@@ -603,18 +634,18 @@ export default {
                 localStorage.setItem('cartItems', JSON.stringify(cartItems))
                 localStorage.setItem('totalLitersToShow', totalLiters.value)
 
-                cartChannel.postMessage ("It's new item adding to cart")
+                cartChannel.postMessage("It's new item adding to cart")
             }
             else {
                 console.log("Cannot add more than 10 liters")
             }
         }
 
-        const formatNumber = (value) =>{
+        const formatNumber = (value) => {
             const floatValue = parseFloat(value);
             return floatValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
-        
+
         const extractBottleSizeMl = (bottleSize) => {
             const match = bottleSize.match(/(\d+(\.\d+)?)\s*ml/i);
             return match ? parseFloat(match[1]) : 0;
@@ -632,7 +663,7 @@ export default {
             console.log("BottleSize :", bottleSize.value)
         }
 
-        const groupedWineSearch = computed (() => {
+        const groupedWineSearch = computed(() => {
             const groups = [];
             for (let i = 0; i < wineSearch.value.length; i += 3) {
                 groups.push(wineSearch.value.slice(i, i + 3));
@@ -665,17 +696,31 @@ export default {
         //     return words.slice(0, 2).join(' '); // Extract the first two words
         // };
 
-        onMounted ( () => {
+        const fireAlertMessage = () => {
+            const message = history.state.message;
+            if (message) {
+                console.log(message);
+                alert(message);
+                history.replaceState({}, '', '');
+            }
+        }
+
+        onUpdated(() => {
+            console.log("updated", history.state);
+            fireAlertMessage();
+        })
+
+        onMounted(() => {
             fetchBottleSizes();
             generateYearsArray();
 
             token.value = localStorage.getItem('token')
 
             addedCartItems.value = JSON.parse(localStorage.getItem('cartItems'))
-            if(addedCartItems.value && addedCartItems.value.length > 0) {
+            if (addedCartItems.value && addedCartItems.value.length > 0) {
                 totalLiters.value = addedCartItems.value.reduce((sum, item) => {
-                    const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' 
-                        ? extractBottleSizeMl(item.BottleSize) / 1000 
+                    const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)'
+                        ? extractBottleSizeMl(item.BottleSize) / 1000
                         : extractBottleSizeL(item.BottleSize);
                     return sum + (bottleSize * item.quantity);
                 }, 0);
@@ -829,7 +874,7 @@ export default {
     display: flex;
     justify-content: space-between;
     /* align-items: center; */
-    background-color: #2B476D ;
+    background-color: #2B476D;
     width: 100%;
     height: 80px;
     box-shadow: 0px 3px 6px #00000080;
@@ -933,21 +978,21 @@ export default {
 }
 
 .autocomplete-results li {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
 }
 
 .autocomplete-results li:hover {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
 .bottle-image {
-  width: 50px;
-  height: auto;
-  margin-right: 10px;
-  /* padding: 10px;
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+    /* padding: 10px;
   box-shadow: 0px 3px 6px #00000065;
 border-radius: 6px; */
 }
@@ -1038,7 +1083,7 @@ border-radius: 6px; */
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
     z-index: 99;
 }
 

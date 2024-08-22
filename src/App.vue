@@ -5,10 +5,17 @@
 </template>
 
 <script>
+import { onUpdated } from 'vue';
+
 
 export default {
   name: 'App',
   components: {
+  },
+  setup: () => {
+      onUpdated(() => {
+        console.log("app");
+    }) 
   }
 }
 </script>

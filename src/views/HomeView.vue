@@ -32,5 +32,4 @@ export default {
     background-size: 100% 430px;
     background-repeat: no-repeat;
 }
-
 </style>

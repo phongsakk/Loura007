@@ -192,7 +192,8 @@ router.beforeEach((to, _from, next) => {
       localStorage.removeItem('userTypeId');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('accessTokenExpiredAt');
-      next({ path: "/" });
+      history.replaceState({});
+      next({ path: "/", state: { message: "เซสชั่นหมดอายุ"} });
     } else {
       const token = localStorage.getItem("token");
       const refreshToken = localStorage.getItem("refreshToken");
