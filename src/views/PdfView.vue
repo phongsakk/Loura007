@@ -270,23 +270,54 @@ export default {
     const spinner = ref(false)
     
 
-    const onConfirmClick = async() => {
-      spinner.value = true
+    const onConfirmClick = async () => {
+      spinner.value = true;
       const pdfContent = document.getElementById('pdf-content');
-      console.log('PDF Content Element:', pdfContent);
-      const canvas = await html2canvas(pdfContent);
+      const canvas = await html2canvas(pdfContent, { scale: 0.5 });
       const imgData = canvas.toDataURL('image/png');
+      
+      // Create a new jsPDF document
       const doc = new jsPDF();
-      doc.addImage(imgData, 'PNG', 10, 10, 190, 0);
-      pdfBase64.value = doc.output('datauristring');
-      console.log('PDF Base 64 :', pdfBase64.value)
-      localStorage.setItem('generatedPdf', pdfBase64.value);
-      // const retrievedPdfBase64 = localStorage.getItem('generatedPdf');
-      // console.log('Retrieved PDF Base64:', retrievedPdfBase64);
 
+      // Get the dimensions of the PDF page
+      const pageHeight = doc.internal.pageSize.height;
+      const pageWidth = doc.internal.pageSize.width;
+
+      // Get the dimensions of the canvas
+      const imgHeight = canvas.height;
+      const imgWidth = canvas.width;
+
+      // Calculate the height ratio of the canvas image to fit within the PDF page width
+      const ratio = pageWidth / imgWidth;
+      const scaledHeight = imgHeight * ratio;
+
+      let position = 0;
+
+      // Split the content into multiple pages if it's too long
+      while (position < scaledHeight) {
+        const nextHeight = position + pageHeight;
+
+        // Add the current section of the canvas image to the PDF
+        doc.addImage(imgData, 'PNG', 0, -position, pageWidth, scaledHeight);
+
+        // Check if there is more content to add
+        if (nextHeight < scaledHeight) {
+          doc.addPage(); // Add a new page
+          position += pageHeight; // Move to the next page position
+        } else {
+          break; // Exit the loop if all content is added
+        }
+      }
+
+      // Save the PDF as a base64 string and store it in localStorage
+      pdfBase64.value = doc.output('datauristring');
+      localStorage.setItem('generatedPdf', pdfBase64.value);
+
+      // Navigate to the next page
       router.push('/scan-qr');
-      spinner.value = false
+      spinner.value = false;
     };
+
 
     const onBackClick = () => {
       router.push('/wine-list-in-cart');

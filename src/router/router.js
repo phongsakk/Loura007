@@ -226,36 +226,27 @@ router.beforeEach((to, _from, next) => {
   if (to.path == "/" || to.path == "/your-cart" || to.path == "/register" || to.path == "/verify-email") {
     if (isLoggedIn && userTypeId === "21") {
       next({ path: "/import-wine-list" })
-      console.log(1);
     } else {
       next();
-      console.log(2);
     }
   } else if (to.matched.some((record) => record.meta.requiresAdmin)) {
     if (isLoggedIn && userTypeId === "21") {
       next();
-      console.log(3);
     } else if (isLoggedIn && userTypeId !== "21") {
       next({ path: "/" });
-      console.log(4);
     } else {
       next({ path: "/login" });
-      console.log(5);
     }
   } else if (to.matched.some((record) => record.meta.requiresUser)) {
     if (isLoggedIn && userTypeId !== 21) {
       next();
-      console.log(6);
     } else if (isLoggedIn && userTypeId === 21) {
       next({ path: "/import-wine-list" });
-      console.log(7);
     } else {
       next({ path: "/login" });
-      console.log(8);
     }
   } else {
     next();
-    console.log(9);
   }
 });
 
