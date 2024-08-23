@@ -192,7 +192,7 @@
                                     <div class="category text-start">
                                         <p class="category-name"><span class="category-icon"><img
                                                     src="../assets/img/wine-img1.png" class="category-image"></span>{{
-                                            wine.CategoryName }}</p>
+                                                        wine.CategoryName }}</p>
                                     </div>
                                     <div class="year text-start">
                                         <p class="form-label">ปีที่ผลิต <span class="wine-detail-text">{{ wine.Year
@@ -319,6 +319,7 @@ import { BroadcastChannel } from 'broadcast-channel';
 import { getWineSearch, getBottleSize, uploadWineSearchImage } from '@/api/getWineSearch.js'
 import { uploadFileV4 } from '@/api/uploadFile.js';
 import router from '@/router/router';
+import Toast from '@/js/Toast';
 
 export default {
     // components: {
@@ -716,12 +717,16 @@ export default {
 
         watch(
             () => router.currentRoute.value.query.sessionExpired
-            , (newValue) => {
-                console.log(newValue);
+            , (newValue, oldValue) => {
+                console.log(oldValue, newValue);
                 if (newValue) {
-                    alert("เซสชั่นหมดอายุ");
                     router.push("/");
-                    // You can also trigger any other action here
+                } else if (oldValue === "true") {
+                    Toast.fire({
+                        icon: "warning",
+                        title: "Session expired",
+                        text: "เซสชั่นหมดอายุ กรุณาเข้าสู่ระบบ"
+                    });
                 }
             });
 

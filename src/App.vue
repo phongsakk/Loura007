@@ -1,26 +1,26 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+    <div>
+        <router-view></router-view>
+    </div>
 </template>
 
 <script>
 
 export default {
-  name: 'App',
-  components: {
-  }
+    name: 'App',
+    components: {
+    }
 }
 </script>
 
 <style>
 #app {
-  font-family: "Sarabun", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #000000;
-  /* margin-top: 60px; */
+    font-family: "Sarabun", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #000000;
+    /* margin-top: 60px; */
 }
 
 .custom-container {
@@ -221,7 +221,7 @@ export default {
     font-size: 20px;
     font-weight: 700;
     color: #2B476D;
-} 
+}
 
 .table-card {
     margin-top: 30px;
@@ -236,7 +236,12 @@ export default {
     border-color: #2B476D;
 }
 
-tbody, td, tfoot, th, thead, tr {
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
     border-color: inherit;
     border-style: solid;
     border-width: 0;
@@ -254,7 +259,7 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .red-text {
-    color : #FF5757 !important;
+    color: #FF5757 !important;
 }
 
 .blue-text {
@@ -277,7 +282,7 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .position-relative {
-  position: relative;
+    position: relative;
 }
 
 .overlay {
@@ -421,20 +426,21 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .file-display {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* width: 60%; */
-  height: 650px; /* or any other height you prefer */
-  /* padding-left: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* width: 60%; */
+    height: 650px;
+    /* or any other height you prefer */
+    /* padding-left: 20%;
   padding-right: 20%; */
-  padding-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 .file-display-frame {
-  width: 550px;
-  height: auto;
-  border: none;
+    width: 550px;
+    height: auto;
+    border: none;
 
 }
 
@@ -477,5 +483,37 @@ tbody, td, tfoot, th, thead, tr {
     width: 14px;
     height: auto;
     margin-bottom: 5px;
+}
+
+.colored-toast.swal2-icon-success {
+    background-color: #a5dc86 !important;
+}
+
+.colored-toast.swal2-icon-error {
+    background-color: #f27474 !important;
+}
+
+.colored-toast.swal2-icon-warning {
+    background-color: #f8bb86 !important;
+}
+
+.colored-toast.swal2-icon-info {
+    background-color: #3fc3ee !important;
+}
+
+.colored-toast.swal2-icon-question {
+    background-color: #87adbd !important;
+}
+
+.colored-toast .swal2-title {
+    color: white;
+}
+
+.colored-toast .swal2-close {
+    color: white;
+}
+
+.colored-toast .swal2-html-container {
+    color: white;
 }
 </style>

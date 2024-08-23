@@ -1,6 +1,6 @@
 <template> 
     <div class="login-page">
-        <div class="login-card">
+        <form @submit="onLoginClick" class="login-card">
             <img src="../assets/img/excise-logo.png" alt="" class="img-fluid">
             <div class="text-start p-3">
                 <h3 class="login-header">ลงชื่อเข้าใช้</h3>
@@ -13,13 +13,13 @@
                 <p class="error-text" v-if="passwordErrorText">{{ passwordErrorText }}</p>
             </div>
             <div class="login-buttons">
-                <button class="btn-cancel" @click="onRegisterClick">สร้างบัญชี</button>
-                <button class="btn-login" @click="onLoginClick">ลงชื่อเข้าใช้</button>
+                <button type="button" class="btn-cancel" @click="onRegisterClick">สร้างบัญชี</button>
+                <button type="submit" class="btn-login" @click="onLoginClick">ลงชื่อเข้าใช้</button>
             </div>
             <div class="forgot-password">
                 <button class="btn-forgot-password" @click="onForgotPasswordClick">ลืมรหัสผ่าน</button>
             </div>
-        </div>
+        </form>
     </div>
     <div v-if="spinner" class="overlay"></div>
 
@@ -44,7 +44,9 @@ export default {
         const emailErrorText = ref('')
         const passwordErrorText = ref('')
 
-        const onLoginClick = async () => {
+        const onLoginClick = async (event) => {
+            event.preventDefault();
+            console.log("onLoginClick", event);
             spinner.value = true;
             const getLogin = await getLonginUser(email.value, password.value);
             console.log("Logging in :", getLogin);
