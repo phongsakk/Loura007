@@ -44,7 +44,7 @@
                             </div>
                             <div class="col-3">
                                 <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                <p>alc. {{ wine.WineLiquorPic.Alcohol }} % vol.</p>
+                                <p>alc. {{ wine.Avb }} % vol.</p>
                             </div>
                             <div class="col-6">
                                 <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
@@ -125,7 +125,7 @@
 <script>
 import { ref, onMounted, computed } from 'vue'
 // import { jsPDF } from 'jspdf'
-import { getCartItem } from '@/api/getWineSearch'
+import { getCartItem, getWineInfo } from '@/api/getWineSearch'
 import router from '@/router/router'
 
 // import moment from 'moment';
@@ -199,12 +199,20 @@ export default {
         const fetchCartItem = async () => {
             spinner.value = true
             const getCartData = await getCartItem (cartId.value, token.value)
-            cartItems.value = getCartData.data
+
+            for (const item of getCartData.data.Items) {
+                console.log("Items : ", item);
+                const wineInfo = await getWineInfo(item.WineLiquorId, item.WineLiquorPic.WineLiquorYear);
+                item.Avb = wineInfo.data.AVB;
+            }
+            cartItems.value = getCartData.data;
+
             console.log('Cart data :', cartItems.value)
             console.log("Import purpose :", cartItems.value.ImportPurpose.CheckpointLabel)
             importCheckpoint.value = cartItems.value.ImportPurpose.CheckpointLabel
             importPurpose.value = cartItems.value.ImportPurpose.PurposeLabel
             importDate.value = new Date(cartItems.value.ImportPurpose.PurposeDate).toISOString().slice(0, 10)
+
             spinner.value = false
         }
 

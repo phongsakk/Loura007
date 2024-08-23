@@ -181,3 +181,42 @@ export async function updateCart (wineData, cartId, token) {
         throw error;
     }
 }
+
+export async function getStampList(cartId, token) {
+    try {
+        const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-FtGetQrCode/${cartId}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        if (!response.ok) {
+            throw new Error('Error: Unable to fetch data');
+        }
+        const data = await response.json();
+        return data
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+export async function getWineInfo(wineId, year) {
+    try {
+        const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/wine/getwineprofile?wid=${wineId}&vintage=${year}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        if (!response.ok) {
+            throw new Error('Error: Unable to fetch data');
+        }
+        const data = await response.json();
+        return data
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}

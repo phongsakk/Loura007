@@ -199,7 +199,7 @@
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                    <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol }} % vol.</p>
+                                    <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol === 0 ? wine.Avb : wine.WineLiquorPic.Alcohol }} % vol.</p>
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
@@ -317,7 +317,7 @@
 
 <script>
 import { ref, onMounted, watch } from 'vue'
-import { getCartItem } from '@/api/getWineSearch'
+import { getCartItem, getWineInfo } from '@/api/getWineSearch'
 import algoliasearch from 'algoliasearch';
 import { useRouter } from 'vue-router'
 import { getWineSearch, getBottleSize, updateCart } from '@/api/getWineSearch.js'
@@ -819,6 +819,11 @@ export default {
         const fetchCartItem = async () => {
             spinner.value = true
             const getCartData = await getCartItem(importCartId.value, token.value)
+            for (const item of getCartData.data.Items) {
+                console.log("Items : ", item);
+                const wineInfo = await getWineInfo(item.WineLiquorId, item.WineLiquorPic.WineLiquorYear);
+                item.Avb = wineInfo.data.AVB;
+            }
             cartItems.value = getCartData.data
             console.log('Cart data :', cartItems.value)
             checkpoint.value = cartItems.value.ImportPurpose.Checkpoint

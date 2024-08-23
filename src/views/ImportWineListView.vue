@@ -3,7 +3,7 @@
         <div class="header-card">
             <h1 class="text-start">รายการการนำเข้าไวน์</h1>
         </div>
-        <div class="product-card">
+        <div class="product-card" style="overflow-x: auto;">
             <table class="table">
                 <thead>
                     <tr>

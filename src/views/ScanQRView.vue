@@ -106,14 +106,14 @@ export default {
             }
         }
 
-        const base64ToArrayBuffer = (base64) => {
-        const binaryString = atob(base64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-        return bytes.buffer;
-        };
+        // const base64ToArrayBuffer = (base64) => {
+        //     const binaryString = atob(base64);
+        //     const bytes = new Uint8Array(binaryString.length);
+        //     for (let i = 0; i < binaryString.length; i++) {
+        //         bytes[i] = binaryString.charCodeAt(i);
+        //     }
+        //     return bytes.buffer;
+        // };
 
         const getQrData = async () => {
             const fetchQrData = await getConfirmExciseTaxForm(cartId, token)
@@ -136,10 +136,23 @@ export default {
             getQrData ();
             
             const savedPdfBase64 = localStorage.getItem('generatedPdf')
+            
             if (savedPdfBase64) {
-                const savedPdfBytes = base64ToArrayBuffer(savedPdfBase64)
-                const savedPdfBlob = new Blob([savedPdfBytes], { type: 'application/pdf' })
-                savedPdfUrl.value = URL.createObjectURL(savedPdfBlob)
+                const base64String = savedPdfBase64.split(',')[1];
+
+                const byteCharacters = atob(base64String);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+                savedPdfUrl.value = URL.createObjectURL(blob);
+                
+                // const savedPdfBytes = base64ToArrayBuffer(savedPdfBase64)
+                // const savedPdfBlob = new Blob([savedPdfBytes], { type: 'application/pdf' })
+                // savedPdfUrl.value = URL.createObjectURL(savedPdfBlob)
             }
 
             console.log("Token :", token)

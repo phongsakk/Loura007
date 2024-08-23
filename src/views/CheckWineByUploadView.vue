@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                    <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol }} % vol.</p>
+                                    <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol === 0 ? wine.Avb : wine.WineLiquorPic.Alcohol }} % vol.</p>
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
@@ -130,7 +130,7 @@
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                        <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol }} % vol.</p>
+                                        <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol === 0 ? wine.Avb : wine.WineLiquorPic.Alcohol }} % vol.</p>
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
@@ -416,7 +416,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCartItem, uploadWineSearchImage, getWineSearch, updateCart } from '@/api/getWineSearch'
+import { getCartItem, uploadWineSearchImage, getWineSearch, updateCart, getWineInfo } from '@/api/getWineSearch'
 import { getBottleSize } from '@/api/getWineSearch.js'
 import { getEnumGroup } from '@/api/getMaster'
 import algoliasearch from 'algoliasearch';
@@ -782,6 +782,11 @@ export default {
         const fetchCartItem = async () => {
             spinner.value = true
             const getCartData = await getCartItem(importCartId.value, token.value)
+            for (const item of getCartData.data.Items) {
+                console.log("Items : ", item);
+                const wineInfo = await getWineInfo(item.WineLiquorId, item.WineLiquorPic.WineLiquorYear);
+                item.Avb = wineInfo.data.AVB;
+            }
             cartItems.value = getCartData.data
             console.log('Cart data :', cartItems.value)
             checkpoint.value = cartItems.value.ImportPurpose.Checkpoint

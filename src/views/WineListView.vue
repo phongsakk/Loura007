@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-card">
+        <div class="table-card" style="overflow-x: auto;">
             <table class="table">
                 <thead>
                     <tr>
