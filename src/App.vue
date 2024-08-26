@@ -494,7 +494,7 @@ tr {
 }
 
 .colored-toast.swal2-icon-warning {
-    background-color: #f8bb86 !important;
+    background-color: #f9ad69 !important;
 }
 
 .colored-toast.swal2-icon-info {
