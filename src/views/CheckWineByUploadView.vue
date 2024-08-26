@@ -55,7 +55,8 @@
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                    <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol === 0 ? wine.Avb : wine.WineLiquorPic.Alcohol }} % vol.</p>
+                                    <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol === 0 ? wine.Avb :
+                                        wine.WineLiquorPic.Alcohol }} % vol.</p>
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
@@ -90,8 +91,8 @@
                             <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท</p>
                             <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ wine.WineLiquorTotal }} ขวด
                             </p>
-                            <button class="btn-scan" @click="onScanClick(wine.Id)"><img
-                                src="../assets/img/scan-icon.png" alt="" class="scan-icon">สแกนฉลาก</button>
+                            <button class="btn-scan" @click="onScanClick(wine)"><img src="../assets/img/scan-icon.png"
+                                    alt="" class="scan-icon">สแกนฉลาก</button>
                         </div>
                     </div>
                 </div>
@@ -130,7 +131,8 @@
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                        <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol === 0 ? wine.Avb : wine.WineLiquorPic.Alcohol }} % vol.</p>
+                                        <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol === 0 ?
+                                            wine.Avb : wine.WineLiquorPic.Alcohol }} % vol.</p>
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
@@ -167,7 +169,7 @@
                                 <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ wine.WineLiquorTotal }} ขวด
                                 </p>
                                 <div v-if="isChecked === false">
-                                    <button class="btn-scan" @click="onScanClick(wine.Id)"><img
+                                    <button class="btn-scan" @click="onScanClick(wine)"><img
                                             src="../assets/img/scan-icon.png" alt="" class="scan-icon">สแกนฉลาก</button>
                                 </div>
                                 <div v-else>
@@ -180,8 +182,92 @@
                     </div>
                 </div>
                 <!-- After upload -->
-                <div v-if="wine.isUploaded === true">
-                    <div v-if="wine.isNewWine">
+                <div v-else-if="wine.isUploaded === true">
+                    <div v-if="wine.isUpdatedWine">
+                        <div class="product-card">
+                            <div class="row ">
+                                <div class="col-lg-2 d-flex align-items-center justify-content-center">
+                                    <div class="wine-image-card">
+                                        <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.WineLiquorPic.Path}`"
+                                            alt="" class="card-image">
+                                    </div>
+                                </div>
+                                <div class="col-lg-7 horizontal-divider">
+                                    <div class="d-flex justify-content-between" style="padding-top: 10px;">
+                                        <div class="category">
+                                            <p class="category-name" style="margin-bottom: 0px;"><span
+                                                    class="category-icon"><img src="../assets/img/wine-img1.png"
+                                                        class="category-image"></span>{{ wine.WineLiquor.CategoryLabel
+                                                }}
+                                            </p>
+                                        </div>
+                                        <div class="year">
+                                            <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
+                                                    class="manu-year">{{ wine.WineLiquorPic.WineLiquorYear }}</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="row text-start">
+                                        <p class="wine-name-display text-start">{{ wine.WineLiquor.DisplayName }}</p>
+
+                                    </div>
+                                    <div class="row text-start">
+                                        <div class="col-3">
+                                            <label class="form-label">ประเทศที่ผลิต</label>
+                                            <p style="margin-bottom: 0px;">{{ wine.WineLiquor.Country }}</p>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label">ปริมาณแอลกอฮอล์</label>
+                                            <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic.Alcohol === 0 ?
+                                                wine.Avb : wine.WineLiquorPic.Alcohol }} % vol.</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
+                                            <p style="margin-bottom: 0px;">{{ wine.BottleSize }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row text-start">
+                                        <div class="col-3">
+                                            <label class="form-label">ภาษีสรรพสามิต</label>
+                                            <p style="margin-bottom: 0px;">{{ formatNumber(wine.ExciseTax) }} บาท</p>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label">ภาษีท้องถิ่น</label>
+                                            <p style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท</p>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label">เงินบำรุงกองทุน</label>
+                                            <p style="margin-bottom: 0px;">{{ formatNumber(wine.Fund) }} บาท</p>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label">ภาษีศุลกากร</label>
+                                            <p style="margin-bottom: 0px;">{{ formatNumber(wine.CustomsDuty) }} บาท</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 price-col text-end">
+                                    <label class="form-label bold">มูลค่าเบื้องต้น</label>
+                                    <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.InitialValue)
+                                        }}
+                                        บาท</p>
+                                    <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
+                                    <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
+                                    <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }}
+                                        บาท
+                                    </p>
+                                    <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ wine.WineLiquorTotal }}
+                                        ขวด
+                                    </p>
+                                    <div v-if="wine.isCheckedCorrect === true">
+                                        <button class="btn-checked-correct">ตรวจสอบสุราเรียบร้อยแล้ว</button>
+                                    </div>
+                                    <div v-else>
+                                        <button class="btn-checked-incorrect">ไม่พบไวน์ในระบบ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else-if="wine.isNewWine">
                         <div class="product-card">
                             <div class="row ">
                                 <div class="col-lg-2 d-flex align-items-center justify-content-center">
@@ -195,11 +281,13 @@
                                         <div class="category">
                                             <p class="category-name" style="margin-bottom: 0px;"><span
                                                     class="category-icon"><img src="../assets/img/wine-img1.png"
-                                                        class="category-image"></span>{{ wine.CategoryName }}</p>
+                                                        class="category-image"></span>{{
+                                                            wine.CategoryName }}</p>
                                         </div>
                                         <div class="year">
                                             <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
-                                                    class="manu-year">{{ wine.Year }}</span></p>
+                                                    class="manu-year">{{
+                                                        wine.Year }}</span></p>
                                         </div>
                                     </div>
                                     <div class="row text-start">
@@ -241,7 +329,8 @@
                                 </div>
                                 <div class="col-lg-3 price-col text-end">
                                     <label class="form-label bold">มูลค่าเบื้องต้น</label>
-                                    <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.RecommendMinPrice) }} บาท
+                                    <p class="price-text" style="margin-bottom: 0px;">{{
+                                        formatNumber(wine.RecommendMinPrice) }} บาท
                                     </p>
                                     <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
                                     <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
@@ -273,7 +362,8 @@
                                             <div class="category">
                                                 <p class="category-name" style="margin-bottom: 0px;"><span
                                                         class="category-icon"><img src="../assets/img/wine-img1.png"
-                                                            class="category-image"></span>{{ wine.CategoryName }}</p>
+                                                            class="category-image"></span>{{
+                                                                wine.CategoryName }}</p>
                                             </div>
                                             <div class="year">
                                                 <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
@@ -321,7 +411,7 @@
                                             </div>
                                             <div class="d-flex justify-content-end" style="margin-top: 20px;">
                                                 <button class="btn-add-to-cart"
-                                                    @click="onAddToCartClick(wine.Id)">ตรวจสอบไวน์</button>
+                                                    @click="onAddToCartClick(wine)">ตรวจสอบไวน์</button>
                                             </div>
                                         </div>
                                     </div>
@@ -329,7 +419,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -370,8 +460,7 @@
                         <div v-if="algoliaImageResults.length > 0">
                             <p class="form-label fw-bold text-start" style="margin-bottom: 10px;">ค้นหาด้วยรูปภาพ</p>
                             <div v-for="result in algoliaImageResults" :key="result.objectID">
-                                <div class="image-search-results"
-                                    @click="onImageResultClick(result.name, result.alcohol)">
+                                <div class="image-search-results" @click="onImageResultClick(result)">
                                     <div class="result-name d-flex align-items-center">
                                         <img :src="result.image_label" alt="" class="bottle-image">
                                         <p class="wine-name" style="margin-bottom: 0px;">{{ result.name }}</p>
@@ -449,14 +538,16 @@ export default {
         const bottleCode = ref('')
         const avb = ref('')
         const vintage = ref('')
-        const location = ref('')
+        // const location = ref('')
         const uid = ref('')
         const currencyCode = ref('THB')
-        const addArray = ref([])
         const isNewWine = ref(false)
-        const removeArray = ref([])
         const years = ref([])
-        const replacedWine = ref([])
+        // const replacedWine = ref([])
+        
+        const addArray = ref([]);
+        const updateArray = ref([]);
+        const removeArray = ref([]);
 
         const taxByPrice = ref(5)
         const taxByValue = ref(1000)
@@ -482,30 +573,32 @@ export default {
         const totalInitialValue = ref(0)
         const totalTaxAll = ref(0)
 
-        const onScanClick = (wineId) => {
-            const wine = cartItems.value.Items.find(w => w.Id === wineId);
-            const removeWine = itemsArray.value.find(w => w.Id === wineId)
+        const checkingWine = ref(null);
+
+        const onScanClick = (wine) => {
+            // const removeWine = itemsArray.value.find(w => w.Id === wineId)
             wine.isChecked = true
-            removeArray.value.push(wine)
+            checkingWine.value = wine;
+            // removeArray.value.push(wine)
             uploadModal.value = true
             algoliaImageResults.value = []
             window.scrollTo(0, 0)
-            console.log("wine to replace :", removeWine)
-            console.log("wine to replace :", wine)
-            localStorage.setItem('wineIdToReplace', wineId)
+            // console.log("wine to replace :", removeWine)
+            // console.log("wine to replace :", wine)
+            // localStorage.setItem('wineIdToReplace', wineId)
         }
 
         const onUploadClick = async (event) => {
             spinner.value = true
             const selectedImage = event.target.files[0]
             wineImage.value = selectedImage
-            console.log("Wine image to search :", wineImage.value)
+            // console.log("Wine image to search :", wineImage.value)
             if (wineImage.value) {
                 const uploadImage = await uploadWineSearchImage(wineImage.value)
-                console.log("Uploading Image:", uploadImage.data)
+                // console.log("Uploading Image:", uploadImage.data)
                 // autocompleteResults.value = uploadImage.data
                 wineNameFromImage.value = uploadImage.data[0].wine_name_display
-                console.log("Wine name from image search :", wineNameFromImage.value)
+                // console.log("Wine name from image search :", wineNameFromImage.value)
                 if (wineNameFromImage.value) {
                     await algoliaSearch()
                 }
@@ -516,7 +609,7 @@ export default {
         const onModalCancelClick = () => {
             uploadModal.value = false
             algoliaImageResults.value = []
-            
+
         }
 
         const algoliaSearch = async () => {
@@ -524,35 +617,34 @@ export default {
             const index = client.initIndex('wine_index');
             const { hits } = await index.search(wineNameFromImage.value);
             algoliaImageResults.value = hits;
-            console.log("Algolia search result:", algoliaImageResults.value);
-            
+            // console.log("Algolia search result:", algoliaImageResults.value);
+
             if (algoliaImageResults.value.length === 0) {
                 uploadModal.value = false
                 await showNotFoundAlert()
             }
-            else {
-                
-                console.log('ItemsArray after upload', itemsArray.value)
-            }
+            // else {
+
+            // console.log('ItemsArray after upload', itemsArray.value)
+            // }
             // imageSearchModal.value = true
         };
 
-        const onImageResultClick = async (name, alc) => {
+        const onImageResultClick = async (result) => {
             spinner.value = true
-            wineName.value = name
-            avb.value = alc
-            const wineIdToReplace = localStorage.getItem('wineIdToReplace')
-                const wine = itemsArray.value.find(w => w.Id === Number(wineIdToReplace))
-                wine.isChecked = true
-                wine.isUploaded = true
+            wineName.value = result.name
+            avb.value = result.alcohol
+            const wine = checkingWine.value
+            wine.isChecked = true
+            wine.isUploaded = true
             const wineSearchData = await getWineSearch(wineName.value, vintage.value, location.value, avb.value, bottleSize.value, bottleCode.value, currencyCode.value, uid.value)
-            console.log("Wine Search Data:", wineSearchData.data)
+            // console.log("Wine Search Data:", wineSearchData.data)
             if (wineSearchData.code === 404) {
                 spinner.value = false
                 // notFoundAlert.value = true
             }
             else {
-                
+
                 if (Array.isArray(wineSearchData.data)) {
                     wineSearch.value = wineSearchData.data.map(wine => {
                         const wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)'
@@ -569,7 +661,7 @@ export default {
                 } else {
                     console.error('Unexpected data format:', wineSearchData.data);
                 }
-                console.log("Updated wine search array:", wineSearch.value)
+                // console.log("Updated wine search array:", wineSearch.value)
                 spinner.value = false
                 uploadModal.value = false
                 isUploaded.value = true
@@ -577,9 +669,9 @@ export default {
         }
 
         const decreaseQuantity = (wineId) => {
-            console.log("Wine id to decrease:", wineId)
+            // console.log("Wine id to decrease:", wineId)
             const wine = wineSearch.value.find(w => w.Id === wineId);
-            console.log("Decrease wine:", wine)
+            // console.log("Decrease wine:", wine)
             if (wine && wine.quantity > 1) {
                 wine.quantity--;
                 wine.wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(wine.BottleSize) / 1000) * wine.quantity : extractBottleSizeL(wine.BottleSize) * wine.quantity;
@@ -588,9 +680,9 @@ export default {
         }
 
         const increaseQuantity = (wineId) => {
-            console.log("Wine id to increase:", wineId)
+            // console.log("Wine id to increase:", wineId)
             const wine = wineSearch.value.find(w => w.Id === wineId);
-            console.log("Increase wine:", wine)
+            // console.log("Increase wine:", wine)
             if (wine) {
                 wine.quantity++;
                 wine.wineLiter = wine.BottleSize === 'Bottle (750ml)' || wine.BottleSize === 'Half Bottle (375ml)' ? (extractBottleSizeMl(wine.BottleSize) / 1000) * wine.quantity : extractBottleSizeL(wine.BottleSize) * wine.quantity;
@@ -598,60 +690,118 @@ export default {
             // cartChannel.postMessage ("It's new item adding to cart")
         }
 
-        const onAddToCartClick = (WineLiquorId) => {
-            const wineIdToReplace = localStorage.getItem('wineIdToReplace');
-            const wineIndexToReplace = itemsArray.value.findIndex(w => w.Id === Number(wineIdToReplace));
-            replacedWine.value.push(itemsArray.value[wineIdToReplace])
-            console.log("Replaced wine!!!!!!!!!!!!", replacedWine.value);
-            
+        const onAddToCartClick = (selectingWine) => {
+            const check = checkingWine.value;
+            const select = selectingWine;
+            // console.log({ check, select, calculateValues });
 
-            if (wineIndexToReplace !== -1) {
-                const wineToReplace = itemsArray.value[wineIndexToReplace];
-                const wine = wineSearch.value.find(w => w.Id === WineLiquorId);
+            const sameName = check.WineLiquor.DisplayName == select.WineName;
+            const sameYear = check.WineLiquorPic.WineLiquorYear == select.Year
+            const sameAvb = check.Avb == select.AVB;
+            const sameSize = check.BottleSize == select.BottleSize;
+            const sameContry = check.WineLiquor.Country == select.Country;
 
-                console.log("Wine to replace :", wineToReplace);
-                console.log("Wine to add :", wine);
-                
+            if (sameName && sameYear && sameAvb && sameSize && sameContry) {
+                check.IsStatus = 2;
+                check.isChecked = true;
+                check.isNewWine = false;
+                check.isUpdatedWine = true;
+                check.isCheckedCorrect = true;
 
-                addArray.value = wine;
-                const item = addArray.value;
-                const calculatedValues = calculateValues(item);
-
-                const isCheckedCorrect = 
-                wineToReplace.WineLiquor.DisplayName === wine.WineName &&
-                wineToReplace.WineLiquorPic.WineLiquorYear === wine.Year &&
-                wineToReplace.WineLiquorPic.Alcohol === wine.AVB &&
-                wineToReplace.BottleSize === wine.BottleSize &&
-                wineToReplace.WineLiquor.Country === wine.Country;
-                console.log("Is checked correct:", isCheckedCorrect);
-
-                Object.assign(item, {
-                    exciseTaxByDuty: formatNumber(calculatedValues.itemExciseTaxByDuty),
-                    exciseTaxByValue: formatNumber(calculatedValues.itemExciseTaxByValue),
-                    calTaxByDuty: formatNumber(calculatedValues.itemCalTaxByDuty),
-                    calTaxByValue: formatNumber(calculatedValues.itemCalTaxByValue),
-                    calTaxByFund: formatNumber(calculatedValues.itemCalTaxByFund),
-                    exciseTaxByPrice: formatNumber(calculatedValues.itemExciseTaxByPrice),
-                    exciseTaxByTotal: formatNumber(calculatedValues.itemExciseTaxByTotal),
-                    externalLocal: formatNumber(calculatedValues.itemExternalLocal),
-                    externalFund: formatNumber(calculatedValues.itemExternalFund),
-                    externalTotal: formatNumber(calculatedValues.itemExternalTotal),
-                    fAndI: formatNumber(calculatedValues.itemFAndI),
-                    isChecked: true,
-                    isUploaded: true,
-                    isNewWine: true,
-                    isCheckedCorrect
-                });
-
-                // Replace the item in itemsArray with the new item
-                itemsArray.value.splice(wineIndexToReplace, 1, item);
-                calculateSummary([item]);
-                console.log("Updated itemsArray:", itemsArray.value);
-                isChecked.value = true;
-                isNewWine.value = true;
+                updateArray.value.push(check);
             } else {
-                console.log("No wine found with ID:", wineIdToReplace);
+                check.IsStatus = -1;
+                check.isChecked = true;
+                check.isNewWine = false;
+                check.isUpdatedWine = false;
+                check.isCheckedCorrect = false;
+
+                const newItem = { ...check }
+
+                const changes = itemsArray.value.find(item => item.Id === check.Id);
+
+                changes.Id = undefined;
+                console.log({ calculateValues, changes, select })
+                changes.WineLiquorId = select.WineLiquorId;
+                changes.Year = select.Year;
+                changes.WineLiquorTotal = select.quantity;
+                changes.BottleSize = select.BottleSize;
+
+                const {
+                    exciseTaxByTotal, itemExternalLocal,
+                    itemExternalFund, itemExciseTaxByDuty,
+                    itemExternalTotal
+                } = calculateValues(changes);
+                changes.ExciseTax = exciseTaxByTotal;
+                changes.LocalTax = itemExternalLocal;
+                changes.Fund = itemExternalFund;
+                changes.CustomsDuty = itemExciseTaxByDuty;
+                changes.InitialValue = select.RecommendMinPrice;
+                changes.TotalTax = itemExternalTotal
+
+                check.IsStatus = 2;
+                check.isChecked = true;
+                check.isNewWine = true;
+                check.isUpdatedWine = false;
+                check.isCheckedCorrect = true;
+                addArray.value.push(check);
+
+                itemsArray.value.push(newItem);
+                removeArray.value.push(newItem);
             }
+            // const wineIdToReplace = localStorage.getItem('wineIdToReplace');
+            // const wineIndexToReplace = itemsArray.value.findIndex(w => w.Id === Number(wineIdToReplace));
+            // replacedWine.value.push(itemsArray.value[wineIdToReplace])
+            // console.log("Replaced wine!!!!!!!!!!!!", replacedWine.value);
+
+
+            // if (wineIndexToReplace !== -1) {
+            //     const wineToReplace = itemsArray.value[wineIndexToReplace];
+            //     const wine = wineSearch.value.find(w => w.Id === WineLiquorId);
+
+            //     console.log("Wine to replace :", wineToReplace);
+            //     console.log("Wine to add :", wine);
+
+
+            //     addArray.value = wine;
+            //     const item = addArray.value;
+            //     const calculatedValues = calculateValues(item);
+
+            //     const isCheckedCorrect = 
+            //     wineToReplace.WineLiquor.DisplayName === wine.WineName &&
+            //     wineToReplace.WineLiquorPic.WineLiquorYear === wine.Year &&
+            //     wineToReplace.WineLiquorPic.Alcohol === wine.AVB &&
+            //     wineToReplace.BottleSize === wine.BottleSize &&
+            //     wineToReplace.WineLiquor.Country === wine.Country;
+            //     console.log("Is checked correct:", isCheckedCorrect);
+
+            //     Object.assign(item, {
+            //         exciseTaxByDuty: formatNumber(calculatedValues.itemExciseTaxByDuty),
+            //         exciseTaxByValue: formatNumber(calculatedValues.itemExciseTaxByValue),
+            //         calTaxByDuty: formatNumber(calculatedValues.itemCalTaxByDuty),
+            //         calTaxByValue: formatNumber(calculatedValues.itemCalTaxByValue),
+            //         calTaxByFund: formatNumber(calculatedValues.itemCalTaxByFund),
+            //         exciseTaxByPrice: formatNumber(calculatedValues.itemExciseTaxByPrice),
+            //         exciseTaxByTotal: formatNumber(calculatedValues.itemExciseTaxByTotal),
+            //         externalLocal: formatNumber(calculatedValues.itemExternalLocal),
+            //         externalFund: formatNumber(calculatedValues.itemExternalFund),
+            //         externalTotal: formatNumber(calculatedValues.itemExternalTotal),
+            //         fAndI: formatNumber(calculatedValues.itemFAndI),
+            //         isChecked: true,
+            //         isUploaded: true,
+            //         isNewWine: true,
+            //         isCheckedCorrect
+            //     });
+
+            //     // Replace the item in itemsArray with the new item
+            //     itemsArray.value.splice(wineIndexToReplace, 1, item);
+            //     calculateSummary([item]);
+            //     console.log("Updated itemsArray:", itemsArray.value);
+            //     isChecked.value = true;
+            //     isNewWine.value = true;
+            // } else {
+            //     console.log("No wine found with ID:", wineIdToReplace);
+            // }
         }
 
         const onPreviousClick = () => {
@@ -659,52 +809,60 @@ export default {
         }
 
         const onSaveClick = async () => {
-            spinner.value = true
-            const allItemsHaveCheckedCorrect = itemsArray.value.every(item => item.isCheckedCorrect === true || item.isCheckedCorrect === false);
+            console.log({ 
+                remove: removeArray.value, 
+                add: addArray.value,
+                update: updateArray.value,
 
-            if (!allItemsHaveCheckedCorrect) {
-                console.log("Not all items have `isCheckedCorrect` property. Save operation aborted.");
-                return;
-            }
+                updateCart
+             });
+            // spinner.value = true
+            // const allItemsHaveCheckedCorrect = itemsArray.value.every(item => item.isCheckedCorrect === true || item.isCheckedCorrect === false);
 
-            console.log("Items array to update to api:", itemsArray.value);
-            // if (addArray.value && addArray.value.length > 0) {
-                const wineData = {
-                    isStatus: itemsArray.value.every((item) => item.isChecked) ? 1 : 0,
-                    Update: itemsArray.value.map(item => ({
-                        Id: item.Id,
-                        CartId: importCartId.value,
-                        WineLiquorId: item.WineLiquorId,
-                        WineLiquorPicId: item.WineLiquorPicId || '',
-                        WineLiquorTotal: item.quantity,
-                        BottleSize: item.BottleSize,
-                        ExciseTax: item.exciseTaxByTotal,
-                        LocalTax: item.externalLocal,
-                        Fund: item.externalFund,
-                        CustomsDuty: item.exciseTaxByDuty,
-                        InitialValue: item.RecommendMinPrice,
-                        TotalTax: item.externalTotal,
-                        IsStatus: item.isChecked ? 1 : 0
-                    }))
-                };
-            console.log("Wine Data :", wineData)
-            try {
-                const updateCartItem = await updateCart(wineData, importCartId.value, token.value);
-                console.log("Updating cart :", updateCartItem.data);
-                router.push('/import-wine-list');
-            } catch (error) {
-                console.error("Error updating cart:", error);
-            }
-            spinner.value = false
+            // if (!allItemsHaveCheckedCorrect) {
+            //     // console.log("Not all items have `isCheckedCorrect` property. Save operation aborted.");
+            //     return;
+            // }
+
+            // // console.log("Items array to update to api:", itemsArray.value);
+            // // if (addArray.value && addArray.value.length > 0) {
+            // const wineData = {
+            //     isStatus: itemsArray.value.every((item) => item.isChecked) ? 1 : 0,
+            //     Update: itemsArray.value.map(item => ({
+            //         Id: item.Id,
+            //         CartId: importCartId.value,
+            //         WineLiquorId: item.WineLiquorId,
+            //         WineLiquorPicId: item.WineLiquorPicId || '',
+            //         WineLiquorTotal: item.quantity,
+            //         BottleSize: item.BottleSize,
+            //         ExciseTax: item.exciseTaxByTotal,
+            //         LocalTax: item.externalLocal,
+            //         Fund: item.externalFund,
+            //         CustomsDuty: item.exciseTaxByDuty,
+            //         InitialValue: item.RecommendMinPrice,
+            //         TotalTax: item.externalTotal,
+            //         IsStatus: item.isChecked ? 1 : 0
+            //     }))
+            // };
+            // // console.log("Wine Data :", wineData)
+            // try {
+            //     await updateCart(wineData, importCartId.value, token.value);
+            //     // const updateCartItem = await updateCart(wineData, importCartId.value, token.value);
+            //     // console.log("Updating cart :", updateCartItem.data);
+            //     router.push('/import-wine-list');
+            // } catch (error) {
+            //     console.error("Error updating cart:", error);
+            // }
+            // spinner.value = false
         }
 
         const onDownloadQRCodeClick = () => {
-            const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`; 
+            const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`;
 
             QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H' }, (err, url) => {
                 if (err) {
-                console.error(err);
-                return;
+                    console.error(err);
+                    return;
                 }
 
                 // Create a link element to download the QR code
@@ -724,7 +882,7 @@ export default {
             const itemCalTaxByDuty = (item.RecommendMinPrice + itemExciseTaxByDuty) * (taxByPrice.value / 100);
             const itemCalTaxByValue = itemExciseTaxByValue * taxByFund.value * (taxByPrice.value / 100);
             const itemCalTaxByFund = 1 - taxByFund.value * (taxByPrice.value / 100);
-            console.log({itemExciseTaxByValue, itemCalTaxByDuty,itemCalTaxByValue,itemCalTaxByFund})
+            // console.log({ itemExciseTaxByValue, itemCalTaxByDuty, itemCalTaxByValue, itemCalTaxByFund })
             const itemExciseTaxByPrice = (itemCalTaxByDuty + itemCalTaxByValue) / itemCalTaxByFund;
             const itemExciseTaxByTotal = (itemExciseTaxByValue + itemCalTaxByDuty);
             const itemExternalLocal = 0.1 * itemExciseTaxByTotal;
@@ -748,7 +906,7 @@ export default {
         }
 
         const calculateSummary = (Items) => {
-            console.log("Calculate summary:", Items);
+            // console.log("Calculate summary:", Items);
             totalLiter.value = Items?.reduce((acc, cur) => {
                 const q = cur.WineLiquorTotal || cur.quantity;
                 return acc + (q * (cur.BottleSize === 'Bottle (750ml)' || cur.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(cur.BottleSize) / 1000 : extractBottleSizeL(cur.BottleSize)));
@@ -783,16 +941,16 @@ export default {
             spinner.value = true
             const getCartData = await getCartItem(importCartId.value, token.value)
             for (const item of getCartData.data.Items) {
-                console.log("Items : ", item);
+                // console.log("Items : ", item);
                 const wineInfo = await getWineInfo(item.WineLiquorId, item.WineLiquorPic.WineLiquorYear);
                 item.Avb = wineInfo.data.AVB;
             }
             cartItems.value = getCartData.data
-            console.log('Cart data :', cartItems.value)
+            // console.log('Cart data :', cartItems.value)
             checkpoint.value = cartItems.value.ImportPurpose.Checkpoint
             importPurpose.value = cartItems.value.ImportPurpose.PurposeId
             importDate.value = new Date(cartItems.value.ImportPurpose.PurposeDate).toISOString().slice(0, 10)
-            console.log("Import values :", importPurpose.value, checkpoint.value, importDate.value)
+            // console.log("Import values :", importPurpose.value, checkpoint.value, importDate.value)
             itemsArray.value = cartItems.value.Items.map(item => {
                 return {
                     ...item,
@@ -800,7 +958,7 @@ export default {
                     isUploaded: isUploaded.value
                 }
             })
-            console.log("Cart Items after map", itemsArray.value)
+            // console.log("Cart Items after map", itemsArray.value)
             calculateSummary(cartItems.value.Items);
             spinner.value = false
         }
