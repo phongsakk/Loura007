@@ -94,17 +94,18 @@ export default {
         }
 
         const onDownloadPdfClick = () => {
-            if (savedPdfUrl.value) {
-                const link = document.createElement('a')
-                link.href = savedPdfUrl.value // Use the saved PDF URL
-                link.download = 'import_tax_form.pdf' // Set the filename for download
-                document.body.appendChild(link)
-                link.click()
-                document.body.removeChild(link)
-            } else {
-                console.error('No PDF URL available.')
-            }
-        }
+            const pdfUrl = localStorage.getItem('generatedPdfUrl');
+            if (pdfUrl) {
+                const link = document.createElement('a');
+                link.href = pdfUrl;
+                link.download = 'import_tax_form.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Optionally, revoke the object URL after download
+                URL.revokeObjectURL(pdfUrl);
+                }
 
         // const base64ToArrayBuffer = (base64) => {
         //     const binaryString = atob(base64);
@@ -113,7 +114,7 @@ export default {
         //         bytes[i] = binaryString.charCodeAt(i);
         //     }
         //     return bytes.buffer;
-        // };
+        };
 
         const getQrData = async () => {
             const fetchQrData = await getConfirmExciseTaxForm(cartId, token)

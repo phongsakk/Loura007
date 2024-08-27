@@ -1,76 +1,76 @@
 <template>
   <div class="pdf-container">
-    <div>
-      <div class="pdf-file" id="pdf-content">
+    <div v-if="itemsArray.length < 4">
+      <div class="pdf-file" id="pdf-content-page-1">
         <p class="pdf-header fw-bold">แบบแจ้งข้อมูลการนำเข้าสินค้า</p>
         <p class="pdf-text text-end">วันที่.........................................<span class="pdf-result-text" style="right: 40px;">{{ importedDate }}</span></p>
         <p class="pdf-text text-start text-fit">ชื่อผู้นำเข้า........................................................................................................................................................................<span class="pdf-result-text" style="left: 80px;">{{ importerName }}</span></p>
         <div class="d-flex">
-          <input type="checkbox" class="pdf-checkbox" id="userType19" :checked="userType === 19">
+          <input type="checkbox" class="pdf-checkbox" id="userType19" :checked="userType === 19"  disabled>
           <label for="userType19" class="pdf-text" style="margin-right: 10px;">บุคคลธรรมดา</label>
-          <input type="checkbox" class="pdf-checkbox" id="userType20" :checked="userType === 20">
+          <input type="checkbox" class="pdf-checkbox" id="userType20" :checked="userType === 20"  disabled>
           <label for="userType20" class="pdf-text" style="margin-right: 10px;">นิติบุคคล</label>
-          <input type="checkbox" class="pdf-checkbox">
+          <input type="checkbox" class="pdf-checkbox"  disabled>
           <label for="" class="pdf-text" style="margin-right: 10px;">คณะบุคคล</label>
-          <input type="checkbox" class="pdf-checkbox">
+          <input type="checkbox" class="pdf-checkbox"  disabled>
           <label for="" class="pdf-text" style="margin-right: 10px;">หน่วยงานราชการ</label>
         </div>
         <div class="d-flex">
-          <input type="checkbox" class="pdf-checkbox" id="userTypeOther">
+          <input type="checkbox" class="pdf-checkbox" id="userTypeOther"  disabled>
           <label for="userTypeOther" class="pdf-text">อื่นๆ (ระบุ)</label>
         </div>
         <div class="d-flex">
           <p class="pdf-text" style="margin-right: 5px;">เลขประจำตัวประชาชน/ทะเบียนนิติบุคคล</p>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[0] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox"  disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[1] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox"  disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[2] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox"  disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[3] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox"  disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[4] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[5] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[6] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[7] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[8] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[9] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[10] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[11] }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[12] }}</span>
           </div>
 
@@ -78,73 +78,73 @@
         <div class="d-flex">
           <p class="pdf-text" style="margin-right: 5px;">เลขทะเบียนสรรพสามิต (ถ้ามี)</p>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[0] ? exciseNumberArray[0] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[1] ? exciseNumberArray[1] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[2] ? exciseNumberArray[2] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[3] ? exciseNumberArray[3] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[4] ? exciseNumberArray[4] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[5] ? exciseNumberArray[5] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[6] ? exciseNumberArray[6] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[7] ? exciseNumberArray[7] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[8] ? exciseNumberArray[8] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[9] ? exciseNumberArray[9] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[10] ? exciseNumberArray[10] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[11] ? exciseNumberArray[11] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[12] ? exciseNumberArray[12] : '' }}</span>
           </div>
           <p class="pdf-text" style="margin-right: 3px;">-</p>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[13] ? exciseNumberArray[13] : '' }}</span>
           </div>
           <p class="pdf-text" style="margin-right: 3px;">-</p>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[14] ? exciseNumberArray[14] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[15] ? exciseNumberArray[15] : '' }}</span>
           </div>
           <div class="position-relative">
-            <input type="checkbox" class="pdf-checkbox">
+            <input type="checkbox" class="pdf-checkbox" disabled>
             <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[16] ? exciseNumberArray[16] : '' }}</span>
           </div>
         </div>
@@ -167,15 +167,15 @@
         <p class="pdf-text text-start">ได้นำเข้าสินค้าที่ไม่ได้จำแนกประเภทไว้ในภาคที่ว่าด้วยของที่ได้รับยกเว้นอากรตามกฎหมายว่าด้วยพิกัดอัตราศุลกากร</p>
         <p class="pdf-text text-start">เพื่อวัตถุประสงค์</p>
         <div class="d-flex" style="margin-left: 60px;">
-          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 22">
+          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 22" disabled>
           <label for="" class="pdf-text">นำสินค้าติดตัวเข้ามา</label>
         </div>
         <div class="d-flex" style="margin-left: 60px;">
-          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 23">
+          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 23" disabled>
           <label for="" class="pdf-text">นำสินค้าเข้ามาเพื่อเป็นตัวอย่างสินค้า</label>
         </div>
         <div class="d-flex" style="margin-left: 60px;">
-          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 24">
+          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 24" disabled>
           <label for="" class="pdf-text">นำสินค้าเข้ามาโดยมิใช่เพื่อการค้า</label>
         </div>
         <p class="pdf-text text-start">ดังต่อไปนี้</p>
@@ -209,13 +209,250 @@
           <p class="pdf-text text-center" style="margin-left: 130px;">(...........................)</p>
           <p class="pdf-text text-center" style="margin-left: 130px;">ผู้นำเข้า</p>
         </div>
-        
+      </div>
+    </div>
+    <div v-else>
+      <div class="pdf-file" id="pdf-content-page-1">
+        <p class="pdf-header fw-bold">แบบแจ้งข้อมูลการนำเข้าสินค้า</p>
+        <p class="pdf-text text-end">วันที่.........................................<span class="pdf-result-text" style="right: 40px;">{{ importedDate }}</span></p>
+        <p class="pdf-text text-start text-fit">ชื่อผู้นำเข้า........................................................................................................................................................................<span class="pdf-result-text" style="left: 80px;">{{ importerName }}</span></p>
+        <div class="d-flex">
+          <input type="checkbox" class="pdf-checkbox" id="userType19" :checked="userType === 19" disabled>
+          <label for="userType19" class="pdf-text" style="margin-right: 10px;">บุคคลธรรมดา</label>
+          <input type="checkbox" class="pdf-checkbox" id="userType20" :checked="userType === 20" disabled>
+          <label for="userType20" class="pdf-text" style="margin-right: 10px;">นิติบุคคล</label>
+          <input type="checkbox" class="pdf-checkbox" disabled>
+          <label for="" class="pdf-text" style="margin-right: 10px;">คณะบุคคล</label>
+          <input type="checkbox" class="pdf-checkbox" disabled>
+          <label for="" class="pdf-text" style="margin-right: 10px;">หน่วยงานราชการ</label>
+        </div>
+        <div class="d-flex">
+          <input type="checkbox" class="pdf-checkbox" id="userTypeOther" disabled>
+          <label for="userTypeOther" class="pdf-text">อื่นๆ (ระบุ)</label>
+        </div>
+        <div class="d-flex">
+          <p class="pdf-text" style="margin-right: 5px;">เลขประจำตัวประชาชน/ทะเบียนนิติบุคคล</p>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[0] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[1] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[2] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[3] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[4] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[5] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[6] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[7] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[8] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[9] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[10] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[11] }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ idNumberArray[12] }}</span>
+          </div>
+
+        </div>
+        <div class="d-flex">
+          <p class="pdf-text" style="margin-right: 5px;">เลขทะเบียนสรรพสามิต (ถ้ามี)</p>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[0] ? exciseNumberArray[0] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[1] ? exciseNumberArray[1] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[2] ? exciseNumberArray[2] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[3] ? exciseNumberArray[3] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[4] ? exciseNumberArray[4] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[5] ? exciseNumberArray[5] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[6] ? exciseNumberArray[6] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[7] ? exciseNumberArray[7] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[8] ? exciseNumberArray[8] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[9] ? exciseNumberArray[9] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[10] ? exciseNumberArray[10] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[11] ? exciseNumberArray[11] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[12] ? exciseNumberArray[12] : '' }}</span>
+          </div>
+          <p class="pdf-text" style="margin-right: 3px;">-</p>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[13] ? exciseNumberArray[13] : '' }}</span>
+          </div>
+          <p class="pdf-text" style="margin-right: 3px;">-</p>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[14] ? exciseNumberArray[14] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[15] ? exciseNumberArray[15] : '' }}</span>
+          </div>
+          <div class="position-relative">
+            <input type="checkbox" class="pdf-checkbox" disabled>
+            <span class="pdf-result-text" style="left: 3px; bottom: 5px;">{{ exciseNumberArray[16] ? exciseNumberArray[16] : '' }}</span>
+          </div>
+        </div>
+        <p class="pdf-text text-start">เลขที่พาสปอร์ต........................................<span class="pdf-result-text" style="left: 100px;">{{ passportNumber }}</span></p>
+        <p class="pdf-text text-start text-fit">ที่อยู่เลขที่.....................................................หมู่ที่....................................ตรอก/ซอย.......................................................
+          <span class="pdf-result-text" style="left: 80px;">{{ addressName }}</span>
+          <span class="pdf-result-text" style="left: 280px;">{{ moo }}</span>
+          <span class="pdf-result-text" style="left: 470px;">{{ soi }}</span>
+        </p>
+        <p class="pdf-text text-start text-fit">ถนน.................................................ตำบล/แขวง.......................................อำเภอ/เขต....................................................
+          <span class="pdf-result-text" style="left: 80px;">{{ road }}</span>
+          <span class="pdf-result-text" style="left: 280px;">{{ subDistrict }}</span>
+          <span class="pdf-result-text" style="left: 480px;">{{ district }}</span>
+        </p>
+        <p class="pdf-text text-start text-fit">จังหวัด................................................รหัสไปรษณีย์.......................................โทรศัพท์....................................................
+          <span class="pdf-result-text" style="left: 80px;">{{ province }}</span>
+          <span class="pdf-result-text" style="left: 300px;">{{ postCode }}</span>
+          <span class="pdf-result-text" style="right: 50px;">{{ contactNumber }}</span>
+        </p>
+        <p class="pdf-text text-start">ได้นำเข้าสินค้าที่ไม่ได้จำแนกประเภทไว้ในภาคที่ว่าด้วยของที่ได้รับยกเว้นอากรตามกฎหมายว่าด้วยพิกัดอัตราศุลกากร</p>
+        <p class="pdf-text text-start">เพื่อวัตถุประสงค์</p>
+        <div class="d-flex" style="margin-left: 60px;">
+          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 22" disabled>
+          <label for="" class="pdf-text">นำสินค้าติดตัวเข้ามา</label>
+        </div>
+        <div class="d-flex" style="margin-left: 60px;">
+          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 23" disabled>
+          <label for="" class="pdf-text">นำสินค้าเข้ามาเพื่อเป็นตัวอย่างสินค้า</label>
+        </div>
+        <div class="d-flex" style="margin-left: 60px;">
+          <input type="checkbox" class="pdf-checkbox" :checked="importPurpose === 24" disabled>
+          <label for="" class="pdf-text">นำสินค้าเข้ามาโดยมิใช่เพื่อการค้า</label>
+        </div>
+        <p class="pdf-text text-start">ดังต่อไปนี้</p>
+        <table class="pdf-table">
+          <tr>
+            <th>ลำดับที่<br><span class="th-number">(1)</span></th>
+            <th>ประเภท<br>สินค้า<br><span class="th-number">(2)</span></th>
+            <th>ชื่อสินค้า<br><span class="th-number">(3)</span></th>
+            <th>แบบ/รุ่น<br><span class="th-number">(4)</span></th>
+            <th>ดีกรี/<br>ปริมาณน้ำตาล/<br>CO 2 /<br>น้ำหนัก /มวน<br><span class="th-number">(5)</span></th>
+            <th>ขนาด<br><span class="th-number">(6)</span></th>
+            <th>ปริมาณ<br>ที่<br>นำเข้า<br><span class="th-number">(7)</span></th>
+            <th>ราคาที่ใช้<br>เป็นฐาน<br>หมายเหตุ<br>ในการ<br>คำนวณภาษี<br><span class="th-number">(8)</span></th>
+            <th>หมายเหตุ<br><span class="th-number">(9)</span></th>
+          </tr>
+          <tr v-for="(wine, index) in firstArray" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ wine.WineLiquor.CategoryLabel }}</td>
+            <td>{{ wine.WineLiquor.DisplayName }}</td>
+            <td>{{ wine.WineLiquorPic.WineLiquorYear }}</td>
+            <td>{{ wine.WineLiquorPic.Alcohol === 0 ? wine.Avb : wine.WineLiquorPic.Alcohol }}%</td>
+            <td>{{ wine.BottleSize }}</td>
+            <td>{{ wine.WineLiquorTotal }}</td>
+            <td>{{ formatNumber(wine.InitialValue) }}</td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <div class="pdf-file" id="pdf-content-page-2" style="margin-top: 20px;">
+        <table class="pdf-table">
+          <tr>
+            <th>ลำดับที่<br><span class="th-number">(1)</span></th>
+            <th>ประเภท<br>สินค้า<br><span class="th-number">(2)</span></th>
+            <th>ชื่อสินค้า<br><span class="th-number">(3)</span></th>
+            <th>แบบ/รุ่น<br><span class="th-number">(4)</span></th>
+            <th>ดีกรี/<br>ปริมาณน้ำตาล/<br>CO 2 /<br>น้ำหนัก /มวน<br><span class="th-number">(5)</span></th>
+            <th>ขนาด<br><span class="th-number">(6)</span></th>
+            <th>ปริมาณ<br>ที่<br>นำเข้า<br><span class="th-number">(7)</span></th>
+            <th>ราคาที่ใช้<br>เป็นฐาน<br>หมายเหตุ<br>ในการ<br>คำนวณภาษี<br><span class="th-number">(8)</span></th>
+            <th>หมายเหตุ<br><span class="th-number">(9)</span></th>
+          </tr>
+          <tr v-for="(wine, index) in secondArray" :key="index">
+            <td>{{ index + 6 }}</td>
+            <td>{{ wine.WineLiquor.CategoryLabel }}</td>
+            <td>{{ wine.WineLiquor.DisplayName }}</td>
+            <td>{{ wine.WineLiquorPic.WineLiquorYear }}</td>
+            <td>{{ wine.WineLiquorPic.Alcohol === 0 ? wine.Avb : wine.WineLiquorPic.Alcohol }}%</td>
+            <td>{{ wine.BottleSize }}</td>
+            <td>{{ wine.WineLiquorTotal }}</td>
+            <td>{{ formatNumber(wine.InitialValue) }}</td>
+            <td></td>
+          </tr>
+        </table>
+        <p class="pdf-text">ข้าพเจ้าขอรับรองว่าข้อความดังกล่าวข้างต้นเป็นจริงและถูกต้องทุกประการ</p>
+        <div class="sign-session">
+          <p class="pdf-text text-center" style="margin-left: 130px;">(ลงชื่อ).........................</p>
+          <p class="pdf-text text-center" style="margin-left: 130px;">(...........................)</p>
+          <p class="pdf-text text-center" style="margin-left: 130px;">ผู้นำเข้า</p>
+        </div>
       </div>
     </div>
     <div class="button-session">
       <button class="btn-back" @click="onBackClick">ย้อนกลับ</button>
       <button class="btn-next" @click="onConfirmClick">ยืนยันแบบฟอร์ม</button>
     </div>
+    
   </div>
   <div v-if="spinner" class="overlay"></div>
 
@@ -244,7 +481,7 @@ export default {
     const importedDate = ref('');
     const wineData = ref([])
     // let sarabunFont = null;
-    const pdfBase64 = ref('')
+    // const pdfBase64 = ref('')
     const userData = ref([])
 
     const importerName = ref('')
@@ -265,6 +502,8 @@ export default {
     const contactNumber = ref('')
     const importPurpose = ref()
     const itemsArray = ref([])
+    const firstArray = ref([])
+    const secondArray = ref([])
     // const importPurpose = ref()
 
     const spinner = ref(false)
@@ -272,48 +511,38 @@ export default {
 
     const onConfirmClick = async () => {
       spinner.value = true;
-      const pdfContent = document.getElementById('pdf-content');
-      const canvas = await html2canvas(pdfContent, { scale: 0.5 });
-      const imgData = canvas.toDataURL('image/png');
-      
-      // Create a new jsPDF document
+      const pdfContentPage1 = document.getElementById('pdf-content-page-1');
+      const canvasPage1 = await html2canvas(pdfContentPage1, {
+        scale: 2, // Increase the scale for better clarity
+        useCORS: true // Ensure cross-origin images are loaded
+      });
+      const imgDataPage1 = canvasPage1.toDataURL('image/png');
+
       const doc = new jsPDF();
+      doc.addImage(imgDataPage1, 'PNG', 10, 10, 190, 0);
 
-      // Get the dimensions of the PDF page
-      const pageHeight = doc.internal.pageSize.height;
-      const pageWidth = doc.internal.pageSize.width;
+      const pdfContentPage2 = document.getElementById('pdf-content-page-2');
+      console.log("It's second page", pdfContentPage2);
+      if (pdfContentPage2) {
+        const canvasPage2 = await html2canvas(pdfContentPage2, {
+          scale: 2,
+          useCORS: true
+        });
+        const imgDataPage2 = canvasPage2.toDataURL('image/png');
 
-      // Get the dimensions of the canvas
-      const imgHeight = canvas.height;
-      const imgWidth = canvas.width;
-
-      // Calculate the height ratio of the canvas image to fit within the PDF page width
-      const ratio = pageWidth / imgWidth;
-      const scaledHeight = imgHeight * ratio;
-
-      let position = 0;
-
-      // Split the content into multiple pages if it's too long
-      while (position < scaledHeight) {
-        const nextHeight = position + pageHeight;
-
-        // Add the current section of the canvas image to the PDF
-        doc.addImage(imgData, 'PNG', 0, -position, pageWidth, scaledHeight);
-
-        // Check if there is more content to add
-        if (nextHeight < scaledHeight) {
-          doc.addPage(); // Add a new page
-          position += pageHeight; // Move to the next page position
-        } else {
-          break; // Exit the loop if all content is added
-        }
+        doc.addPage();
+        doc.addImage(imgDataPage2, 'PNG', 10, 10, 190, 0);
       }
+      
 
-      // Save the PDF as a base64 string and store it in localStorage
-      pdfBase64.value = doc.output('datauristring');
-      localStorage.setItem('generatedPdf', pdfBase64.value);
+      const pdfBlob = doc.output('blob');
 
-      // Navigate to the next page
+      // Create a Blob URL
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Save the Blob URL in localStorage
+      localStorage.setItem('generatedPdfUrl', pdfUrl);
+
       router.push('/scan-qr');
       spinner.value = false;
     };
@@ -324,6 +553,7 @@ export default {
     };
 
     const fetchUserProfile = async () => {
+      spinner.value = true
       const getUserData = await getUserProfile(token.value)
       console.log("User Data :", getUserData.data)
       userData.value = getUserData.data
@@ -344,6 +574,7 @@ export default {
       province.value = userData.value.Province ? userData.value.Province : ''
       postCode.value = userData.value.PostCode ? userData.value.PostCode : ''
       contactNumber.value = userData.value.Mobile ? userData.value.Mobile : userData.value.Phone
+      spinner.value = false
     }
 
     const formatNumber = (value) => {
@@ -363,6 +594,10 @@ export default {
       cartItems.value = JSON.parse(localStorage.getItem('cartItemsToScan'));
       console.log('Cart Items:', cartItems.value);
       itemsArray.value = cartItems.value.Items
+      if (itemsArray.value.length > 4) {
+        firstArray.value = itemsArray.value.slice(0, 5);
+        secondArray.value = itemsArray.value.slice(5);
+      }
       importedDate.value = formatDate(cartItems.value.ImportPurpose.PurposeDate)
       importPurpose.value = cartItems.value.ImportPurpose.PurposeId
       token.value = localStorage.getItem('token')
@@ -396,6 +631,8 @@ export default {
       contactNumber,
       importPurpose,
       itemsArray,
+      firstArray,
+      secondArray,
       spinner,
       onBackClick,
       onConfirmClick,

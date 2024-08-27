@@ -694,6 +694,7 @@ export default {
             const sameAvb = check.Avb == select.AVB;
             const sameSize = check.BottleSize == select.BottleSize;
             const sameContry = check.WineLiquor.Country == select.Country;
+            algoliaImageResults.value = [];
 
             if (sameName && sameYear && sameAvb && sameSize && sameContry) {
                 check.IsStatus = 2;
@@ -706,8 +707,8 @@ export default {
             } else {
                 check.IsStatus = -1;
                 check.isChecked = true;
-                check.isNewWine = false;
-                check.isUpdatedWine = false;
+                check.isNewWine = true;
+                check.isUpdatedWine = true;
                 check.isCheckedCorrect = false;
 
                 const removedItem = { ...check };
@@ -763,59 +764,6 @@ export default {
                     updateArray: updateArray.value,
                 });
             }
-            // const wineIdToReplace = localStorage.getItem('wineIdToReplace');
-            // const wineIndexToReplace = itemsArray.value.findIndex(w => w.Id === Number(wineIdToReplace));
-            // replacedWine.value.push(itemsArray.value[wineIdToReplace])
-            // console.log("Replaced wine!!!!!!!!!!!!", replacedWine.value);
-
-
-            // if (wineIndexToReplace !== -1) {
-            //     const wineToReplace = itemsArray.value[wineIndexToReplace];
-            //     const wine = wineSearch.value.find(w => w.Id === WineLiquorId);
-
-            //     console.log("Wine to replace :", wineToReplace);
-            //     console.log("Wine to add :", wine);
-
-
-            //     addArray.value = wine;
-            //     const item = addArray.value;
-            //     const calculatedValues = calculateValues(item);
-
-            //     const isCheckedCorrect = 
-            //     wineToReplace.WineLiquor.DisplayName === wine.WineName &&
-            //     wineToReplace.WineLiquorPic.WineLiquorYear === wine.Year &&
-            //     wineToReplace.WineLiquorPic.Alcohol === wine.AVB &&
-            //     wineToReplace.BottleSize === wine.BottleSize &&
-            //     wineToReplace.WineLiquor.Country === wine.Country;
-            //     console.log("Is checked correct:", isCheckedCorrect);
-
-            //     Object.assign(item, {
-            //         exciseTaxByDuty: formatNumber(calculatedValues.itemExciseTaxByDuty),
-            //         exciseTaxByValue: formatNumber(calculatedValues.itemExciseTaxByValue),
-            //         calTaxByDuty: formatNumber(calculatedValues.itemCalTaxByDuty),
-            //         calTaxByValue: formatNumber(calculatedValues.itemCalTaxByValue),
-            //         calTaxByFund: formatNumber(calculatedValues.itemCalTaxByFund),
-            //         exciseTaxByPrice: formatNumber(calculatedValues.itemExciseTaxByPrice),
-            //         exciseTaxByTotal: formatNumber(calculatedValues.itemExciseTaxByTotal),
-            //         externalLocal: formatNumber(calculatedValues.itemExternalLocal),
-            //         externalFund: formatNumber(calculatedValues.itemExternalFund),
-            //         externalTotal: formatNumber(calculatedValues.itemExternalTotal),
-            //         fAndI: formatNumber(calculatedValues.itemFAndI),
-            //         isChecked: true,
-            //         isUploaded: true,
-            //         isNewWine: true,
-            //         isCheckedCorrect
-            //     });
-
-            //     // Replace the item in itemsArray with the new item
-            //     itemsArray.value.splice(wineIndexToReplace, 1, item);
-            //     calculateSummary([item]);
-            //     console.log("Updated itemsArray:", itemsArray.value);
-            //     isChecked.value = true;
-            //     isNewWine.value = true;
-            // } else {
-            //     console.log("No wine found with ID:", wineIdToReplace);
-            // }
         }
 
         const onPreviousClick = () => {
@@ -874,7 +822,7 @@ export default {
                 Toast.fire({ icon: "warning", title: "Warning", text: "ไม่มีการเปลี่ยนแปลงที่ต้องบันทึก" });
                 return;
             }
-            
+
             spinner.value = false;
 
             // console.log({
