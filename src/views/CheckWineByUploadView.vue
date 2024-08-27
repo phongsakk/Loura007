@@ -294,6 +294,7 @@ export default {
         const algoliaImageResults = ref([])
         const wineSearch = ref([])
         const bottleSizes = ref([])
+        const bottleSize = ref("");
 
         // const currencyCode = ref('THB')
         const years = ref([])
@@ -358,7 +359,7 @@ export default {
 
         const onImageResultClick = async (result) => {
             spinner.value = true;
-            const wineSearchData = await getWineSearch(result.name, "", "", result.alcohol, "", "", "THB", "")
+            const wineSearchData = await getWineSearch(result.name, "", "", result.alcohol, bottleSize.value, "", "THB", "")
             if (wineSearchData.code === 404) {
                 spinner.value = false;
             } else {
@@ -644,6 +645,7 @@ export default {
             const enumGroup = 'BottleSize'
             const fetchSizes = await getBottleSize(enumGroup);
             bottleSizes.value = fetchSizes.data
+            bottleSize.value = fetchSizes.data[0].EnumName;
         }
 
         const extractBottleSizeMl = (bottleSize) => {
