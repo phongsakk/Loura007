@@ -19,6 +19,7 @@ export async function getConfirmExciseTaxForm(cardId, token) {
 
 export async function getQRCode(cardId, token) {
     try {
+        console.log(123455);
         const response = await fetch(`https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-FtGetQrCode/${cardId}`, {
             method: 'GET',
             headers: {
