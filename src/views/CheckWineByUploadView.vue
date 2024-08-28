@@ -172,7 +172,8 @@
                                     จำนวน {{ wine.WineLiquorTotal }} ขวด
                                 </p>
                                 <div v-if="wine.IsStatus === 2">
-                                    <button class="btn-checked-correct">ตรวจสอบสุราเรียบร้อยแล้ว</button>
+                                    <button v-if="wine.isIncorrectWine || wine.CartItemIdRef" class="btn-checked-incorrect">ไม่พบไวน์ในระบบ</button>
+                                    <button v-else class="btn-checked-correct">ตรวจสอบสุราเรียบร้อยแล้ว</button>
                                 </div>
                                 <div v-else>
                                     <button class="btn-scan" @click="onScanClick(wine)"><img
@@ -294,7 +295,8 @@ export default {
         const algoliaImageResults = ref([])
         const wineSearch = ref([])
         const bottleSizes = ref([])
-        const bottleSize = ref("");
+        const bottleSize = ref('')
+        const bottleCode = ref('')
 
         // const currencyCode = ref('THB')
         const years = ref([])
@@ -359,7 +361,7 @@ export default {
 
         const onImageResultClick = async (result) => {
             spinner.value = true;
-            const wineSearchData = await getWineSearch(result.name, "", "", result.alcohol, bottleSize.value, "", "THB", "")
+            const wineSearchData = await getWineSearch(result.name, "", "", result.alcohol, bottleSize.value, bottleCode.value, "THB", "")
             if (wineSearchData.code === 404) {
                 spinner.value = false;
             } else {
@@ -413,14 +415,17 @@ export default {
             const sameContry = check.WineLiquor.Country == select.Country;
             algoliaImageResults.value = [];
             wineSearch.value = [];
+            const checkingId = checkingWine.value.Id
             checkingWine.value = null;
 
             if (sameName && sameYear && sameAvb && sameSize && sameContry) {
                 check.IsStatus = 2;
 
+
                 updateArray.value.push(check);
             } else {
                 check.IsStatus = -1;
+
 
                 const removedItem = { ...check };
 
@@ -434,6 +439,7 @@ export default {
                 changes.RecommendMinPrice = select.RecommendMinPrice;
                 changes.quantity = select.quantity;
                 changes.AVB = select.AVB;
+                changes.CartItemIdRef = checkingId
 
                 const {
                     itemExciseTaxByTotal, itemExternalLocal,
@@ -448,6 +454,7 @@ export default {
                 changes.TotalTax = itemExternalTotal
 
                 changes.IsStatus = 2;
+                changes.isIncorrectWine = true
                 changes.WineLiquorPic = {
                     Path: select.Path,
                     WineLiquorYear: select.Year,
@@ -645,7 +652,8 @@ export default {
             const enumGroup = 'BottleSize'
             const fetchSizes = await getBottleSize(enumGroup);
             bottleSizes.value = fetchSizes.data
-            bottleSize.value = fetchSizes.data[0].EnumName;
+            bottleSize.value = fetchSizes.data[0].EnumName
+            bottleCode.value = fetchSizes.data[0].EnumCode
         }
 
         const extractBottleSizeMl = (bottleSize) => {

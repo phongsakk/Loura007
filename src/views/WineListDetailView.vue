@@ -24,7 +24,7 @@
                 <div class="row ">
                         <div class="col-lg-2 d-flex align-items-center justify-content-center">
                             <div class="wine-image-card">
-                                <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.CartItem.WineLiquorPic.Path}`"
+                                <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.CartItem.WineLiquorPic?.Path}`"
                                     alt="" class="card-image">
                             </div>
                         </div>
@@ -33,60 +33,60 @@
                                 <div class="category">
                                     <p class="category-name" style="margin-bottom: 0px;"><span
                                             class="category-icon"><img src="../assets/img/wine-img1.png"
-                                                class="category-image"></span>category</p>
+                                                class="category-image"></span>{{ wine.WineLiquor?.CategoryLabel }}</p>
                                 </div>
                                 <div class="year">
                                     <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
-                                            class="manu-year">{{ wine.CartItem.WineLiquorPic.WineLiquorYear }}</span></p>
+                                            class="manu-year">{{ wine.WineLiquorPic?.WineLiquorYear }}</span></p>
                                 </div>
                             </div>
                             <div class="row text-start">
-                                <p class="wine-name-display text-start">wine name</p>
+                                <p class="wine-name-display text-start">{{ wine.WineLiquor?.DisplayName }}</p>
 
                             </div>
                             <div class="row text-start">
                                 <div class="col-3">
                                     <label class="form-label">ประเทศที่ผลิต</label>
-                                    <p style="margin-bottom: 0px;">country</p>
+                                    <p style="margin-bottom: 0px;">{{ wine.WineLiquorPic?.WineLiquorYear }}</p>
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">ปริมาณแอลกอฮอล์</label>
-                                    <p style="margin-bottom: 0px;">alc. {{ wine.CartItem.WineLiquorPic.Alcohol }} % vol.</p>
+                                    <p style="margin-bottom: 0px;">alc. {{ wine.WineLiquorPic?.Alcohol }} % vol.</p>
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">ขนาดภาชนะ (มิลลิลิตร)</label>
-                                    <p style="margin-bottom: 0px;">{{ wine.CartItem.BottleSize }}</p>
+                                    <p style="margin-bottom: 0px;">{{ wine.BottleSize }}</p>
                                 </div>
                             </div>
                             <div class="row text-start">
                                 <div class="col-3">
                                     <label class="form-label">ภาษีสรรพสามิต</label>
-                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.CartItem.ExciseTax) }} บาท</p>
+                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.ExciseTax) }} บาท</p>
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">ภาษีท้องถิ่น</label>
-                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.CartItem.TotalTax) }} บาท</p>
+                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท</p>
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">เงินบำรุงกองทุน</label>
-                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.CartItem.Fund) }} บาท</p>
+                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.Fund) }} บาท</p>
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">ภาษีศุลกากร</label>
-                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.CartItem.CustomsDuty) }} บาท</p>
+                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.CustomsDuty) }} บาท</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-3 price-col text-end">
                             <label class="form-label bold">มูลค่าเบื้องต้น</label>
-                            <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.CartItem.InitialValue) }} บาท
+                            <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.InitialValue) }} บาท
                             </p>
                             <p for="" class="form-label bold">รวมภาษีและเงินกองทุนทั้งหมด</p>
                             <label class="form-label bold">รวมภาษีทั้งสิ้น</label>
-                            <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.CartItem.TotalTax) }} บาท</p>
-                            <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ wine.CartItem.WineLiquorTotal }} ขวด
+                            <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท</p>
+                            <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ wine.WineLiquorTotal }} ขวด
                             </p>
-                            <button class="btn-scan" @click="onScanClick(wine.CartItem.Id)"><img
+                            <button class="btn-scan" @click="onScanClick(wine.Id)"><img
                                 src="../assets/img/scan-icon.png" alt="" class="scan-icon">สแกนแสตมป์</button>
                         </div>
                     </div>
@@ -192,6 +192,10 @@ export default {
             uploadModal.value = true
         }
 
+        const onUploadClick = (event) => {
+            console.log("Event", event);
+        }
+
         const onBackToHomeClick = () => {
             router.push('/import-wine-list')
         }
@@ -222,6 +226,14 @@ export default {
             importCheckpoint.value = getCartData.data.ImportPurpose.CheckpointLabel
             importPurpose.value = getCartData.data.ImportPurpose.PurposeLabel
             importDate.value = formatDate(getCartData.data.ImportPurpose.PurposeDate)
+            cartItems.value = cartItems.value.map((cartItem) => {
+                const filtered = getCartData.data.Items.find((_item) => _item.Id === cartItem.CartItemId);
+                return {
+                    ...filtered,
+                    ...cartItem,
+                }
+            });
+            console.log({items: cartItems.value});
             spinner.value = false
         }
 
@@ -285,8 +297,9 @@ export default {
         onMounted (() => {
             importCartId.value = localStorage.getItem('importCartId')
             token.value = localStorage.getItem('token')
-            fetchStampList();
-            fetchCartItem ();
+            fetchStampList().then(() => {
+                fetchCartItem ();
+            });
         })
 
         return {
@@ -302,6 +315,7 @@ export default {
             totalTaxAmount,
             uploadModal,
             onScanClick,
+            onUploadClick,
             onBackToHomeClick,
             onDownloadQRCodeClick
         }
