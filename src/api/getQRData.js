@@ -64,3 +64,29 @@ export async function setPairStampBottle(BottleId, SNNO, token) {
     }
 
 }
+
+export async function setQrConfirmImage(raw, token) {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Authorization", `Bearer ${token}`);
+
+    const options = {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(raw),
+    };
+
+    try {
+        const response = await fetch("https://asia-southeast1-tbit-excise.cloudfunctions.net/apiv4-FtQrConfirmImage", options)
+
+        if (!response.ok || response.status >= 400) {
+            console.log(response);
+            throw new Error();
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+        throw new Error("Failed to create image confirmation");
+    }
+}

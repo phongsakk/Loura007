@@ -91,7 +91,7 @@
                             </p>
                             <div v-if="wine.QRCode">
                                 <button class="btn-success">
-                                    Success
+                                    ตรวจสอบแสตมป์ไวน์เรียบร้อยแล้ว
                                 </button>
                             </div>
                             <div v-else>
@@ -123,14 +123,24 @@
                 <p class="text-end summary-value">{{ formatNumber(totalTaxAmount) }} บาท</p>
             </div>
 
-            <div class="payment-success">
-                <img src="../assets/img/success-icon.png" alt="" class="success-icon">
-                <p class="payment-success-text">ทำการชำระภาษีสำเร็จ</p>
+            <label v-if="imageStr === null" for="upload-invidence" class="btn-add-label" style="cursor: pointer">
+                <span class="image-icon">
+                    <img src="../assets/img/image-icon2.png" alt="" class="image-icon">
+                </span>
+                เพิ่มรูปภาพฉลาก
+            </label>
+            <label v-else for="upload-invidence" class="btn-add-label bg-success" style="cursor: pointer">
+                <span class="image-icon">
+                    <img src="../assets/img/image-icon2.png" alt="" class="image-icon">
+                </span>
+                เพิ่มรูปภาพฉลาก
+            </label>
+            <input type="file" class="d-none" id="upload-invidence" @change="imageChange">
+            <div class="d-flex justify-content-center">
+                <button class="btn-previous" @click="onCancelClick">ย้อนกลับ</button>
+                <button v-if="everyThingsIsSet" class="btn-next" @click="onConfirmClick">ยืนยัน</button>
+                <button v-else class="btn-next" disabled @click="onConfirmClick">ยืนยัน</button>
             </div>
-            <!-- <div class="summary-button"> -->
-            <button class="btn-home" @click="onBackToHomeClick">กลับหน้าแรก</button>
-            <button class="btn-downloadQr" @click="onDownloadQRCodeClick">ดาวน์โหลดคิวอาร์โค้ดและแบบฟอร์ม</button>
-            <!-- </div> -->
         </div>
     </div>
     <div class="upload-modal" v-if="uploadModal === true">
@@ -156,6 +166,7 @@
             </div>
         </div>
     </div>
+
     <div v-if="spinner" class="overlay"></div>
 
     <div v-if="spinner" class="text-center-spinner">
@@ -169,7 +180,7 @@ import { useRouter } from 'vue-router'
 import { getCartItem, getStampList } from '@/api/getWineSearch'
 import QRCode from 'qrcode';
 import Toast from '@/js/Toast';
-import { setPairStampBottle } from '@/api/getQRData';
+import { setPairStampBottle, setQrConfirmImage } from '@/api/getQRData';
 
 export default {
     setup() {
@@ -179,12 +190,14 @@ export default {
         const token = ref('')
 
         const BottleId = ref(null);
+        const imageStr = ref(null);
 
         const cartItems = ref([])
         const importCheckpoint = ref('')
         const importPurpose = ref('')
         const importDate = ref('')
         const uploadModal = ref(false)
+        const uploadImgModal = ref(false)
 
         const spinner = ref(false)
 
@@ -194,18 +207,31 @@ export default {
             window.scrollTo(0, 0);
         }
 
+        const imageChange = (event) => {
+            if (event.target.files[0]) {
+                const FR = new FileReader();
+
+                FR.addEventListener("load", function (evt) {
+                    imageStr.value = evt.target.result;
+                });
+
+                FR.readAsDataURL(event.target.files[0]);
+            } else {
+                imageStr.value = null;
+            }
+        }
+
         const onUploadClick = async (event) => {
             spinner.value = true;
             const SNNO = event[0]?.rawValue;
             if (SNNO) {
-                console.log(cartItems.value.find((_i) => _i.Id === BottleId.value));
                 await setPairStampBottle(BottleId.value, SNNO, token.value).then((response) => {
                     const tar = cartItems.value.find((_i) => _i.Id === BottleId.value);
                     tar.QRCode = SNNO;
 
                     console.log({ tar, response });
 
-                    Toast.fire({ icon: "success", title: "สำเร็จ", text: "บันทึกแล้ว"})
+                    Toast.fire({ icon: "success", title: "สำเร็จ", text: "บันทึกแล้ว" })
                 }).catch((err) => {
                     Toast.fire({ icon: "error", title: "แจ้งเตือน", text: err.message });
                 });
@@ -217,8 +243,47 @@ export default {
             spinner.value = false;
         }
 
-        const onBackToHomeClick = () => {
-            router.push('/import-wine-list')
+        const OnAddLabelClick = () => {
+            uploadImgModal.value = true;
+            window.scrollTo(0, 0);
+        }
+
+        const onConfirmClick = async () => {
+            spinner.value = true;
+            const data = {
+                CartId: Number(importCartId.value),
+                StampItems: cartItems.value.map((item) => ({
+                    CartId: item.CartId,
+                    CartItemId: item.CartItemId,
+                    WineLiquorPicId: item.WineLiquorPicId,
+                    ImageLabel: imageStr.value,
+                    ReceiptNo: "",
+                }))
+            }
+            
+            try {
+
+                const result = await setQrConfirmImage(data, token.value);
+                
+                console.log(result);
+                Toast.fire({
+                    icon: "success",
+                    title: "สำเร็จ",
+                    text: "บันทึกแล้ว"
+                });
+            } catch (e) {
+                Toast.fire({
+                    icon: "error",
+                    title: "ผิดพลาด",
+                    text: "ไม่สามารถบันทึกผลได้"
+                });
+            }
+            spinner.value = false;
+            // router.push('/import-wine-list/check-the-correctness')
+        }
+
+        const onCancelClick = () => {
+            router.push('/import-wine-list/check-the-correctness')
         }
 
         const onDownloadQRCodeClick = () => {
@@ -256,10 +321,16 @@ export default {
             spinner.value = false
         }
 
+        const everyThingsIsSet = computed(() => {
+            return imageStr.value !== null && cartItems.value.every(i => i.QRCode !== null);
+        });
+
         const fetchStampList = async () => {
+            spinner.value = true;
             const getStamps = await getStampList(importCartId.value, token.value)
             cartItems.value = getStamps.data
 
+            spinner.value = false;
         }
 
         const totalLiters = computed(() => {
@@ -318,6 +389,7 @@ export default {
 
         const onModalCancelClick = () => {
             uploadModal.value = false;
+            uploadImgModal.value = false;
             BottleId.value = null;
         }
 
@@ -341,11 +413,17 @@ export default {
             totalInitialPrice,
             totalTaxAmount,
             uploadModal,
+            uploadImgModal,
             onScanClick,
             onUploadClick,
-            onBackToHomeClick,
+            OnAddLabelClick,
+            onConfirmClick,
+            onCancelClick,
             onDownloadQRCodeClick,
-            onModalCancelClick
+            onModalCancelClick,
+            imageChange,
+            imageStr,
+            everyThingsIsSet
         }
     }
 }
@@ -382,17 +460,18 @@ export default {
     border-radius: 5px;
 }
 
-.btn-home {
+.btn-add-label {
     font-family: "Prompt", sans-serif;
     font-size: 20px;
     font-weight: 700;
     width: 100%;
     height: 44px;
-    background-color: #2B476D;
+    background-color: #162848;
     color: #FFFFFF;
     border: none;
     border-radius: 5px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .success-icon {
@@ -473,5 +552,49 @@ export default {
     width: 800px;
     text-align: center;
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+}
+
+.btn-success {
+    margin-top: 20px;
+    width: 100%;
+    height: 45px;
+    font-weight: 700;
+    border: 3px solid #5ED15E;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    color: #5ED15E;
+}
+
+.btn-previous {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    width: 50%;
+    height: 44px;
+    background-color: #77818A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    margin-right: 3px;
+}
+
+.btn-next {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    width: 50%;
+    height: 44px;
+    background-color: #2B476D;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    margin-left: 3px;
+}
+
+.image-icon {
+    width: 17px;
+    height: 17px;
+    margin-right: 5px;
+    margin-bottom: 2px;
 }
 </style>
