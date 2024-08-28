@@ -129,7 +129,7 @@
                 </span>
                 เพิ่มรูปภาพฉลาก
             </label>
-            <label v-else for="upload-invidence" class="btn-add-label bg-success" style="cursor: pointer">
+            <label v-else for="upload-invidence" class="btn-add-label" style="cursor: pointer; background-color: #5ED15E">
                 <span class="image-icon">
                     <img src="../assets/img/image-icon2.png" alt="" class="image-icon">
                 </span>
@@ -139,7 +139,7 @@
             <div class="d-flex justify-content-center">
                 <button class="btn-previous" @click="onCancelClick">ย้อนกลับ</button>
                 <button v-if="everyThingsIsSet" class="btn-next" @click="onConfirmClick">ยืนยัน</button>
-                <button v-else class="btn-next" disabled @click="onConfirmClick">ยืนยัน</button>
+                <button v-else class="btn-next-disabled" disabled @click="onConfirmClick">ยืนยัน</button>
             </div>
         </div>
     </div>
@@ -279,7 +279,7 @@ export default {
                 });
             }
             spinner.value = false;
-            // router.push('/import-wine-list/check-the-correctness')
+            router.push('/import-wine-list/check-the-correctness')
         }
 
         const onCancelClick = () => {
@@ -472,6 +472,7 @@ export default {
     border-radius: 5px;
     margin-bottom: 10px;
     margin-top: 10px;
+    padding: 5px 0px;
 }
 
 .success-icon {
@@ -579,6 +580,19 @@ export default {
 }
 
 .btn-next {
+    font-family: "Prompt", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    width: 50%;
+    height: 44px;
+    background-color: #2B476D;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    margin-left: 3px;
+}
+
+.btn-next-disabled {
     font-family: "Prompt", sans-serif;
     font-size: 20px;
     font-weight: 700;
