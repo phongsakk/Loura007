@@ -34,7 +34,7 @@
     "sweetalert2": "^11.12.4",
     "vue": "^3.2.13",
     "vue-hooks-form": "^0.3.1",
-    "vue-qrcode-reader": "^5.5.6",
+    "vue-qrcode-reader": "^5.5.7",
     "vue-router": "^4.3.2",
     "vue-slider-component": "^3.2.24",
     "vue3-slider": "^1.9.0"
@@ -42,6 +42,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@types/qrcode": "^1.5.5",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",

@@ -20,11 +20,12 @@
             </div>
         </div>
         <div v-for="wine in cartItems" :key="wine.Id">
-            <div class="product-card">
-                <div class="row ">
+            <div v-if="wine.WineLiquorPic">
+                <div class="product-card">
+                    <div class="row ">
                         <div class="col-lg-2 d-flex align-items-center justify-content-center">
                             <div class="wine-image-card">
-                                <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.CartItem.WineLiquorPic?.Path}`"
+                                <img :src="`https://storage.googleapis.com/tbit-excise.appspot.com/${wine.WineLiquorPic?.Path}`"
                                     alt="" class="card-image">
                             </div>
                         </div>
@@ -33,11 +34,13 @@
                                 <div class="category">
                                     <p class="category-name" style="margin-bottom: 0px;"><span
                                             class="category-icon"><img src="../assets/img/wine-img1.png"
-                                                class="category-image"></span>{{ wine.WineLiquor?.CategoryLabel }}</p>
+                                                class="category-image"></span>{{
+                                                    wine.WineLiquor?.CategoryLabel }}</p>
                                 </div>
                                 <div class="year">
                                     <p class="form-label" style="margin-bottom: 0px;">ปีที่ผลิต <span
-                                            class="manu-year">{{ wine.WineLiquorPic?.WineLiquorYear }}</span></p>
+                                            class="manu-year">{{
+                                                wine.WineLiquorPic?.WineLiquorYear }}</span></p>
                                 </div>
                             </div>
                             <div class="row text-start">
@@ -47,7 +50,7 @@
                             <div class="row text-start">
                                 <div class="col-3">
                                     <label class="form-label">ประเทศที่ผลิต</label>
-                                    <p style="margin-bottom: 0px;">{{ wine.WineLiquorPic?.WineLiquorYear }}</p>
+                                    <p style="margin-bottom: 0px;">{{ wine.WineLiquorPic?.Country }}</p>
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">ปริมาณแอลกอฮอล์</label>
@@ -65,7 +68,7 @@
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">ภาษีท้องถิ่น</label>
-                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท</p>
+                                    <p style="margin-bottom: 0px;">{{ formatNumber(wine.LocalTax) }} บาท</p>
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label">เงินบำรุงกองทุน</label>
@@ -86,65 +89,59 @@
                             <p class="price-text" style="margin-bottom: 0px;">{{ formatNumber(wine.TotalTax) }} บาท</p>
                             <p class="form-label" style="margin-bottom: 0px;">จำนวน {{ wine.WineLiquorTotal }} ขวด
                             </p>
-                            <button class="btn-scan" @click="onScanClick(wine.Id)"><img
-                                src="../assets/img/scan-icon.png" alt="" class="scan-icon">สแกนแสตมป์</button>
+                            <div v-if="wine.QRCode">
+                                <button class="btn-success">
+                                    Success
+                                </button>
+                            </div>
+                            <div v-else>
+                                <button class="btn-scan" @click="onScanClick(wine.Id)"><img
+                                        src="../assets/img/scan-icon.png" alt="" class="scan-icon">สแกนแสตมป์</button>
+                            </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
-        
+
         <div class="summary-card">
-                <div class="d-flex justify-content-between">
-                    <p class="text-start summary-label">ปริมาตรไวน์ในตะกร้า</p>
-                    <p class="text-end summary-value">{{ totalLiters }}/10 ลิตร</p>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <p class="text-start summary-label">รวมจำนวนไวน์นำเข้าทั้งหมด</p>
-                    <p class="text-end summary-value">{{ totalQuantity }} ขวด</p>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <p class="text-start summary-label">มูลค่าที่ใช้ในการคำนวนภาษี</p>
-                    <p class="text-end summary-value">{{ formatNumber(totalInitialPrice) }} บาท</p>
-                </div>
-                <hr class="divider-line">
-                <div class="d-flex justify-content-between">
-                    <p class="text-start summary-label" style="font-weight: 700;">รวมภาษีและเงินกองทุนทั้งหมด</p>
-                    <p class="text-end summary-value">{{ formatNumber(totalTaxAmount) }} บาท</p>
-                </div>
-                
-                    <div class="payment-success">
-                        <img src="../assets/img/success-icon.png" alt="" class="success-icon">
-                        <p class="payment-success-text">ทำการชำระภาษีสำเร็จ</p>
-                    </div>
-                    <!-- <div class="summary-button"> -->
-                        <button class="btn-home" @click="onBackToHomeClick">กลับหน้าแรก</button>
-                        <button class="btn-downloadQr" @click="onDownloadQRCodeClick">ดาวน์โหลดคิวอาร์โค้ดและแบบฟอร์ม</button>
-                    <!-- </div> -->
+            <div class="d-flex justify-content-between">
+                <p class="text-start summary-label">ปริมาตรไวน์ในตะกร้า</p>
+                <p class="text-end summary-value">{{ totalLiters }}/10 ลิตร</p>
             </div>
+            <div class="d-flex justify-content-between">
+                <p class="text-start summary-label">รวมจำนวนไวน์นำเข้าทั้งหมด</p>
+                <p class="text-end summary-value">{{ totalQuantity }} ขวด</p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <p class="text-start summary-label">มูลค่าที่ใช้ในการคำนวนภาษี</p>
+                <p class="text-end summary-value">{{ formatNumber(totalInitialPrice) }} บาท</p>
+            </div>
+            <hr class="divider-line">
+            <div class="d-flex justify-content-between">
+                <p class="text-start summary-label" style="font-weight: 700;">รวมภาษีและเงินกองทุนทั้งหมด</p>
+                <p class="text-end summary-value">{{ formatNumber(totalTaxAmount) }} บาท</p>
+            </div>
+
+            <div class="payment-success">
+                <img src="../assets/img/success-icon.png" alt="" class="success-icon">
+                <p class="payment-success-text">ทำการชำระภาษีสำเร็จ</p>
+            </div>
+            <!-- <div class="summary-button"> -->
+            <button class="btn-home" @click="onBackToHomeClick">กลับหน้าแรก</button>
+            <button class="btn-downloadQr" @click="onDownloadQRCodeClick">ดาวน์โหลดคิวอาร์โค้ดและแบบฟอร์ม</button>
+            <!-- </div> -->
+        </div>
     </div>
     <div class="upload-modal" v-if="uploadModal === true">
         <div class="modal">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="image-search-list">
-                        <!-- <div v-if="algoliaImageResults.length > 0">
-                            <p class="form-label fw-bold text-start" style="margin-bottom: 10px;">ค้นหาด้วยรูปภาพ</p>
-                            <div v-for="result in algoliaImageResults" :key="result.objectID">
-                                <div class="image-search-results"
-                                    @click="onImageResultClick(result.name, result.alcohol)">
-                                    <div class="result-name d-flex align-items-center">
-                                        <img :src="result.image_label" alt="" class="bottle-image">
-                                        <p class="wine-name" style="margin-bottom: 0px;">{{ result.name }}</p>
-                                    </div>
-                                    <div class="result-country">
-                                        <p class="country-text">{{ result.country }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="upload-session">
-                            <input type="file" class="image-input" id="image-input" accept="image/*"
-                                @change="onUploadClick($event)">
+                            <qrcode-capture id="image-input" class="image-input"
+                                @detect="onUploadClick"></qrcode-capture>
+
                             <label for="image-input" class="upload-label">
                                 <img src="../assets/img/upload-icon.png" alt="" class="upload-icon">
                                 <h3>ค้นหารูปภาพ</h3>
@@ -171,6 +168,8 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCartItem, getStampList } from '@/api/getWineSearch'
 import QRCode from 'qrcode';
+import Toast from '@/js/Toast';
+import { setPairStampBottle } from '@/api/getQRData';
 
 export default {
     setup() {
@@ -178,6 +177,8 @@ export default {
 
         const importCartId = ref('')
         const token = ref('')
+
+        const BottleId = ref(null);
 
         const cartItems = ref([])
         const importCheckpoint = ref('')
@@ -188,12 +189,32 @@ export default {
         const spinner = ref(false)
 
         const onScanClick = (wineId) => {
-            console.log("Wine ID :", wineId);
-            uploadModal.value = true
+            BottleId.value = wineId;
+            uploadModal.value = true;
+            window.scrollTo(0, 0);
         }
 
-        const onUploadClick = (event) => {
-            console.log("Event", event);
+        const onUploadClick = async (event) => {
+            spinner.value = true;
+            const SNNO = event[0]?.rawValue;
+            if (SNNO) {
+                console.log(cartItems.value.find((_i) => _i.Id === BottleId.value));
+                await setPairStampBottle(BottleId.value, SNNO, token.value).then((response) => {
+                    const tar = cartItems.value.find((_i) => _i.Id === BottleId.value);
+                    tar.QRCode = SNNO;
+
+                    console.log({ tar, response });
+
+                    Toast.fire({ icon: "success", title: "สำเร็จ", text: "บันทึกแล้ว"})
+                }).catch((err) => {
+                    Toast.fire({ icon: "error", title: "แจ้งเตือน", text: err.message });
+                });
+                BottleId.value = null;
+            } else {
+                Toast.fire({ icon: "error", title: "แจ้งเตือน", text: "OrCode ไม่ถูกต้อง" })
+            }
+            uploadModal.value = false;
+            spinner.value = false;
         }
 
         const onBackToHomeClick = () => {
@@ -201,12 +222,12 @@ export default {
         }
 
         const onDownloadQRCodeClick = () => {
-            const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`; 
+            const qrData = `https://tbit-stamp.exise.go.th/qr/cart/${importCartId.value}`;
 
             QRCode.toDataURL(qrData, { errorCorrectionLevel: 'H' }, (err, url) => {
                 if (err) {
-                console.error(err);
-                return;
+                    console.error(err);
+                    return;
                 }
 
                 // Create a link element to download the QR code
@@ -221,8 +242,7 @@ export default {
 
         const fetchCartItem = async () => {
             spinner.value = true
-            console.log("ImportCardId", importCartId.value)
-            const getCartData = await getCartItem (importCartId.value, token.value)
+            const getCartData = await getCartItem(importCartId.value, token.value)
             importCheckpoint.value = getCartData.data.ImportPurpose.CheckpointLabel
             importPurpose.value = getCartData.data.ImportPurpose.PurposeLabel
             importDate.value = formatDate(getCartData.data.ImportPurpose.PurposeDate)
@@ -233,34 +253,44 @@ export default {
                     ...cartItem,
                 }
             });
-            console.log({items: cartItems.value});
             spinner.value = false
         }
 
         const fetchStampList = async () => {
             const getStamps = await getStampList(importCartId.value, token.value)
             cartItems.value = getStamps.data
-            console.log("Cart items:", cartItems.value);
-            
+
         }
 
         const totalLiters = computed(() => {
             return (cartItems.value || []).reduce((sum, item) => {
-                const bottleSize = item.CartItem.BottleSize === 'Bottle (750ml)' || item.CartItem.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.CartItem.BottleSize) / 1000 : extractBottleSizeL(item.CartItem.BottleSize);
-                return sum + (bottleSize * item.CartItem.WineLiquorTotal);
+                if (!item.BottleSize) {
+                    return sum + 0;
+                }
+                const bottleSize = item.BottleSize === 'Bottle (750ml)' || item.BottleSize === 'Half Bottle (375ml)' ? extractBottleSizeMl(item.BottleSize) / 1000 : extractBottleSizeL(item.BottleSize);
+                return sum + (bottleSize * item.WineLiquorTotal);
             }, 0);
         });
 
         const totalQuantity = computed(() => {
-            return (cartItems.value || []).reduce((sum, item) => sum + item.CartItem.WineLiquorTotal, 0);
+            return (cartItems.value || []).reduce((sum, item) => {
+                if (!item.WineLiquorTotal) { return sum + 0 }
+                return sum + (item.WineLiquorTotal)
+            }, 0);
         });
 
         const totalInitialPrice = computed(() => {
-            return (cartItems.value || []).reduce((sum, item) => sum + (item.CartItem.InitialValue * item.CartItem.WineLiquorTotal), 0);
+            return (cartItems.value || []).reduce((sum, item) => {
+                if (!item.InitialValue) { return sum + 0 }
+                return sum + ((item.InitialValue || 0) * (item.WineLiquorTotal || 0))
+            }, 0);
         });
 
         const totalTaxAmount = computed(() => {
-            return (cartItems.value || []).reduce((sum, item) => sum + parseFloat(String(item.CartItem.TotalTax).replace(/,/g, '')), 0);
+            return (cartItems.value || []).reduce((sum, item) => {
+                if (!item.TotalTax) { return sum + 0 }
+                return sum + ((item.TotalTax || 0) * (item.WineLiquorTotal || 0))
+            }, 0);
         });
 
         const formatDate = (data) => {
@@ -271,9 +301,9 @@ export default {
             return `${day}/${month}/${year}`;
         }
 
-        const formatNumber = (value) =>{
+        const formatNumber = (value) => {
             const floatValue = parseFloat(value);
-                return floatValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return floatValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         const extractBottleSizeMl = (bottleSize) => {
@@ -286,19 +316,16 @@ export default {
             return match ? parseFloat(match[1]) : 0;
         }
 
-        // const calculateTotalQuantity = (items) => {
-        //     return items?.reduce((sum, item) => sum + item.WineLiquorTotal, 0);
-        // };
+        const onModalCancelClick = () => {
+            uploadModal.value = false;
+            BottleId.value = null;
+        }
 
-        // const calculateTotalPrice = (items) => {
-        //     return items?.reduce((sum, item) => sum + item.InitialValue * item.WineLiquorTotal, 0);
-        // };
-
-        onMounted (() => {
+        onMounted(() => {
             importCartId.value = localStorage.getItem('importCartId')
             token.value = localStorage.getItem('token')
             fetchStampList().then(() => {
-                fetchCartItem ();
+                fetchCartItem();
             });
         })
 
@@ -317,7 +344,8 @@ export default {
             onScanClick,
             onUploadClick,
             onBackToHomeClick,
-            onDownloadQRCodeClick
+            onDownloadQRCodeClick,
+            onModalCancelClick
         }
     }
 }

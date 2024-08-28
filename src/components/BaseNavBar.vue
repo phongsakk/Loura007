@@ -239,7 +239,7 @@ export default {
             else {
                 const getUserData = await getUserProfile(token.value)
                 userData.value = getUserData.data
-                console.log("User data :", getUserData.data.code)
+                // console.log("User data :", getUserData.data.code)
                 userName.value = userData.value.FirstName + ' ' + userData.value.LastName
                 emailAddress.value = userData.value.Email
                 phoneNumber.value = userData.value.Phone ? userData.value.Phone : userData.value.Mobile
