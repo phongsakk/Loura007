@@ -138,7 +138,7 @@ export default {
             console.log("Import cart status", importCartStatus)
             if (userTypeId.value === '21') {
                 if (importCartStatus === 2) {
-                    router.push('/wine-list')
+                    router.push(`/wine-list/${importCartId}`);
                 }
                 else {
                     router.push({ name: 'import-wine-list-in-cart', params: { cartId: importCartId } })

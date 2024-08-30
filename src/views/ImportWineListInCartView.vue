@@ -136,7 +136,7 @@
 <script>
 import { ref, onMounted, computed } from 'vue'
 import { getCartItem, getWineInfo } from '@/api/getWineSearch'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { getEnumGroup } from '@/api/getMaster'
 // import { getQRCode } from '@/api/getQRData'
 import QRCode from 'qrcode';
@@ -145,6 +145,7 @@ export default {
     props: ['cardId'],
     setup (props) {
         const router = useRouter()
+        const route = useRoute()
 
         const token = ref('')
         const importCartId = ref(props.cartId || '')
@@ -298,7 +299,7 @@ export default {
 
         onMounted (() => {
             token.value = localStorage.getItem('token')
-            importCartId.value = localStorage.getItem('importCartId')
+            importCartId.value = route.params.cartId;
             userTypeId.value = localStorage.getItem('userTypeId')
             fetchCartItem()
             fetchImportPurpose()

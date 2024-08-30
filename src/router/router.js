@@ -59,9 +59,10 @@ const routes = [
         component: ImportLiquorView,
       },
       {
-        path: "wine-list",
+        path: "/wine-list/:cartId",
         name: "wine-list",
         component: WineListView,
+        props: true
       },
       {
         path: "scan-qr",

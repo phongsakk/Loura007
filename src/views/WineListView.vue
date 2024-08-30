@@ -86,13 +86,13 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { getCartItem } from '@/api/getWineSearch'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import QRCode from 'qrcode';
 
 export default {
     setup() {
         const router = useRouter()
-
+        const route = useRoute()
         const importCartId = ref('')
         const token = ref('')
         const cartItems = ref([])
@@ -168,7 +168,7 @@ export default {
         }
 
         onMounted (() => {
-            importCartId.value = localStorage.getItem('importCartId')
+            importCartId.value = route.params.cartId;
             token.value = localStorage.getItem('token')
 
             fetchCartItem()
