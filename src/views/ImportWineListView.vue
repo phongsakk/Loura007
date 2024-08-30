@@ -214,8 +214,7 @@ export default {
             currentPage.value = page;
         };
 
-        onMounted (() => {
-            // cartId.value = localStorage.getItem('cartId')
+        onMounted (() => {            
             token.value = localStorage.getItem('token')
             if (!token.value) {
                 router.push({ name: 'login' })

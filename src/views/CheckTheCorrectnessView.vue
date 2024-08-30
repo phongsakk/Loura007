@@ -88,7 +88,7 @@ export default {
 
         const onDeatilsClick = (wineId) => {
             localStorage.setItem('importCartId', wineId)
-            router.push('/import-wine-list/wine-list-details')
+            router.push(`/import-wine-list/wine-list-details/${wineId}`)
         }
 
         const fetchCartItems = async() => {

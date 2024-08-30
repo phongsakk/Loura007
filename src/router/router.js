@@ -119,8 +119,9 @@ const routes = [
         component: CheckTheCorrectness,
       },
       {
-        path: "wine-list-details",
+        path: "wine-list-details/:cartId",
         name: "wine-list-details",
+        props: true,
         component: WineListDetails,
       }
     ],

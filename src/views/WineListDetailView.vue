@@ -176,7 +176,7 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { getCartItem, getStampList } from '@/api/getWineSearch'
 import QRCode from 'qrcode';
 import Toast from '@/js/Toast';
@@ -185,13 +185,11 @@ import { setPairStampBottle, setQrConfirmImage } from '@/api/getQRData';
 export default {
     setup() {
         const router = useRouter()
-
+        const route = useRoute()
         const importCartId = ref('')
         const token = ref('')
-
         const BottleId = ref(null);
         const imageStr = ref(null);
-
         const cartItems = ref([])
         const importCheckpoint = ref('')
         const importPurpose = ref('')
@@ -394,7 +392,7 @@ export default {
         }
 
         onMounted(() => {
-            importCartId.value = localStorage.getItem('importCartId')
+            importCartId.value = route.params.cartId;
             token.value = localStorage.getItem('token')
             fetchStampList().then(() => {
                 fetchCartItem();
