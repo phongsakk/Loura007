@@ -170,7 +170,6 @@ export default {
         onMounted (() => {
             importCartId.value = route.params.cartId;
             token.value = localStorage.getItem('token')
-
             fetchCartItem()
         })
 
